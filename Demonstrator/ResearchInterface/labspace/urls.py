@@ -18,5 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('request/', include('researcher_req.urls')),
+    path('consent/', include('genecoop.urls')),
     path('admin/', admin.site.urls),
 ]

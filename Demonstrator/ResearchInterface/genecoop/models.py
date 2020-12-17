@@ -5,8 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.db import IntegrityError, transaction
 
-
-
+# Create your models here.
 TITLE_LENGTH = 200
 DESCR_LENGTH = 1000
 TOKEN_LENGTH = 2000
@@ -36,7 +35,7 @@ def read_table():
 
         with transaction.atomic():
             operation_inst = Operation(
-                name=request['name'], description=request['description'], key=request['key'])
+                name=request['nameU'], description=request['descriptionU'], key=request['key'])
 
             # try:
             operation_inst.save()
@@ -49,6 +48,7 @@ def read_table():
 
             # except IntegrityError:
                 # inst.delete()
+
 
 class Operation(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
@@ -76,23 +76,23 @@ class Option(models.Model):
     def __str__(self):
         return self.text
 
-class Request(models.Model):
+
+class Consent(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
     user_id = models.IntegerField(default=0)
     operations = models.ManyToManyField(Operation, through='Membership')
     token = models.CharField(max_length=TOKEN_LENGTH, default = 0)
-    request_sent = models.DateTimeField('date sent', default = datetime(1900,1,1))
+    request_approved = models.DateTimeField('date sent', default = datetime(1900,1,1))
 
     class RequestStatus(models.TextChoices):
-        NOTSENT = 'NOT SENT', _('Request has not been sent')
-        SENT = 'SENT', _('Request has been sent')
-        REPLIED = 'REPLIED', _('Request has been fulfilled')
+        NOTDONE = 'NOT DONE', _('Consent has not been signed yet')
+        DONE = 'DONE', _('Consent has been signed')
 
     status = models.CharField(
         max_length=8,
         choices=RequestStatus.choices,
-        default=RequestStatus.NOTSENT,
+        default=RequestStatus.NOTDONE,
     )
 
     def __str__(self):
@@ -100,4 +100,4 @@ class Request(models.Model):
 
 class Membership(models.Model):
     operation = models.ForeignKey(Operation, on_delete=models.CASCADE)
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    consent = models.ForeignKey(Consent, on_delete=models.CASCADE)

@@ -2,6 +2,9 @@
     {
         "name": "Array test including QC and Data curation",
         "description": "Tier 1 assay Needed for tumor classification",
+        "nameU": "Array test",
+        "descriptionU": "Interest in DNA for tumor treatment and other personal use (Heritage, lifestyle, ..)",
+        
         "key" : 0,
         "options": [
             {
@@ -17,6 +20,8 @@
     {
         "name": "Analysis II CNV",
         "description" : "Needed for tumor classification and personalized advise",
+        "nameU": "Analysis II CNV",
+        "descriptionU" : "Better insight in Cancer treatment and prediction",
         "key" : 1,
         "options": [
             {
@@ -32,6 +37,8 @@
     {
         "name": "Analysis III Drug biomarker discover",
         "description" : "Optimize personalized drug treatment",
+        "nameU": "Drug biomarker discover",
+        "descriptionU" : "Interest in personal use but not to develop new drugs and make company better",
         "key" : 2,
         "options": [
             {
@@ -47,6 +54,8 @@
     {
         "name": "Secondary use. DNA data description is published in catalogue for new research",
         "description" : "Description not directly linked to researcher to protect study.",
+        "nameU": "DNA data in catalogue for new research",
+        "descriptionU" : "Learn as much from my DNA data.",
         "key" : 3,
         "options": [
             {

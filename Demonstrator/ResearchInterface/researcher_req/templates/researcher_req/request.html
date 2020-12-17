@@ -10,21 +10,40 @@
 
 <body>
 
-    {% if request %}
+    <div><a href="{% url 'researcher_req:index' %}">Home</a></div>
+    <div class="container">
+        <h2>Request</h2>
 
-    <h1>{{ request.name }}</h1>
-    <div>
-        {{ request.description }}
+        <form action="{% url 'researcher_req:gentoken' %}" method="post">
+            {% csrf_token %}
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Name of Request</div>
+                    <div class="col col-2">Request Description</div>
+                    <div class="col col-3">Operations</div>
+                    <div class="col col-4">User id</div>
+                    <div class="col col-4">Token</div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-1" data-label="Name">{{request.name }}</div>
+                    <div class="col col-2" data-label="Description">{{ request.description }}</div>
+                    <div class="col col-3" data-label="Operations">
+                        {% for operation in request.operations.all %}
+                        <ul>
+                            <li id="minim">{{ operation.name }}</li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                    <div class="col col-4" data-label="Userid">{{ request.user_id }}</div>
+                    <div class="col col-5" data-label="Token">{{ request.token }}</div>
+                </li>
+                <li class="table-row">
+                    <input type="hidden" id="requestID" name="requestID" value={{request.id}}>
+                    <div class="col col-1" data-label="Submit"><input type="submit" value="Generate Token"></div>
+                </li>
+            </ul>
+        </form>
     </div>
-    <ul>
-        {% for operation in request.operations_set.all %}
-        <li>{{ operation.name }} - {{ operation.description }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>Request does not exist.</p>
-    {% endif %}
-
 </body>
 
 </html>

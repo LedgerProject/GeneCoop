@@ -5,7 +5,7 @@ from django.views import generic
 from .models import Operation, Option, Request, read_table
 
 
-read_table()
+# read_table()
 
 class IndexView(generic.ListView):
     template_name = 'researcher_req/index.html'
@@ -35,16 +35,30 @@ class OperationsView(generic.DetailView):
 def addrequest(request):
     if request.method == 'POST':
         if 'operations' in request.POST:
-            print(f'request {request.POST}')
+            # print(f'request {request.POST}')
             new_request = Request(name=request.POST.get('name'), description=request.POST.get(
                 'description'), user_id=request.POST.get('user_id'))
             new_request.save()
             operations_ids = request.POST.getlist('operations')
             for id in operations_ids:
                 operation = get_object_or_404(Operation, key=id)
+                print(f'operation key: {operation.key}')
+                # new_request.operations.add(Operation.objects.get(key=id))
                 new_request.operations.add(Operation.objects.get(key=id))
             new_request.save()
             return HttpResponseRedirect(reverse('researcher_req:request', args=(new_request.id,)))
+    return HttpResponseRedirect(reverse('researcher_req:index'))
+
+def gentoken(request):
+    if request.method == 'POST':
+        if 'requestID' in request.POST:
+            requestInst = get_object_or_404(Request, id=request.POST.get('requestID'))
+            # print(f'request {request.POST}')
+            # print(f'operation {operation for operation in requestInst.operations.all()}')
+            opconcat = '_'.join([f'{operation.key}'.zfill(4) for operation in requestInst.operations.all()])
+            requestInst.token = f'{requestInst.user_id}_{opconcat}'
+            requestInst.save()
+            return HttpResponseRedirect(reverse('researcher_req:request', args=(requestInst.id,)))
     return HttpResponseRedirect(reverse('researcher_req:index'))
 
     # try:

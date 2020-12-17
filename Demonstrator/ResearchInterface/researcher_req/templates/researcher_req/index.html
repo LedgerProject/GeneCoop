@@ -12,37 +12,69 @@
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <div class="container"></div>
-    <h2>Existing Requests</h2>
+    <div class="container">
+        <h2>Existing Requests</h2>
 
-    {% if my_set.requests %}
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-1">Request Name</div>
-            <div class="col col-2">Request Description</div>
-            <div class="col col-3">User id</div>
-            <div class="col col-4">Status</div>
-        </li>
 
-        {% for request in my_set.requests %}
-        <li class="table-row">
-            <div class="col col-1" data-label="Name"><a href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
-            <div class="col col-2" data-label="Description">{{ request.description }}</div>
-            <div class="col col-3" data-label="User_id">{{ request.user_id }}</div>
-            <div class="col col-4" data-label="Status">{{ request.status }}</div>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No requests are available.</p>
-    {% endif %}
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-1">Request Name</div>
+                <div class="col col-2">Request Description</div>
+                <div class="col col-3">Operations</div>
+                <div class="col col-4">User id</div>
+                <div class="col col-5">Token</div>
+            </li>
+            {% if my_set.requests %}
+                {% for request in my_set.requests %}
+                    <li class="table-row">
+                        <div class="col col-1" data-label="Name"><a
+                                href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
+                        <div class="col col-2" data-label="Description">{{ request.description }}</div>
+                        <div class="col col-2" data-label="Description">
+                            {% for operation in request.operations.all %}
+                            <ul>
+                                <li id="minim">{{ operation.name }}</li>
+                            </ul>
+                            {% endfor %}
+                        </div>
+                        <div class="col col-4" data-label="User_id">{{ request.user_id }}</div>
+                        <div class="col col-5" data-label="Token">{{ request.token }}</div>
+                    </li>
+                {% endfor %}
+            {% else %}
+            <li class="table-row">No requests are available.</li>
+            {% endif %}
+        </ul>
     </div>
 
-    <h2>New Request</h2>
+    <div class="container">
+        <h2>New Request</h2>
 
-    <form action="{% url 'researcher_req:addrequest' %}" method="post">
-        {% csrf_token %}
-        <div>
+        <form action="{% url 'researcher_req:addrequest' %}" method="post">
+            {% csrf_token %}
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Name of Request</div>
+                    <div class="col col-2">Request Description</div>
+                    <div class="col col-3">Operations</div>
+                    <div class="col col-4">User id</div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-1" data-label="Name"><input type="text" name="name" value=""></div>
+                    <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
+                    <div class="col col-3" data-label="Operations">
+                        {% for operation in my_set.operations %}
+                            <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
+                            <label for="operation{{ forloop.counter }}">{{ operation.name }}</label><br>
+                        {% endfor %}
+                    </div>
+                    <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
+                </li>
+            </ul>
+<!--        <div>
             <label for="name">Insert name of request</label><br />
             <input type="text" name="name" value="">
         </div>
@@ -63,8 +95,9 @@
                 <input type="text" name="user_id" value="">
             </p>
         </div>
-        <input type="submit" value="Request">
-    </form>
+-->
+        </form>
+    </div>
 </body>
 
 </html>
