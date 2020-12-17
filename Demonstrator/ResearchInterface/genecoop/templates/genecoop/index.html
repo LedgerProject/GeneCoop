@@ -4,13 +4,50 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Requests</title>
+    <title>GeneCoop Consent</title>
     <link rel="stylesheet" type="text/css" href="{% static 'genecoop/style.css' %}">
 </head>
 
 <body>
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <div class="container">
+        <h2>Consents</h2>
+        
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-a">Name of Consent</div>
+                <div class="col col-b">Operations</div>
+            </li>
+            {% for consent in consent_list %}
+            <li class="table-row">
+                <div class="col col-a" data-label="Name">{{ consent.id}}</div>
+                <div class="col col-b" data-label="Operations">
+                    <ul class="responsive-table">
+                    {% for operation in consent.operations.all %}
+                    <li class="table-row">
+                        <div class="col col-1" data-label="Name">{{ operation.name}}</div>
+                        <div class="col col-2" data-label="Description">{{ operation.description}}</div>
+                        <div class="col col-3" data-label="Options">
+                            <ul>
+                            {% for option in operation.option_set.all %}
+                                {% if option.id == operation.chosen_option %}
+                                    <li id="minim"><b>{{ option.text }}</b></li>
+                                {% else %}
+                                    <li id="minim">{{ option.text }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            {% endfor %}  
+        </ul>
+    </div>
 
     <div class="container">
         <h2>Consent Request</h2>

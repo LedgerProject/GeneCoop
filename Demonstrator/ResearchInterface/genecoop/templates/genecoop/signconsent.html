@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Consent</title>
+    <title>Sign Consent</title>
     <link rel="stylesheet" type="text/css" href="{% static 'genecoop/style.css' %}">
 </head>
 
@@ -12,9 +12,10 @@
     <div><a href="{% url 'genecoop:index' %}">Home</a></div>
 
     <div class="container">
-        <h2>Consento {{consent.name}} </h2>
-        
+        <h2>Sign Consent {{consent.name}} </h2>
+
         <form action="{% url 'genecoop:signconsent' %}" method="post">
+            {% csrf_token %}
             <ul class="responsive-table">
                 <li class="table-header">
                     <div class="col col-1">Name of Operation</div>
@@ -28,20 +29,19 @@
                     <div class="col col-3" data-label="Options">
                         <ul>
                             {% for option in operation.option_set.all %}
-                                {% if option.id == operation.chosen_option %}
-                                    <li id="minim"><b>{{ option.text }</b></li>
-                                {% else %}
-                                    <li id="minim">{{ option.text }}</li>
-                                {% endif %}
+                            <li id="minim">
+                                <label for="{{ operation.key }}">{{ option.text }}</label>
+                                <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.id }}">
+                            </li>
                             {% endfor %}
                         </ul>
                     </div>
                 </li>
+                {% endfor %}
                 <li class="table-row">
                     <input type="hidden" id="consentID" name="consentID" value={{consent.id}}>
-                    <div class="col col-1" data-label="Submit"><input type="submit" value="Process Consent"></div>
+                    <div class="col col-1" data-label="Submit"><input type="submit" value="Sign Consent"></div>
                 </li>
-                {% endfor %}
             </ul>
         </form>
     </div>

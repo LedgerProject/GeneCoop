@@ -59,6 +59,13 @@ body {
   .responsive-table .col-5 {
     flex-basis: 15%;
   }
+  .responsive-table .col-a {
+    flex-basis: 10%;
+  }
+  .responsive-table .col-b {
+    flex-basis: 90%;
+  }
+
   @media all and (max-width: 767px) {
     .responsive-table .table-header {
       display: none;

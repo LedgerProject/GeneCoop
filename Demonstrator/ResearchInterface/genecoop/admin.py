@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Consent, Operation, Option
+
+admin.site.register(Operation)
+admin.site.register(Option)
+admin.site.register(Consent)

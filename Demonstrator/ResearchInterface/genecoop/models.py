@@ -35,7 +35,7 @@ def read_table():
 
         with transaction.atomic():
             operation_inst = Operation(
-                name=request['nameU'], description=request['descriptionU'], key=request['key'])
+                name=request['nameU'], description=request['descriptionU'], key=request['key'], chosen_option=-1)
 
             # try:
             operation_inst.save()
@@ -54,6 +54,7 @@ class Operation(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
     key = models.IntegerField(default=0, unique=True)
+    chosen_option = models.IntegerField(default=-1)
 
     # @classmethod
     # def create(cls, text, key):
