@@ -22,7 +22,7 @@
             </li>
             {% for consent in consent_list %}
             <li class="table-row">
-                <div class="col col-a" data-label="Name">{{ consent.id}}</div>
+                <div class="col col-a" data-label="Name">{{ consent.name}}</div>
                 <div class="col col-b" data-label="Operations">
                     <ul class="responsive-table">
                     {% for operation in consent.operations.all %}
