@@ -13,6 +13,36 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
+        <h2>New Request</h2>
+
+        <form action="{% url 'researcher_req:addrequest' %}" method="post">
+            {% csrf_token %}
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Name of Request</div>
+                    <div class="col col-2">Request Description</div>
+                    <div class="col col-3">Operations</div>
+                    <div class="col col-4">User id</div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-1" data-label="Name"><input type="text" name="name" value=""></div>
+                    <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
+                    <div class="col col-3" data-label="Operations">
+                        {% for operation in my_set.operations %}
+                            <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
+                            <label for="operation{{ forloop.counter }}">{{ operation.name }}</label><br>
+                        {% endfor %}
+                    </div>
+                    <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
+                </li>
+            </ul>
+        </form>
+    </div>
+    
+    <div class="container">
         <h2>Existing Requests</h2>
 
 
@@ -47,35 +77,6 @@
         </ul>
     </div>
 
-    <div class="container">
-        <h2>New Request</h2>
-
-        <form action="{% url 'researcher_req:addrequest' %}" method="post">
-            {% csrf_token %}
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Name of Request</div>
-                    <div class="col col-2">Request Description</div>
-                    <div class="col col-3">Operations</div>
-                    <div class="col col-4">User id</div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Name"><input type="text" name="name" value=""></div>
-                    <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
-                    <div class="col col-3" data-label="Operations">
-                        {% for operation in my_set.operations %}
-                            <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
-                            <label for="operation{{ forloop.counter }}">{{ operation.name }}</label><br>
-                        {% endfor %}
-                    </div>
-                    <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
-                </li>
-            </ul>
-        </form>
-    </div>
 </body>
 
 </html>
