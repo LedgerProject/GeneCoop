@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Request</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
+</head>
+
+<body>
+
+    {% if request %}
+
+    <h1>{{ request.name }}</h1>
+    <div>
+        {{ request.description }}
+    </div>
+    <ul>
+        {% for operation in request.operations_set.all %}
+        <li>{{ operation.name }} - {{ operation.description }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Request does not exist.</p>
+    {% endif %}
+
+</body>
+
+</html>

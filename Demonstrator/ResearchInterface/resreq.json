@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Array test including QC and Data curation",
+        "description": "Tier 1 assay Needed for tumor classification",
+        "key" : 0,
+        "options": [
+            {
+                "text": "yes",
+                "description": ""
+            },
+            {
+                "text": "no",
+                "description": ""
+            }
+        ]
+    },
+    {
+        "name": "Analysis II CNV",
+        "description" : "Needed for tumor classification and personalized advise",
+        "key" : 1,
+        "options": [
+            {
+                "text": "yes",
+                "description": ""
+            },
+            {
+                "text": "no",
+                "description": ""
+            }
+        ]
+    },
+    {
+        "name": "Analysis III Drug biomarker discover",
+        "description" : "Optimize personalized drug treatment",
+        "key" : 2,
+        "options": [
+            {
+                "text": "yes",
+                "description": ""
+            },
+            {
+                "text": "no",
+                "description": ""
+            }
+        ]
+    },
+    {
+        "name": "Secondary use. DNA data description is published in catalogue for new research",
+        "description" : "Description not directly linked to researcher to protect study.",
+        "key" : 3,
+        "options": [
+            {
+                "text": "yes",
+                "description": ""
+            },
+            {
+                "text": "no",
+                "description": ""
+            }
+        ]
+    }
+]

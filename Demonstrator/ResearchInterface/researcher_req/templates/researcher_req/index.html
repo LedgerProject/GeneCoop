@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Requests</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
+</head>
+
+<body>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <div class="container"></div>
+    <h2>Existing Requests</h2>
+
+    {% if my_set.requests %}
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-1">Request Name</div>
+            <div class="col col-2">Request Description</div>
+            <div class="col col-3">User id</div>
+            <div class="col col-4">Status</div>
+        </li>
+
+        {% for request in my_set.requests %}
+        <li class="table-row">
+            <div class="col col-1" data-label="Name"><a href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
+            <div class="col col-2" data-label="Description">{{ request.description }}</div>
+            <div class="col col-3" data-label="User_id">{{ request.user_id }}</div>
+            <div class="col col-4" data-label="Status">{{ request.status }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No requests are available.</p>
+    {% endif %}
+    </div>
+
+    <h2>New Request</h2>
+
+    <form action="{% url 'researcher_req:addrequest' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="name">Insert name of request</label><br />
+            <input type="text" name="name" value="">
+        </div>
+        <div>
+            <label for="description">Insert request description</label><br />
+            <input type="text" name="description" value="">
+        </div>
+        <div>
+            <p>Check required operations</p>
+            {% for operation in my_set.operations %}
+            <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
+            <label for="operation{{ forloop.counter }}">{{ operation.name }}</label><br>
+            {% endfor %}
+        </div>
+        <div>
+            <p>
+                <label for="user_id">Insert user id</label><br />
+                <input type="text" name="user_id" value="">
+            </p>
+        </div>
+        <input type="submit" value="Request">
+    </form>
+</body>
+
+</html>
