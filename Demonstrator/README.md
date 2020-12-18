@@ -28,7 +28,7 @@ Quit the server with CONTROL-C.
 ## Operations
 If these step were successful, you can access the Researcher interface at `http://127.0.0.1:8000/request` and the consent interface at `http://127.0.0.1:8000/consent`
 
-With the Researcher interface you can define a consent request; the first page also shows a list of existing requests.
+With the Researcher interface you can define a consent request; the first page also shows a list of existing requests (the db has been pre-populated to have some instances to show).
 
 After generating a request, you can generate a token. Ideally this token is sent by the researcher to the user, 
 who is supposed to enter the token on the page at `http://127.0.0.1:8000/consent`.
@@ -38,4 +38,4 @@ When they do so, a consent is generated which is the mapping of the researcher r
 The user can then reply to each single question in the consent and sign it. 
 
 For a complete picture of the planned flow that we want to implement
-have a look at the [technical description](https://github.com/LedgerProject/GeneCoop/blob/master/Demonstrator/Documentation/Technical_Design/demonstrator_tech_design.md)
+have a look at the [technical description](https://github.com/LedgerProject/GeneCoop/blob/master/Demonstrator/Documentation/Technical_Design/demonstrator_tech_design.md).
