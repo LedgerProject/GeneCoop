@@ -6,7 +6,7 @@ then
     # we are not running in screen
     exec screen -dm -S ${screen_name} /bin/bash "$0";
 else
-    # we are running in screen, execute script
+    # we are running in screen, provide commands to execute
     if [ ! -f ./manage.py ]
     then
         echo "Wrong directory, needs to be where manage.py is"
