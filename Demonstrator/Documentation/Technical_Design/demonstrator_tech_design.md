@@ -4,7 +4,7 @@
 
 This document describes the technical design of the first GeneCoop demonstrator.
 
-A first prototype of the Demonstrator is online: the [Researcher Interface](http://135.181.106.35/request/) and the [Consent Interface](http://135.181.106.35/consent/).
+A first prototype of the Demonstrator is online: the [Researcher Interface](https://genecoop.waag.org/request/) and the [Consent Interface](https://genecoop.waag.org/consent/).
 
 In this demonstrator a researcher invites a user to participate in a specific research,
 the user is asked to give consent for the use of their genetic data through GeneCoop.
