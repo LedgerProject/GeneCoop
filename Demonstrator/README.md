@@ -11,7 +11,7 @@ If you want to run the code on your premises, after cloning this repository perf
 4. Install Django with version >=3.0 (we use 3.1)
 5. Install django extension: `pip install django-extensions`
 6. Change directory to `Genecoop/Demonstrator/ResearchInterface`
-7. Run the webserver that serves the apps: `python manage.py runserver`
+7. Run the webserver that serves the apps: `python manage.py runserver --settings=labspace.settingsD`
 
 You should see a message similar to the following:
 ```
