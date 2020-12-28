@@ -1,3 +1,4 @@
+import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -8,11 +9,20 @@ from .models import Operation, Option, Request, read_table
 # read_table()
 
 class IndexView(generic.ListView):
+    host = 'http://localhost:8000'
+    gc_issignedURL = f"{host}/api/is_signed"
     template_name = 'researcher_req/index.html'
     context_object_name = 'my_set'
 
     def get_queryset(self):
         """Return the requests."""
+        for request in Request.objects.all():
+            r = requests.get(f'{self.gc_issignedURL}/{request.token}')
+            print(r)
+            if r.status_code == 200:
+                request.replied()
+                request.save()
+                
         my_set = {}
         my_set['requests'] = Request.objects.all()
         my_set['operations'] = Operation.objects.all()

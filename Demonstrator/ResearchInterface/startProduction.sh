@@ -1,10 +1,17 @@
 #!/bin/bash
-screen_name=Demonstrator
+env_name=Demonstrator
+
+if [ "$(uname)" == "Darwin" ]
+then
+    conda_shell=~/opt/miniconda3/etc/profile.d/conda.sh
+else
+    conda_shell=~/miniconda3/etc/profile.d/conda.sh
+fi
 
 if [ -z "$STY" ]
 then
     # we are not running in screen
-    exec screen -dm -S ${screen_name} /bin/bash "$0";
+    exec screen -dm -S ${env_name} /bin/bash "$0";
 else
     # we are running in screen, provide commands to execute
     if [ ! -f ./manage.py ]
@@ -19,9 +26,12 @@ else
         exit 1
     fi
 
-    source ~/miniconda3/etc/profile.d/conda.sh
+    if [ "${CONDA_DEFAULT_ENV} " != "${env_name} " ]
+    then
+        source ${conda_shell}
+        conda activate ${env_name}
+    fi
 
-    conda activate ${screen_name}
 
     export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=labspace.settingsP
 

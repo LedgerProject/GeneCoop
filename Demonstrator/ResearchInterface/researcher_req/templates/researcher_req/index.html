@@ -52,7 +52,7 @@
                 <div class="col col-2">Request Description</div>
                 <div class="col col-3">Operations</div>
                 <div class="col col-4">User id</div>
-                <div class="col col-5">Token</div>
+                <div class="col col-5">Status</div>
             </li>
             {% if my_set.requests %}
                 {% for request in my_set.requests %}
@@ -68,7 +68,7 @@
                             {% endfor %}
                         </div>
                         <div class="col col-4" data-label="User_id">{{ request.user_id }}</div>
-                        <div class="col col-5" data-label="Token">{{ request.token }}</div>
+                        <div class="col col-5" data-label="Status">{{ request.status }}</div>
                     </li>
                 {% endfor %}
             {% else %}

@@ -95,6 +95,12 @@ class Request(models.Model):
         default=RequestStatus.NOTSENT,
     )
 
+    def replied(self):
+        self.status = self.RequestStatus.REPLIED
+
+    def is_replied(self):
+        return self.status == self.RequestStatus.REPLIED
+
     def __str__(self):
         return self.description
 

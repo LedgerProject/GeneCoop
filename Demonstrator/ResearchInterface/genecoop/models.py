@@ -83,7 +83,7 @@ class Consent(models.Model):
     description = models.CharField(max_length=DESCR_LENGTH)
     user_id = models.IntegerField(default=0)
     operations = models.ManyToManyField(Operation, through='Membership')
-    token = models.CharField(max_length=TOKEN_LENGTH, default = 0)
+    token = models.CharField(primary_key=True, max_length=TOKEN_LENGTH)
     request_approved = models.DateTimeField('date sent', default = datetime(1900,1,1))
 
     class RequestStatus(models.TextChoices):
@@ -98,6 +98,12 @@ class Consent(models.Model):
 
     def __str__(self):
         return self.description
+
+    def is_signed(self):
+        return self.status == self.RequestStatus.DONE
+
+    def sign(self):
+        self.status = self.RequestStatus.DONE
 
 class Membership(models.Model):
     operation = models.ForeignKey(Operation, on_delete=models.CASCADE)
