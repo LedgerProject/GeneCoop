@@ -54,6 +54,8 @@ class Operation(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
     key = models.IntegerField(default=0, unique=True)
+    chosen_option = models.IntegerField(default=-1)
+    chosen_option_text = models.CharField(max_length=TITLE_LENGTH, default="")
 
     # @classmethod
     # def create(cls, text, key):
@@ -67,6 +69,7 @@ class Option(models.Model):
     operation = models.ForeignKey(Operation, on_delete=models.CASCADE)
     text = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
+    
 
     # @classmethod
     # def create(cls, text, key):
@@ -87,16 +90,20 @@ class Request(models.Model):
     class RequestStatus(models.TextChoices):
         NOTSENT = 'NOT SENT', _('Request has not been sent')
         SENT = 'SENT', _('Request has been sent')
-        REPLIED = 'REPLIED', _('Request has been fulfilled')
+        NOTREPLIED = 'NOT REPLIED', _('Request has not been replied')
+        REPLIED = 'REPLIED', _('Request has been replied')
 
     status = models.CharField(
-        max_length=8,
+        max_length=15,
         choices=RequestStatus.choices,
         default=RequestStatus.NOTSENT,
     )
 
     def replied(self):
         self.status = self.RequestStatus.REPLIED
+
+    def not_replied(self):
+        self.status = self.RequestStatus.NOTREPLIED
 
     def is_replied(self):
         return self.status == self.RequestStatus.REPLIED

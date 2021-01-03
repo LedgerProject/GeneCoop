@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.response import Response
@@ -27,7 +28,28 @@ def is_signed(request, token):
         except Consent.DoesNotExist as e:
             return Response({f'error': f'consent {token} does not exist'})
         if consent is not None:
-            return Response({f'Consent {token}':  consent.is_signed()})
+            return Response({"token" : token,
+                              "signed" : consent.is_signed()})
+    return Response({f'error': f'You need to provide a token'})
+        
+@api_view((['GET']))
+def allowed_operations(request, token):
+    # print(f'sono io {token}')
+    if token is not None:
+        try:
+            consent = Consent.objects.get(token=token)
+        except Consent.DoesNotExist as e:
+            return Response({f'error': f'consent {token} does not exist'})
+        if consent is not None:
+            op_results = []
+            for operation in consent.operations.all():
+                op_result = {}
+                option = Option.objects.get(id=operation.chosen_option)
+                op_result['key'] = operation.key
+                op_result['chosen_option'] = option.text
+                op_results.append(op_result)
+            # print(op_results)
+            return Response(op_results)
     return Response({f'error': f'You need to provide a token'})
         
 

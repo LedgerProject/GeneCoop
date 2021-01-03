@@ -63,7 +63,11 @@
                         <div class="col col-2" data-label="Description">
                             {% for operation in request.operations.all %}
                             <ul>
+                                {% if operation.chosen_option != -1 %}
+                                    <li id="minim">{{ operation.name }} : {{operation.chosen_option_text}}</li>
+                                {% else %}
                                 <li id="minim">{{ operation.name }}</li>
+                                {% endif %}
                             </ul>
                             {% endfor %}
                         </div>

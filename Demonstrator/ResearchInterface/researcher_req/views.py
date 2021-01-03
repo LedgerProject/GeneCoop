@@ -10,22 +10,37 @@ from .models import Operation, Option, Request, read_table
 
 class IndexView(generic.ListView):
     host = 'http://localhost:8000'
-    gc_issignedURL = f"{host}/api/is_signed"
+    is_signedURL = f"{host}/api/is_signed"
+    allowed_opURL = f"{host}/api/allowed_operations"
     template_name = 'researcher_req/index.html'
     context_object_name = 'my_set'
 
     def get_queryset(self):
         """Return the requests."""
         for request in Request.objects.all():
-            r = requests.get(f'{self.gc_issignedURL}/{request.token}')
-            print(r)
-            if r.status_code == 200:
+            cons_req = requests.get(f'{self.is_signedURL}/{request.token}')
+            # print(cons_req.json()['signed'])
+            request.not_replied()
+            if cons_req.status_code == 200 and 'signed' in cons_req.json() and cons_req.json()['signed']:
                 request.replied()
-                request.save()
+                op_req = requests.get(f'{self.allowed_opURL}/{request.token}')
+                if op_req.status_code == 200:
+                    op_results = op_req.json()
+                    print(f'op_result: {op_results}')
+                    for op_result in op_results:
+                        # print(f"key: {op_result['key']}")
+                        operation = request.operations.get(key=op_result['key'])
+                        option = Option.objects.get(operation=operation.id, text=op_result['chosen_option'])
+                        operation.chosen_option = option.id
+                        operation.chosen_option_text = option.text
+                        operation.save()
+
+            request.save()
                 
         my_set = {}
         my_set['requests'] = Request.objects.all()
         my_set['operations'] = Operation.objects.all()
+        my_set['options'] = Option.objects.all()
         return my_set
 
 
