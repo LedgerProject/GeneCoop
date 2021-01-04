@@ -8,10 +8,9 @@ If you want to run the code on your premises, after cloning this repository perf
 1. Install Python 3.8
 2. (Optional) Install a virtual environment manager such as miniconda or virtualenv.
 3. (Optional) create a virtual environment and activate it. Ex `conda create -n Demonstrator python==3.8` and then `conda activate Demonstrator`
-4. Install Django with version >=3.0 (we use 3.1)
-5. Install django extension: `pip install django-extensions`
-6. Change directory to `Genecoop/Demonstrator/ResearchInterface`
-7. Run the webserver that serves the apps: `python manage.py runserver --settings=labspace.settingsD`
+4. Install requirements: `pip install -r pip_requirements.txt`
+5. Change directory to `Genecoop/Demonstrator/ResearchInterface`
+6. Run the webserver that serves the apps: `./startDevelopment.sh` for development or `startProduction.sh` for production (runs on Linux with screen)
 
 You should see a message similar to the following:
 ```
@@ -20,7 +19,7 @@ Performing system checks...
 
 System check identified no issues (0 silenced).
 December 18, 2020 - 00:02:12
-Django version 3.1.4, using settings 'labspace.settings'
+Django version 3.1.4, using settings 'labspace.settingsD'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
