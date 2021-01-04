@@ -1,0 +1,34 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: osx-64
+asgiref=3.3.1=pyhd3eb1b0_0
+ca-certificates=2020.12.8=hecd8cb5_0
+certifi=2020.12.5=py38hecd8cb5_0
+chardet=4.0.0=pypi_0
+django=3.1.4=pyhd3eb1b0_0
+django-extensions=3.1.0=pypi_0
+django-filter=2.4.0=pypi_0
+djangorestframework=3.12.2=pypi_0
+idna=2.10=pypi_0
+krb5=1.17.1=hddcf347_0
+libcxx=10.0.0=1
+libedit=3.1.20191231=h1de35cc_1
+libffi=3.3=hb1e8313_2
+libpq=12.2=h051b688_0
+markdown=3.3.3=pypi_0
+ncurses=6.2=h0a44026_1
+openssl=1.1.1i=h9ed2024_0
+pip=20.3.1=py38hecd8cb5_0
+psycopg2=2.8.5=py38hddc9c9b_0
+python=3.8.5=h26836e1_1
+pytz=2020.4=pyhd3eb1b0_0
+readline=8.0=h1de35cc_0
+requests=2.25.1=pypi_0
+setuptools=51.0.0=py38hecd8cb5_2
+sqlite=3.33.0=hffcf06c_0
+sqlparse=0.4.1=py_0
+tk=8.6.10=hb0a8c7a_0
+urllib3=1.26.2=pypi_0
+wheel=0.36.1=pyhd3eb1b0_0
+xz=5.2.5=h1de35cc_0
+zlib=1.2.11=h1de35cc_3
