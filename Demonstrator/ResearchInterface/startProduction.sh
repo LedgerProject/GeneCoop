@@ -1,6 +1,18 @@
 #!/bin/bash
 env_name=Demonstrator
 
+if [ ! -f ./manage.py ]
+    then
+        echo "Wrong directory, needs to be where manage.py is"
+        exit 1
+    fi
+
+if [ ! -f ./.secret_key ]
+then
+    echo "File .secret_key is missing"
+    exit 1
+fi
+
 if [ "$(uname)" == "Darwin" ]
 then
     conda_shell=~/opt/miniconda3/etc/profile.d/conda.sh
@@ -14,17 +26,6 @@ then
     exec screen -dm -S ${env_name} /bin/bash "$0";
 else
     # we are running in screen, provide commands to execute
-    if [ ! -f ./manage.py ]
-    then
-        echo "Wrong directory, needs to be where manage.py is"
-        exit 1
-    fi
-
-    if [ ! -f ./.secret_key ]
-    then
-        echo "File .secret_key is missing"
-        exit 1
-    fi
 
     if [ "${CONDA_DEFAULT_ENV} " != "${env_name} " ]
     then
@@ -33,6 +34,8 @@ else
     fi
 
 
+    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=labspace.settingsP
+    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=labspace.settingsP
     export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=labspace.settingsP
 
 fi

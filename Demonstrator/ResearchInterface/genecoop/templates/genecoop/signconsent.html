@@ -22,16 +22,16 @@
                     <div class="col col-2">Operation Description</div>
                     <div class="col col-3">Options</div>
                 </li>
-                {% for operation in consent.operations.all %}
+                {% for operation in my_set.operations %}
                 <li class="table-row">
-                    <div class="col col-1" data-label="Name">{{ operation.name}}</div>
+                    <div class="col col-1" data-label="Name">{{ operation.text}}</div>
                     <div class="col col-2" data-label="Description">{{ operation.description}}</div>
                     <div class="col col-3" data-label="Options">
                         <ul>
-                            {% for option in operation.option_set.all %}
+                            {% for option in operation.options %}
                             <li id="minim">
                                 <label for="{{ operation.key }}">{{ option.text }}</label>
-                                <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.id }}">
+                                <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.key }}">
                             </li>
                             {% endfor %}
                         </ul>
@@ -39,7 +39,7 @@
                 </li>
                 {% endfor %}
                 <li class="table-row">
-                    <input type="hidden" id="consentID" name="consentID" value={{consent.token}}>
+                    <input type="hidden" id="consentID" name="consentID" value={{my_set.token}}>
                     <div class="col col-1" data-label="Submit"><input type="submit" value="Sign Consent"></div>
                 </li>
             </ul>

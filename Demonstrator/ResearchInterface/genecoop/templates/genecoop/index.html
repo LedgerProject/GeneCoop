@@ -38,19 +38,19 @@
                 <div class="col col-a">Name of Consent</div>
                 <div class="col col-b">Operations</div>
             </li>
-            {% for consent in consent_list %}
+            {% for consent in my_set %}
             <li class="table-row">
-                <div class="col col-a" data-label="Name">{{ consent.name}}</div>
+                <div class="col col-a" data-label="Name">{{ consent.text}}</div>
                 <div class="col col-b" data-label="Operations">
                     <ul class="responsive-table">
-                    {% for operation in consent.operations.all %}
+                    {% for operation in consent.operations %}
                     <li class="table-row">
-                        <div class="col col-1" data-label="Name">{{ operation.name}}</div>
+                        <div class="col col-1" data-label="Name">{{ operation.text}}</div>
                         <div class="col col-2" data-label="Description">{{ operation.description}}</div>
                         <div class="col col-3" data-label="Options">
                             <ul>
-                            {% for option in operation.option_set.all %}
-                                {% if option.id == operation.chosen_option %}
+                            {% for option in operation.options %}
+                                {% if option.key == operation.chosen_option %}
                                     <li id="minim"><b>{{ option.text }}</b></li>
                                 {% else %}
                                     <li id="minim">{{ option.text }}</li>
