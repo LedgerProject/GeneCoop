@@ -1,19 +1,18 @@
 from datetime import datetime
-import json
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.response import Response
 from django.urls import reverse
 from django.views import generic
-# from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.decorators import api_view
 from django.core.exceptions import MiddlewareNotUsed
 
-from .models import Consent, SerializeOperations, read_conf
+from .models import Consent
+import labspace.utils as labut
 
-myConfig = read_conf()
-
+myConfig = labut.ConsentConfig('user')
+myConfig.read_conf()
 
 # class ReadConfMiddleware:
 #     def __init__(self, get_response):
@@ -56,7 +55,7 @@ def is_signed(request, token):
         
 @api_view((['GET']))
 def allowed_operations(request, token):
-    # print(f'sono io {token}')
+    # print(f'token {token}')
     if token is not None:
         try:
             consent = Consent.objects.get(token=token)
@@ -64,7 +63,9 @@ def allowed_operations(request, token):
             return Response({f'error': f'consent {token} does not exist'})
         if consent is not None:
             op_results = []
-            for operation in consent.getOperations():
+            operations_json = labut.SerializeOperations(myConfig)
+            operations_json.unserialize(consent.operations)
+            for operation in operations_json.operations:
                 op_result = {}
                 op_result['key'] = operation['key']
                 op_result['chosen_option'] = operation['chosen_option']
@@ -75,16 +76,18 @@ def allowed_operations(request, token):
         
 
 def gen_queryset(pk):
-    my_set = []
+    
     consent_set = None
     if pk == None:
         consent_set = Consent.objects.all()
     else:
         consent_set = [Consent.objects.get(pk=pk)]
 
+    my_set = []
+    operations_json = labut.SerializeOperations(myConfig)
     for consent in consent_set:
-        operations_json = SerializeOperations()
-        operations_json.unserializeOperations(consent.operations)
+        
+        operations_json.unserialize(consent.operations)
         operation_entries = []
         for operation in operations_json.operations:
             ope_obj = myConfig.get_operation(operation['key'])
@@ -124,30 +127,6 @@ def index(request):
     context = {'my_set' : gen_queryset(None)}
     return render(request, template_name, context)
 
-# class IndexView(generic.ListView):
-#     model = Consent
-#     template_name = 'genecoop/index.html'
-#     context_object_name = 'my_set'
-
-#     def get_queryset(self):
-#         my_set = gen_queryset()
-#         return my_set
-
-
-# class ConsentView(generic.DetailView):
-#     model = Consent
-#     template_name = 'genecoop/consent.html'
-
-# class SignConsentView(generic.DetailView):
-#     model = Consent
-#     template_name = 'genecoop/signconsent.html'
-#     context_object_name = 'my_set'
-
-
-#     def get_queryset(self):
-#         my_set = gen_queryset()
-#         return my_set
-
 def sign(request, pk):
     template_name = 'genecoop/signconsent.html'
     context = {'my_set' : gen_queryset(pk)}
@@ -158,7 +137,7 @@ def genconsent(request):
     if request.method == 'POST':
         if 'token' in request.POST:
             token = request.POST.get('token')
-            mytokens = token.split('_')
+            user_token, operations_token = labut.decode_token(token)
             new_consent = None
 
             try:
@@ -168,20 +147,16 @@ def genconsent(request):
                 new_consent = Consent(token=request.POST.get('token'),
                                   text=f'{datetime.now()}', 
                                   description=f'Generated from token {request.POST.get("token")}', 
-                                  user_id=mytokens[0])
+                                  user_id=user_token)
                 new_consent.save()
 
-            operations_ids = mytokens[1:]
-            operations_json = SerializeOperations()
+            operations_json = labut.SerializeOperations(myConfig)
             # print(f'Config: {myConfig}')
-            for id in operations_ids:
+            for id in operations_token:
                 # print(f'id is {id}')
-                operation = myConfig.get_operation(id)
-                operations_json.addOperation(operation.key)
-                for opt_key in operation.getOptions():
-                    operations_json.addOption(operation.key, opt_key)
+                operations_json.add_operation(id)
                     
-            new_consent.operations = operations_json.serializeOperations()
+            new_consent.operations = operations_json.serialize()
             new_consent.save()
             return HttpResponseRedirect(reverse('genecoop:sign', args=(new_consent.token,)))
     return HttpResponseRedirect(reverse('genecoop:index'))
@@ -198,33 +173,18 @@ def signconsent(request):
                 Consent, token=token)
             
             # print(f'consent op {myconsent.operations}')
-            operations_json = SerializeOperations()
-            operations_json.unserializeOperations(myconsent.operations)
+            operations_json = labut.SerializeOperations(myConfig)
+            operations_json.unserialize(myconsent.operations)
 
             for operation in operations_json.operations:
                 if f"option-{operation['key']}" in request.POST:
-                    operations_json.selectOption(operation['key'], request.POST.get(
+                    operations_json.select_option(operation['key'], request.POST.get(
                         f"option-{ operation['key']}"))
 
-            myconsent.operations = operations_json.serializeOperations()
+            myconsent.operations = operations_json.serialize()
             myconsent.sign()
             myconsent.save()
             return HttpResponseRedirect(reverse('genecoop:index'))
         return HttpResponseRedirect(reverse('genecoop:index'))
 
-        # if 'token' in request.POST:
-        #     mytokens = request.POST.get('token').split('_')
-
-        #     # print(f'request {request.POST}')
-        #     new_consent = Consent(
-        #         name=f'{datetime.now()}', description=f'Generated from token {request.POST.get("token")}', user_id=mytokens[0])
-        #     new_consent.save()
-        #     operations_ids = mytokens[1:]
-        #     for id in operations_ids:
-        #         operation = get_object_or_404(Operation, key=id)
-        #         # print(f'operation key: {operation.key}')
-        #         # new_request.operations.add(Operation.objects.get(key=id))
-        #         new_consent.operations.add(Operation.objects.get(key=id))
-        #     new_consent.save()
-        #     return HttpResponseRedirect(reverse('genecoop:sign', args=(new_consent.id,)))
     return HttpResponseRedirect(reverse('genecoop:index'))

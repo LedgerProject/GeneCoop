@@ -25,12 +25,12 @@
                     <div class="col col-4">User id</div>
                 </li>
                 <li class="table-row">
-                    <div class="col col-1" data-label="Name"><input type="text" name="name" value=""></div>
+                    <div class="col col-1" data-label="Name"><input type="text" name="text" value=""></div>
                     <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
                     <div class="col col-3" data-label="Operations">
                         {% for operation in my_set.operations %}
                             <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
-                            <label for="operation{{ forloop.counter }}">{{ operation.name }}</label><br>
+                            <label for="operation{{ forloop.counter }}">{{ operation.text }}</label><br>
                         {% endfor %}
                     </div>
                     <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
@@ -58,15 +58,15 @@
                 {% for request in my_set.requests %}
                     <li class="table-row">
                         <div class="col col-1" data-label="Name"><a
-                                href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
+                                href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
                         <div class="col col-2" data-label="Description">{{ request.description }}</div>
                         <div class="col col-2" data-label="Description">
-                            {% for operation in request.operations.all %}
+                            {% for operation in request.operations %}
                             <ul>
                                 {% if operation.chosen_option != -1 %}
-                                    <li id="minim">{{ operation.name }} : {{operation.chosen_option_text}}</li>
+                                    <li id="minim">{{ operation.text }} : {{operation.chosen_option_text}}</li>
                                 {% else %}
-                                <li id="minim">{{ operation.name }}</li>
+                                <li id="minim">{{ operation.text }}</li>
                                 {% endif %}
                             </ul>
                             {% endfor %}

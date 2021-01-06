@@ -10,11 +10,11 @@
 
 <body>
 
-    <h1>{{ operation.name }}</h1>
+    <h1>{{ operation.text }}</h1>
     <div>Description: {{ operation.description }}</div>
     <div>Possible answers:</div>
     <ul>
-        {% for option in operation.option_set.all %}
+        {% for option in operation.options %}
         <li>{{ option.text }}
         </li>
         {% endfor %}
