@@ -5,6 +5,15 @@ import json, copy
 KEY_SEP='_'
 TOKEN_SEP='_'
 
+def gen_token(user_id, operations):
+    opconcat = TOKEN_SEP.join([f"{operation['key']}".zfill(4) for operation in operations])
+    token = f'{user_id}{TOKEN_SEP}{opconcat}'
+    return token
+
+def decode_token(token):
+    tokens = token.split('_')
+    return tokens[0], tokens[1:]
+
 class baseEntity:
     def __init__(self, text, description, key):
         self.text = text
@@ -20,10 +29,10 @@ class Operation(baseEntity):
         super(Operation,self).__init__( text, description, key )
         self.options = []
     
-    def add_option(self, option_key):
+    def add_option_key(self, option_key):
         self.options.append(option_key)
 
-    def getOptions(self):
+    def get_option_keys(self):
         return self.options
 
 class Option(baseEntity):
@@ -31,7 +40,7 @@ class Option(baseEntity):
         super(Option,self).__init__( text, description, key )
         self.operation = -1
 
-    def setOperation(self, operation_key):
+    def set_operation_key(self, operation_key):
         self.operation = operation_key
 
 class ConsentConfig:
@@ -53,7 +62,7 @@ class ConsentConfig:
         for ope_key in self.operations.keys():
             operation = self.operations[ope_key]
             opt_text = []
-            for opt_key in operation.getOptions():
+            for opt_key in operation.get_option_keys():
                 opt_text.append({
                     'key' : opt_key
                 })
@@ -66,21 +75,24 @@ class ConsentConfig:
             })
         return ', '.join([str(x) for x in ope_text])
 
-    def add_operation(self, operation):
+    def add_operation_obj(self, operation):
         self.operations[operation.key] = operation
 
-    def add_option(self, option):
+    def add_option_obj(self, option):
         self.options[option.key] = option
 
-    def get_operation(self, key):
+    def get_operation_obj(self, key):
         if key in self.operations:
             return self.operations[key]
         return None
 
-    def get_option(self, key):
+    def get_option_obj(self, key):
         if key in self.options:
             return self.options[key]
         return None
+
+    def is_op_allowed(self, ope_key, opt_key):
+        ope_obj = self.get_operation_obj(ope_key)
 
     def read_conf(self):
 
@@ -96,11 +108,11 @@ class ConsentConfig:
                     opt_key = f"{option['key']}".zfill(4)
                     option_key = f"{anOperation.key}{KEY_SEP}{opt_key}"
                     anOption = Option(text=option['text'], description=option[self.role]['description'], key=option_key)
-                    anOption.setOperation(anOperation.key)
-                    anOperation.add_option(anOption.key)
-                    self.add_option(anOption)
+                    anOption.set_operation_key(anOperation.key)
+                    anOperation.add_option_key(anOption.key)
+                    self.add_option_obj(anOption)
                 
-                self.add_operation(anOperation)
+                self.add_operation_obj(anOperation)
 
 
 class SerializeOperations:
@@ -122,7 +134,7 @@ class SerializeOperations:
         }
         self.conf = conf
 
-    def add_operation(self, key):
+    def add_operation_key(self, key):
         for operation in self.operations:
             if key == operation['key']:
                 return
@@ -131,11 +143,11 @@ class SerializeOperations:
         self.operations.append(new_entry)
 
         # Process options
-        operation = self.conf.get_operation(key)
-        for opt_key in operation.getOptions():
-            self.__add_option__(key, opt_key)
+        operation = self.conf.get_operation_obj(key)
+        for opt_key in operation.get_option_keys():
+            self.__add_option_key__(key, opt_key)
 
-    def __add_option__(self, ope_key, opt_key):
+    def __add_option_key__(self, ope_key, opt_key):
         for ope_entry in self.operations:
             if ope_key == ope_entry['key']:
                 for opt_entry in ope_entry['options']:
@@ -145,7 +157,7 @@ class SerializeOperations:
                         'key' : opt_key
                     })
         
-    def select_option(self, ope_key, opt_key):
+    def select_option_key(self, ope_key, opt_key):
         """
         Only set the option if operation and option exist
         """
@@ -156,7 +168,10 @@ class SerializeOperations:
                         ope_entry['chosen_option'] = opt_key
                         return
                     
-        
+
+    def reset(self):
+        self.operations = []
+
 
     def serialize(self):
         return json.dumps(self.operations)
@@ -166,25 +181,16 @@ class SerializeOperations:
         if operations == None or operations == "":
             return []
         # reset operations
-        self.operations = []
+        self.reset()
         ope_json = json.loads(operations)
         for operation in ope_json:
-            self.add_operation(operation['key'])
+            self.add_operation_key(operation['key'])
             for option in operation['options']:
-                self.__add_option__(operation['key'], option['key'])
-            self.select_option(operation['key'], operation['chosen_option'])
-
+                self.__add_option_key__(operation['key'], option['key'])
+            self.select_option_key(operation['key'], operation['chosen_option'])
 
 
     
-def gen_token(user_id, operations):
-    opconcat = TOKEN_SEP.join([f"{operation['key']}".zfill(4) for operation in operations])
-    token = f'{user_id}{TOKEN_SEP}{opconcat}'
-    return token
-
-def decode_token(token):
-    tokens = token.split('_')
-    return tokens[0], tokens[1:]
 
 
 

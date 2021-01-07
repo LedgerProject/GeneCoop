@@ -13,4 +13,5 @@ urlpatterns = [
     # path('<int:key>/operation/', views.OperationsView.as_view(), name='operation'),
     path('genconsent/', views.genconsent, name='genconsent'),
     path('signconsent/', views.signconsent, name='signconsent'),
+    path('<str:pk>/consent', views.consent, name='consent'),
 ]

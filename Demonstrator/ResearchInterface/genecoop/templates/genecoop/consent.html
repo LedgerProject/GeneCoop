@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>GeneCoop Consent Overview</title>
+    <title>GeneCoop Consent</title>
     <link rel="stylesheet" type="text/css" href="{% static 'genecoop/style.css' %}">
 </head>
 
@@ -13,34 +13,15 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
-        <h2>Consent Request</h2>
-        <form action="{% url 'genecoop:genconsent' %}" method="post">
-            {% csrf_token %}
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Insert Token</div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Name"><input type="text" name="token" value=""></div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Submit"><input type="submit" value="Generate Consent"></div>
-                </li>
-            </ul>
-        </form>
-
-    </div>
-    <div class="container">
-        <h2>Existing Consents</h2>
+        <h2>Consent Overview</h2>
         
         <ul class="responsive-table">
             <li class="table-header">
                 <div class="col col-a">Name of Consent</div>
                 <div class="col col-b">Operations</div>
             </li>
-            {% for consent in my_set %}
             <li class="table-row">
-                <div class="col col-a" data-label="Name"><a href="{% url 'genecoop:consent' consent.token %}">{{ consent.text}}</a></div>
+                <div class="col col-a" data-label="Name">{{ consent.text}}</div>
                 <div class="col col-b" data-label="Operations">
                     <ul class="responsive-table">
                     {% for operation in consent.operations %}
@@ -63,7 +44,24 @@
                     </ul>
                 </div>
             </li>
-            {% endfor %}  
+        </ul>
+    </div>
+    <div class="container">
+        <h2>Operation Overview</h2>
+        
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-a">Time</div>
+                <div class="col col-b">Message</div>
+                <div class="col col-c">Type</div>
+            </li>
+            {% for log in consent.logs %}
+            <li class="table-row">
+                <div class="col col-a" data-label="Time">{{ log.time}}</div>
+                <div class="col col-b" data-label="Type">{{ log.message}}</div>
+                <div class="col col-c" data-label="Message">{{ log.type}}</div>
+            </li>
+            {% endfor %}
         </ul>
     </div>
 </body>

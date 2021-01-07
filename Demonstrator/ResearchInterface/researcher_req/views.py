@@ -45,7 +45,7 @@ def update_request(request_obj):
 
             for op_result in op_results:
                 # print(f"key: {op_result['key']}")
-                operations_json.select_option(op_result['key'], op_result['chosen_option'])
+                operations_json.select_option_key(op_result['key'], op_result['chosen_option'])
             request_obj.operations = operations_json.serialize()
         else:
             logger.error(f'Call {ALLOWEDOP_URL}/{request_obj.token} gave {op_req.status_code} with {op_req.json()}')
@@ -83,9 +83,9 @@ def gen_queryset(pk):
         operations_view = []
         for operation in operations_json.operations:
             operation_view = {}
-            operation_view['text'] = myConfig.get_operation(operation['key']).text
+            operation_view['text'] = myConfig.get_operation_obj(operation['key']).text
             operation_view['chosen_option'] = operation['chosen_option']
-            opt_obj = myConfig.get_option(operation['chosen_option'])
+            opt_obj = myConfig.get_option_obj(operation['chosen_option'])
             if not opt_obj == None:
                 operation_view['chosen_option_text'] = opt_obj.text
 
@@ -104,7 +104,7 @@ def gen_queryset(pk):
     operations_view = []
     for op_key in myConfig.operations.keys():
         operation_view = {}
-        op_obj = myConfig.get_operation(op_key)
+        op_obj = myConfig.get_operation_obj(op_key)
         operation_view['key'] = op_obj.key
         operation_view['text'] = op_obj.text
         operations_view.append(operation_view)
@@ -130,11 +130,11 @@ def request(request, pk):
 
 def operation(request, key):
     template_name = 'researcher_req/operation.html'
-    ope_obj = myConfig.get_operation(key)
+    ope_obj = myConfig.get_operation_obj(key)
     opts_view = []
     for ope_key in ope_obj.options:
         opt_view = {}
-        opt_obj = myConfig.get_option(ope_key)
+        opt_obj = myConfig.get_option_obj(ope_key)
         opt_view['key'] = opt_obj.key
         opt_view['text'] = opt_obj.text
         opts_view.append(opt_view)
@@ -167,7 +167,7 @@ def addrequest(request):
             operations_ids = web_data.getlist('operations')
             operations_json = labut.SerializeOperations(myConfig)
             for id in operations_ids:
-                operations_json.add_operation(id)
+                operations_json.add_operation_key(id)
                 # print(f'operation key: {ope_obj.key}')
                 
             new_request.operations = operations_json.serialize()
