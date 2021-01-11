@@ -52,7 +52,7 @@ def gen_queryset(pk, include_log=False):
             }
         if include_log:
             log_entries = []
-            for log_obj in consent.consentlogger_set.all():
+            for log_obj in consent.consentlogger_set.all().order_by('-request_received'):
                 log_entry = {}
                 log_entry['time'] = log_obj.request_received
                 log_entry['type'] = log_obj.type

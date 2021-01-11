@@ -13,3 +13,4 @@ LOGMESSAGE_LENGTH = 500
 HOST = 'http://localhost:8000'
 ISSIGNED_URL = f"{HOST}/api/is_signed"
 ALLOWEDOP_URL = f"{HOST}/api/allowed_operations"
+LOGOP_URL = f"{HOST}/api/log_operation/"

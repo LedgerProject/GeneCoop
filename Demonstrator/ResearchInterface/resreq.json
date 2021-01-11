@@ -14,20 +14,20 @@
                 "text": "yes",
                 "key": 0,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             },
             {
                 "text": "no",
                 "key": 1,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             }
         ]
@@ -47,20 +47,20 @@
                 "text": "yes",
                 "key": 0,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             },
             {
                 "text": "no",
                 "key": 1,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             }
         ]
@@ -80,20 +80,20 @@
                 "text": "yes",
                 "key": 0,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             },
             {
                 "text": "no",
                 "key": 1,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             }
         ]
@@ -113,20 +113,20 @@
                 "text": "yes",
                 "key": 0,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             },
             {
                 "text": "no",
                 "key": 1,
                 "researcher": {
-                    "description": ""
+                    "description": "Researcher description of option"
                 },
                 "user": {
-                    "description": ""
+                    "description": "User description of option"
                 }
             }
         ]

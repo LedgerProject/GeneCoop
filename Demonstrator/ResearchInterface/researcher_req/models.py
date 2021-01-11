@@ -12,7 +12,7 @@ class Request(models.Model):
     description = models.CharField(max_length=DESCR_LENGTH)
     user_id = models.CharField(max_length=USERID_LENGTH, default="")
     operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
-    token = models.CharField(max_length=TOKEN_LENGTH, default = 0)
+    token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
     request_sent = models.DateTimeField('date sent', default = timezone.make_aware(datetime(1900,1,1)))
     request_checked = models.DateTimeField('date signed', default = timezone.make_aware(datetime(1900,1,1)))
 

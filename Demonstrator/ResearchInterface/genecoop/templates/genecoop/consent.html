@@ -51,15 +51,15 @@
         
         <ul class="responsive-table">
             <li class="table-header">
-                <div class="col col-a">Time</div>
-                <div class="col col-b">Message</div>
-                <div class="col col-c">Type</div>
+                <div class="col col-1">Time</div>
+                <div class="col col-2">Message</div>
+                <div class="col col-3">Type</div>
             </li>
             {% for log in consent.logs %}
             <li class="table-row">
-                <div class="col col-a" data-label="Time">{{ log.time}}</div>
-                <div class="col col-b" data-label="Type">{{ log.message}}</div>
-                <div class="col col-c" data-label="Message">{{ log.type}}</div>
+                <div class="col col-1" data-label="Time">{{ log.time }}</div>
+                <div class="col col-2" data-label="Type">{{ log.message }}</div>
+                <div class="col col-3" data-label="Message">{{ log.type }}</div>
             </li>
             {% endfor %}
         </ul>

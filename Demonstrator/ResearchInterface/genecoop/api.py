@@ -78,31 +78,37 @@ def allowed_operations(request, token):
     return Response({f'error': f'You need to provide a token'})
         
 @api_view((['POST']))
-def log_operation(request, token, ope_key):
-    # print(f'token {token}')
-    if token is None or ope_key is None:
-        return Response({f'error': f'Need to provide both consent and operation'})
+def log_operation(request):
+
+    if not ('token' in request.POST and 'ope_key' in request.POST):
+        return Response({f'error': f'Need to provide both token and operation'})
     
+    token = request.POST.get('token')
+    ope_key = request.POST.get('ope_key')
     if token is not None:
         try:
             consent = Consent.objects.get(token=token)
         except Consent.DoesNotExist as e:
             return Response({f'error': f'consent {token} does not exist'})
-        if ope_key is not None:
-            consent_logger = consent.consentlogger_set.create()
+        
+        if ope_key is not None:  
             mySerializedOperations.unserialize(consent.operations)
             for ope_json in mySerializedOperations.operations:
                 if ope_json['key'] == ope_key:
+                    consent_logger = consent.consentlogger_set.create()
                     if ope_json['chosen_option'] != 1:
                         is_allowed = myConfig.is_op_allowed(ope_json['key'], ope_json['chosen_option'])
                         consent_logger.log_operation(token, ope_key, is_allowed)
                         consent_logger.save()
                         if not is_allowed:
-                            return Response({f'error': f'Operation {ope_key} is not allowed for consent {token}'})    
+                            return Response({f'error': f'Operation {ope_key} is not allowed for consent {token}'})
+                        else:
+                            return Response({f'text': f'Operation {ope_key} is allowed for consent {token}'})
                     else:
                         consent_logger.log_not_signed_operation(token, ope_key)
                         consent_logger.save()
                         return Response({f'error': f'Operation {ope_key} has not been signed'})
+            return Response({f'error': f'ope_key {ope_key} is not found in consent {token} with operations {mySerializedOperations.operations}'})
         else:
             return Response({f'error': f'Need to provide an operation'})    
     else:

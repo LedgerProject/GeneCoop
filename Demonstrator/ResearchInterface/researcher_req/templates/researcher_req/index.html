@@ -15,7 +15,7 @@
     <div class="container">
         <h2>New Request</h2>
 
-        <form action="{% url 'researcher_req:addrequest' %}" method="post">
+        <form action="{% url 'researcher_req:add_request' %}" method="post">
             {% csrf_token %}
             <ul class="responsive-table">
                 <li class="table-header">
@@ -60,7 +60,7 @@
                         <div class="col col-1" data-label="Name"><a
                                 href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
                         <div class="col col-2" data-label="Description">{{ request.description }}</div>
-                        <div class="col col-2" data-label="Description">
+                        <div class="col col-3" data-label="Operations">
                             {% for operation in request.operations %}
                             <ul>
                                 {% if operation.chosen_option != -1 %}

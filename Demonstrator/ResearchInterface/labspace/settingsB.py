@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -118,3 +118,80 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+ADMINS = [('Stefano', 'Stefano.Bocconi@gmail.com'), ('Taco', 'taco@waag.org')]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            # 'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'format': '{levelname} {asctime} {filename} {module} {funcName} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        # 'special': {
+        #     '()': 'project.logging.SpecialFilter',
+        #     'foo': 'bar',
+        # },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': './djangodebug.log',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'filters': ['special']
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console','file'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins','file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'labspace': {
+            'handlers': ['console','file','mail_admins'],
+            'level': 'DEBUG',
+            'filters': ['require_debug_true']
+        },
+        'labspace.utils': {
+            'handlers': ['console','file','mail_admins'],
+            'level': 'INFO',
+            'filters': ['require_debug_true']
+        },
+        'researcher_req': {
+            'handlers': ['console','file','mail_admins'],
+            'level': 'DEBUG',
+            'filters': ['require_debug_true']
+        },
+        'genecoop': {
+            'handlers': ['console','file','mail_admins'],
+            'level': 'DEBUG',
+            'filters': ['require_debug_true']
+        }
+    }
+}
