@@ -4,10 +4,21 @@ import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
-from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, USERID_LENGTH
+from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, USERID_LENGTH, KEY_LENGTH
+
+
+class Researcher(models.Model):
+    name = models.CharField(max_length=TITLE_LENGTH)
+    description = models.CharField(max_length=DESCR_LENGTH)
+    affiliation = models.CharField(max_length=TITLE_LENGTH)
+    public_key = models.CharField(max_length=KEY_LENGTH)
+    private_key = models.CharField(max_length=KEY_LENGTH)
+    aff_pub_key = models.CharField(max_length=KEY_LENGTH)
+
 
 
 class Request(models.Model):
+    researcher = models.ForeignKey(Researcher, on_delete=models.CASCADE)
     text = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
     user_id = models.CharField(max_length=USERID_LENGTH, default="")

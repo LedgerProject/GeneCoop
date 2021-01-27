@@ -1,26 +1,19 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <title>Operation</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
-</head>
+{% block title %}Operation{% endblock %}
 
-<body>
 
-    <h1>{{ operation.text }}</h1>
-    <div>Description: {{ operation.description }}</div>
-    <div>Possible answers:</div>
-    <ul>
-        {% for option in operation.options %}
-        <li>{{ option.text }}
-        </li>
-        {% endfor %}
-    </ul>
+{% block content %}
+<h1>{{ operation.text }}</h1>
+<div>Description: {{ operation.description }}</div>
+<div>Possible answers:</div>
+<ul>
+    {% for option in operation.options %}
+    <li>{{ option.text }}
+    </li>
+    {% endfor %}
+</ul>
 
-    </ul>
-</body>
+</ul>
 
-</html>
+{% endblock %}
