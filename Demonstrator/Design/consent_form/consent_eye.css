@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
 
-.consent_page{
+.consent_page {
  max-width: 800px;
  margin-top: 50px;
  margin-left:auto;
@@ -9,6 +9,35 @@
  padding: 30px;
 }
 
+.button {
+  background-color: #2196F3;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.consent_request 
+{
+    background-color: lightblue;
+    padding: 2em;
+}
+
+.consent_request_item
+{
+    background-color: white;
+    padding: 2em;
+    margin-bottom: 2em;
+    border-radius: 25px;
+    box-shadow: 10px 10px 10px 1px gray;
+}
+
+/* TOMO's stuff beneath here */
 /*--For options and label--*/
 
 .questionare{
@@ -161,20 +190,4 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-}
-
-
-/*---Submit Button---*/
-
-.button {
-  background-color: #2196F3;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
 }
