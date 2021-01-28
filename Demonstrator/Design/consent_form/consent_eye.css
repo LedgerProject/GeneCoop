@@ -28,6 +28,11 @@
     padding: 2em;
 }
 
+.consent_request_label
+{
+    text-align: center;
+}
+
 .consent_request_item
 {
     background-color: white;
@@ -36,6 +41,23 @@
     border-radius: 25px;
     box-shadow: 10px 10px 10px 1px gray;
 }
+.consent_request h3 {
+    font-size: larger;
+    text-align: right;
+}
+.consent_request h4 {
+    color: cadetblue;
+}
+.consent_request li 
+{
+    margin-bottom: 1em;
+}
+
+.personal_data
+{
+    color:hotpink;
+}
+
 
 /* TOMO's stuff beneath here */
 /*--For options and label--*/
