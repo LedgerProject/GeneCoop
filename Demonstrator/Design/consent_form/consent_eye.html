@@ -1,11 +1,57 @@
 <html>
     <head>
         <script type="text/javascript" src="http://livejs.com/live.js"></script>  
-    <link rel="stylesheet" href="consent_eye.css">
+        <link rel="stylesheet" href="consent_eye.css">
     </head>
     <body>
         <main class="consent_page">
-            <h1>Request for consent</h1>
+            <form class="consent_request">
+                <h1 class="consent_request_label">Request for consent</h1>
+                <header class="consent_request_header">
+                    <h2 class="consent_request_title">Eye melanoma</h2>
+                    <p class="consent_request_description"><i class="organisation">Genecoop Principal Researcher</i> asks for your consent to the following items:
+                    </p>
+                </header>
+                <section class="consent_request_item">
+                    <h3 class="consent_request_item_title">Array Test</h3>
+                    <h4 class="consent_request_section_title">Purpose</h4>
+                    <p class="consent_request_section_text">An array test is needed to sequence your DNA from your saliva, and to produce a digital version of your DNA, which is needed for tumor classification in this research.</p>
+                    <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
+                    <ul>
+                        <li class="consent_request_section_statement">I will send a sample of my saliva for sequencing directly to Erasmus MC.</li>
+                        <li class="consent_request_section_statement">The array test will be performed by Erasmus MC, after which the sample will be stored at Erasmus MC only during the array test, after which it will be destroyed.</li>
+                        <li class="consent_request_section_statement">As a result of the array test my Raw DNA data file will be stored on Surf LabSafe and managed and protected by GeneCoop cooperation.</li>
+                    </ul>
+                    <input type="checkbox"><strong>I agree to this</strong></input>
+                </section>
+                <section class="consent_request_item">
+                    <h3 class="consent_request_item_title">Copy Number Variation</h3>
+                    <h4 class="consent_request_section_title">Purpose</h4>
+                    <p class="consent_request_section_text">CNV is needed for tumor classification and personalised advice.</p>
+                    <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
+                    <ul>
+                        <li class="consent_request_section_statement">The analysis will be performed by Genecoop Prinicpal Investigator using Omnigen-GCP </li>
+                        <li class="consent_request_section_statement">This analysis needs access to my Raw DNA data file stored on SURF LabSafe managed by Genecoop Cooperation.</li>
+                        <li class="consent_request_section_statement">I understand that as a result of the CNV analysis a CNV analysis report will be stored on SURF LabSafe managed and protected by Genecoop Cooperation</li>
+                    </ul>
+                    <input type="checkbox"><strong>I agree to this</strong></input>
+                </section>
+                <section class="consent_request_item">
+                    <h3 class="consent_request_item_title">Drug biomarker discovery</h3>
+                    <h4 class="consent_request_section_title">Purpose</h4>
+                    <p class="consent_request_section_text">DBM discovery is needed to improve personalized drug treatment in the future, for you and for others. Biomarkers discovered in this analysis can be used for predictive, diagnostic or prognostic purposes. For example...</p>
+                    <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
+                    <ul>
+                        <li class="consent_request_section_statement">The analysis will be performed by Genecoop Principal Investigator using Svastia on Amazon Web Services.</li>
+                        <li class="consent_request_section_statement">I understand that this analysis needs access to my Raw DNA data file stored on SURF LabSafe managed by Genecoop Cooperation.</li>
+                        <li class="consent_request_section_statement">I understand that a copy of my Raw DNA data file is stored on Amazon Web Services during the analysis.</li>
+                        <li class="consent_request_section_statement">I understand that the result of the DBM a personal biomarker analysis report will be stored on SURF LabSafe.</li>
+                        <li class="consent_request_section_statement">I understand that anonymised data from my personal biomarker analysis report will be collected and made available for request through the GeneCoop Data Catalogue</li>
+                    </ul>
+                    <input type="checkbox"><strong>I agree to this</strong></input>
+                </section>
+                <button><strong>sign and send</strong></button>
+            </form> 
         </main>
     </body>
 </html>
