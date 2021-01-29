@@ -7,6 +7,11 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
+
+
 from .models import Request
 
 import labspace.utils as labut
@@ -19,6 +24,8 @@ logger = logging.getLogger(__name__)
 myConfig = labut.ConsentConfig('researcher')
 myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
+
+
 
 def update_request(request_obj):
     """
@@ -141,7 +148,21 @@ def gen_queryset(pk):
     return my_set
 
 
+class LoginView(LoginView):
+    template_name = 'researcher_req/login.html'
 
+class Logout(LogoutView):
+    template_name = 'researcher_req/login.html'
+
+def login_view(request):
+    logger.debug(f'Login view request')        
+    template_name = 'researcher_req/login.html'
+    # context = {'my_set' : gen_queryset(None)}
+    # logger.debug(f'Index view rendering: {json.dumps(context)}')
+    return render(request, template_name)
+
+
+@login_required(login_url='researcher_req:login')
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_req/index.html'
@@ -149,6 +170,7 @@ def index_view(request):
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
+@login_required(login_url='researcher_req:login')
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_req/request.html'
@@ -157,6 +179,7 @@ def request_view(request, pk):
     return render(request, template_name, context)
 
 
+@login_required(login_url='researcher_req:login')
 def operation_view(request, key):
     logger.debug(f'Operation view request')
     template_name = 'researcher_req/operation.html'
@@ -179,6 +202,25 @@ def operation_view(request, key):
     return render(request, template_name, context)
 
 
+def check_login(request):
+    """
+        Check credentials and log user in
+    """
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    if request.method == 'POST':
+        if 'username' in request.POST and 'password' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect to a success page.
+                return HttpResponseRedirect(reverse('researcher_req:index'))
+    logger.debug(f'Login failed')
+    return HttpResponseRedirect(reverse('researcher_req:login'))
+
+            
+@login_required(login_url='researcher_req:login')
 def add_request(request):
     """
         Generate new request
@@ -207,6 +249,7 @@ def add_request(request):
     logger.debug(f'{inspect.currentframe().f_code.co_name} returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
 
+@login_required(login_url='researcher_req:login')
 def generate_token(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
@@ -223,6 +266,7 @@ def generate_token(request):
     logger.debug(f'{inspect.currentframe().f_code.co_name} returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
 
+@login_required(login_url='researcher_req:login')
 def perform_action(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':

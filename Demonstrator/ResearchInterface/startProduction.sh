@@ -34,6 +34,7 @@ else
         conda activate ${env_name}
     fi
 
+    pip install -r ./pip_requirements.txt
 
     export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=labspace.settingsP
     export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=labspace.settingsP

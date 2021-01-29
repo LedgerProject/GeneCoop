@@ -20,7 +20,7 @@ then
     conda activate ${env_name}
 fi
 
-
+pip install -r ./pip_requirements.txt
 
 python manage.py makemigrations --settings=labspace.settingsD
 python manage.py migrate --settings=labspace.settingsD

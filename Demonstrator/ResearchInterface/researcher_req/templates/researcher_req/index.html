@@ -4,8 +4,6 @@
 
 
 {% block content %}
-    {% if user.is_authenticated %}
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <div class="container">
     <h2>New Request</h2>
@@ -76,10 +74,5 @@
         {% endif %}
     </ul>
 </div>
-
-{% else %}
-  <p>You are not logged in</p>
-  <!-- <a href="{% url 'login' %}">Log In</a> -->
-{% endif %}
 
 {% endblock %}
