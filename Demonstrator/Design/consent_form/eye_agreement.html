@@ -14,7 +14,7 @@
                 <li>
                     Erasmus MC will store a Raw DNA data file on SURF LabSafe.
                     <details>
-                          <summary>Smart Contract</summary>
+                          <summary>Read smart contract</summary>
                           <pre class="smart_contract">
 Given I am 'SURF LabSafe'
 Given that I have a 'public key' from 'Erasmus MC'
@@ -40,8 +40,58 @@ Then print 'operation allowed'
                 </li>
 
                 <li>GeneCoop Principal Investigator will access my Raw DNA data file on SURF LabSafe.</li>     
+                    <details>
+                          <summary>Read smart contract</summary>
+                          <pre class="smart_contract">
+Given I am 'SURF LabSafe'
+Given that I have a 'public key' from 'GeneCoop Principal Investigator'
+Given that I have a 'string dictionary' named 'permission_request'
+Given that I have a 'string' named 'operation'
+Given that I have a 'string' named 'consent_key'
+Given that I have a 'string' named 'research'
+Given that I have a 'string' named 'data_class'
+Given that I have a 'signature' named 'permission_request.signature'
+When 'operation' is found in 'permission_request'
+When I verify the 'operation' is equal to 'read'
+When 'research' is found in 'permission_request'
+When I verify the 'research' is equal to 'Eye Melanoma'
+When 'consent_key' is found in 'permission_request'
+When I verify the 'consent_key' is equal to 'XSFAA001'
+When 'data_class' is found in 'permission_request'
+When I verify the 'data_class' is equal to 'Raw DNA data file'
+When 'signature' is found in 'permission_request'
+When I verify the 'permission_request' has a signature in 'permission_request.signature' by 'GeneCoop Principal Investigator'
+Then print 'operation allowed'
+                   </pre>
+                    </details>
+ 
                 <li>GeneCoop Principal Investigator will analyse my Raw DNA data file with Omnigen-GCP.</li>
                 <li>GeneCoop Principal Investigator will store a CNV Analysis Report on SURF LabSafe.</li>
+                    <details>
+                          <summary>Read smart contract</summary>
+                          <pre class="smart_contract">
+Given I am 'SURF LabSafe'
+Given that I have a 'public key' from 'GeneCoop Principal Investigator'
+Given that I have a 'string dictionary' named 'permission_request'
+Given that I have a 'string' named 'operation'
+Given that I have a 'string' named 'consent_key'
+Given that I have a 'string' named 'research'
+Given that I have a 'string' named 'data_class'
+Given that I have a 'signature' named 'permission_request.signature'
+When 'operation' is found in 'permission_request'
+When I verify the 'operation' is equal to 'store'
+When 'research' is found in 'permission_request'
+When I verify the 'research' is equal to 'Eye Melanoma'
+When 'consent_key' is found in 'permission_request'
+When I verify the 'consent_key' is equal to 'XSFAA001'
+When 'data_class' is found in 'permission_request'
+When I verify the 'data_class' is equal to 'CNV Analysis Report'
+When 'signature' is found in 'permission_request'
+When I verify the 'permission_request' has a signature in 'permission_request.signature' by 'GeneCoop Principal Investigator'
+Then print 'operation allowed'
+                   </pre>
+                    </details>
+ 
             </ul>
             </p>
        </main>
