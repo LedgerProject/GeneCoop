@@ -20,6 +20,7 @@
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  margin-left:auto;
 }
 
 .consent_request 
@@ -51,6 +52,11 @@
 .consent_request li 
 {
     margin-bottom: 1em;
+}
+
+.consent_sign_footer
+{
+   display:flex; 
 }
 
 .personal_data
