@@ -34,6 +34,21 @@
     text-align: center;
 }
 
+.smart_contract
+{
+    color: lightgreen;
+    background-color:black;
+    padding: 1em;
+    overflow-x: auto; 
+    overflow-y: hidden; 
+}
+
+summary
+{
+    color: hotpink;
+    text-decoration: underline;
+}
+
 .consent_request_item
 {
     background-color: white;

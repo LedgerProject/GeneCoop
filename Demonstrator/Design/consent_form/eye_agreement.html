@@ -13,7 +13,9 @@
                 <li>Erasmus MC will access my Saliva for an Array Test.</li>
                 <li>
                     Erasmus MC will store a Raw DNA data file on SURF LabSafe.
-                    <pre>
+                    <details>
+                          <summary>Smart Contract</summary>
+                          <pre class="smart_contract">
 Given I am 'SURF LabSafe'
 Given that I have a 'public key' from 'Erasmus MC'
 Given that I have a 'string dictionary' named 'permission_request'
@@ -34,8 +36,9 @@ When 'signature' is found in 'permission_request'
 When I verify the 'permission_request' has a signature in 'permission_request.signature' by 'ErasmusMC'
 Then print 'operation allowed'
                    </pre>
+                    </details>
                 </li>
-                    
+
                 <li>GeneCoop Principal Investigator will access my Raw DNA data file on SURF LabSafe.</li>     
                 <li>GeneCoop Principal Investigator will analyse my Raw DNA data file with Omnigen-GCP.</li>
                 <li>GeneCoop Principal Investigator will store a CNV Analysis Report on SURF LabSafe.</li>
