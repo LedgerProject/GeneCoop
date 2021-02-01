@@ -9,6 +9,13 @@
 </head>
 
 <body>
+    {% if request.user.is_authenticated %}
+        Hello, {{ request.user }}! <a href="{% url 'researcher_req:logout' %}">Logout</a>
+        <div><a href="{% url 'researcher_req:index' %}">Index</a></div>
+
+    {% else %}
+        <!-- You are not logged in.  -->
+    {% endif %}
     {% block content %}
     {% endblock %}
 </body>

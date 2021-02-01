@@ -5,10 +5,12 @@ from . import views
 app_name = 'researcher_req'
 
 urlpatterns = [
+    path('login/', views.login_view, name='login'),
+    path('profile/', views.profile_view, name='profile'),
+    path('fill_profile/', views.fill_profile, name='fill_profile'),
     path('', views.index_view, name='index'),
-    # path('login/', views.login_view, name='login'),
     # path('accounts/', include('django.contrib.auth.urls')),
-    path('login/', views.LoginView.as_view(), name='login_a'),
+    # path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('<int:pk>/', views.request_view, name='request'),
     path('<str:key>/operation/', views.operation_view, name='operation'),

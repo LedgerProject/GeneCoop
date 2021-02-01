@@ -3,17 +3,18 @@ from django.utils import timezone
 import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.contrib.auth.models import User
 
 from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, USERID_LENGTH, KEY_LENGTH
 
 
 class Researcher(models.Model):
-    name = models.CharField(max_length=TITLE_LENGTH)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=DESCR_LENGTH)
-    affiliation = models.CharField(max_length=TITLE_LENGTH)
-    public_key = models.CharField(max_length=KEY_LENGTH)
-    private_key = models.CharField(max_length=KEY_LENGTH)
-    aff_pub_key = models.CharField(max_length=KEY_LENGTH)
+    institute = models.CharField(max_length=TITLE_LENGTH)
+    publickey = models.CharField(max_length=KEY_LENGTH)
+    # private_key = models.CharField(max_length=KEY_LENGTH)
+    institute_publickey = models.CharField(max_length=KEY_LENGTH)
 
 
 

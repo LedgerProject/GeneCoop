@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+
+<h2>Logout</h2>
+{% if request.user.is_authenticated %}
+      Strange, you are still logged in {{ request.user }}!
+{% else %}
+You are now logged out. 
+{% endif %}
+<a href="{% url 'researcher_req:login' %}">Login</a>
+
+{% endblock %}

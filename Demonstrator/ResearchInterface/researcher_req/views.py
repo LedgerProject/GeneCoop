@@ -12,7 +12,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 
 
-from .models import Request
+from .models import Request, Researcher
 
 import labspace.utils as labut
 from labspace.constants import ISSIGNED_URL, ALLOWEDOP_URL, LOGOP_URL
@@ -148,19 +148,39 @@ def gen_queryset(pk):
     return my_set
 
 
-class LoginView(LoginView):
-    template_name = 'researcher_req/login.html'
+# class LoginView(LoginView):
+#     template_name = 'researcher_req/login.html'
 
-class Logout(LogoutView):
-    template_name = 'researcher_req/login.html'
+class LogoutView(LogoutView):
+    template_name = 'researcher_req/logout.html'
 
 def login_view(request):
-    logger.debug(f'Login view request')        
+    logger.debug(f'Login view request')
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('researcher_req:index'))
     template_name = 'researcher_req/login.html'
     # context = {'my_set' : gen_queryset(None)}
     # logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name)
 
+@login_required(login_url='researcher_req:login')
+def profile_view(request):
+    """
+        Store information about the researcher
+    """
+    logger.debug(f'Profile view request')
+    template_name = 'researcher_req/profile.html'
+    researcher = Researcher.objects.get(user=request.user)
+    researcher_obj = {
+        "name" : researcher.user.username,
+        "email": researcher.user.email,
+        "publickey" : researcher.publickey,
+        "institute" :researcher.institute,
+        "institute_publickey": researcher.institute_publickey 
+    }
+    context = {'researcher' : researcher_obj}
+    logger.debug(f'Profile view rendering: {json.dumps(context)}')
+    return render(request, template_name, context)
 
 @login_required(login_url='researcher_req:login')
 def index_view(request):
@@ -214,12 +234,37 @@ def check_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                
+                # Create researcher associated to user if needed
+                if not hasattr(user, 'researcher'):
+                    logger.debug(f'Creating reseacher with user: {user}')
+                    researcher = Researcher(user=user)
+                    researcher.save()
                 # Redirect to a success page.
-                return HttpResponseRedirect(reverse('researcher_req:index'))
+                return HttpResponseRedirect(reverse('researcher_req:profile'))
     logger.debug(f'Login failed')
     return HttpResponseRedirect(reverse('researcher_req:login'))
 
-            
+def fill_profile(request):
+    """
+        Save researcher information
+    """
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    
+    researcher = Researcher.objects.get(user=request.user)
+    if request.method == 'POST':
+        if 'publickey' in request.POST:
+            researcher.publickey = request.POST['publickey']
+        if 'institute' in request.POST:
+            researcher.institute = request.POST['institute']
+        if 'institute_publickey' in request.POST:
+            researcher.institute_publickey = request.POST['institute_publickey']
+        researcher.save()
+
+    return HttpResponseRedirect(reverse('researcher_req:index'))
+
+    
+         
 @login_required(login_url='researcher_req:login')
 def add_request(request):
     """
