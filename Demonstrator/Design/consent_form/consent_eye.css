@@ -64,9 +64,20 @@ summary
 .consent_request h4 {
     color: cadetblue;
 }
+
 .consent_request li 
 {
     margin-bottom: 1em;
+}
+
+.consent_log li 
+{
+    margin-bottom: 1em;
+}
+
+.consent_log li:nth-child(odd)
+{
+    background-color:lightblue;
 }
 
 .consent_sign_footer
