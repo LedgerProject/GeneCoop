@@ -2,3 +2,5 @@ __pycache__/
 .secret_key
 db.sqlite3
 djangodebug.log
+.researcher
+.superuser
