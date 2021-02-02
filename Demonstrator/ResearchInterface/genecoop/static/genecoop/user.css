@@ -1,0 +1,248 @@
+/* style for the user facing part (consent form, log etc) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+.consent_page {
+ max-width: 800px;
+ margin-top: 50px;
+ margin-left:auto;
+ margin-right: auto;
+ font-family: 'Poppins', sans-serif;
+ padding: 30px;
+}
+
+.button {
+  background-color: #2196F3;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  margin-left:auto;
+}
+
+.consent_request 
+{
+    background-color: lightblue;
+    padding: 2em;
+}
+
+.consent_request_label
+{
+    text-align: center;
+}
+
+.smart_contract
+{
+    color: lightgreen;
+    background-color:black;
+    padding: 1em;
+    overflow-x: auto; 
+    overflow-y: hidden; 
+}
+
+summary
+{
+    color: hotpink;
+    text-decoration: underline;
+}
+
+.consent_request_item
+{
+    background-color: white;
+    padding: 2em;
+    margin-bottom: 2em;
+    border-radius: 25px;
+    box-shadow: 10px 10px 10px 1px gray;
+}
+.consent_request h3 {
+    font-size: larger;
+    text-align: right;
+}
+.consent_request h4 {
+    color: cadetblue;
+}
+
+.consent_request li 
+{
+    margin-bottom: 1em;
+}
+
+.consent_log li 
+{
+    margin-bottom: 1em;
+}
+
+.consent_log li:nth-child(odd)
+{
+    background-color:lightblue;
+}
+
+.consent_sign_footer
+{
+   display:flex; 
+}
+
+.personal_data
+{
+    color:hotpink;
+}
+
+
+/* TOMO's stuff beneath here */
+/*--For options and label--*/
+
+.questionare{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom:50px;
+    font-size: 16px;
+}
+
+
+/* ------ custom radio_button_box -----*/
+
+
+  /* This class wraps around the radio button and the text */
+.radio_button_box {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    vertical-align: baseline;
+  }
+  
+  /* Hide the browser's default radio button */
+  .radio_button_box input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  /* Create a custom selected state of radio button */
+  .radio_select_mark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .radio_button_box:hover input ~ .radio_select_mark {
+    background-color: #ccc;
+  }
+  
+  /* When the radio button is checked, add a blue background */
+  .radio_button_box input:checked ~ .radio_select_mark {
+    background-color: #2196F3;
+  }
+
+  .radio_button_box input:checked + label {
+    color: #2196F3;
+  }
+  
+  /* Create the indicator (the dot/circle - hidden when not checked) */
+  .radio_select_mark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the indicator (dot/circle) when checked */
+  .radio_button_box input:checked ~ .radio_select_mark:after {
+    display: block;
+  }
+  
+  /* Style the indicator (dot/circle) */
+  .radio_button_box .radio_select_mark:after {
+      top: 6px;
+      left: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 70%;
+      background: white;
+
+  }
+
+/* ------ custom check_box for multiple option ---------*/
+
+/* The check_button_box */
+.check_button_box {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  padding-left: 35px;
+  margin-bottom: 12px;
+}
+
+/* Hide the browser's default checkbox */
+.check_button_box input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.check_select_mark {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.check_button_box:hover input ~ .check_select_mark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.check_button_box input:checked ~ .check_select_mark {
+  background-color: #2196F3;
+}
+
+/* Create the check_select_mark/indicator (hidden when not checked) */
+.check_select_mark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the check_select_mark when checked */
+.check_button_box input:checked ~ .check_select_mark:after {
+  display: block;
+}
+
+/* Style the check_select_mark/indicator */
+.check_button_box .check_select_mark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
