@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -11,7 +11,8 @@ urlpatterns = [
     # path('<str:pk>/sign', views.SignConsentView.as_view(), name='sign'),
     path('<str:pk>/sign', views.sign, name='sign'),
     # path('<int:key>/operation/', views.OperationsView.as_view(), name='operation'),
-    path('genconsent/', views.genconsent, name='genconsent'),
+    path('verify_consent/', views.verify_consent, name='verify_consent'),
     path('signconsent/', views.signconsent, name='signconsent'),
     path('<str:pk>/consent', views.consent, name='consent'),
+    path('api/', include('genecoop.urls_api'))
 ]

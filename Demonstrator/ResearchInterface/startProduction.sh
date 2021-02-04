@@ -1,5 +1,6 @@
 #!/bin/bash
 env_name=Demonstrator
+settings=labspace.settingsP
 
 if [ ! -f ./manage.py ]
     then
@@ -34,10 +35,19 @@ else
         conda activate ${env_name}
     fi
 
+    pip install -r ./pip_requirements.txt
 
-    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=labspace.settingsP
-    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=labspace.settingsP
-    export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=labspace.settingsP
+    . ./createUsers.sh
+
+    create_user_cmd superuser | python manage.py shell --settings=${settings}
+    create_user_cmd researcher | python manage.py shell --settings=${settings}
+    
+
+    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=${settings}
+    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=${settings}
+
+
+    export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=${settings}
 
 fi
 

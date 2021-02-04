@@ -2,6 +2,7 @@ __pycache__/
 .secret_key
 db.sqlite3
 djangodebug.log
-.researcher
-.superuser
 .DS_Store
+.researcher.json
+.superuser.json
+.institute.json

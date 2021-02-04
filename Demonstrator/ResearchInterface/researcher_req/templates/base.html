@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Researcher Space{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
+</head>
+
+<body>
+    {% if request.user.is_authenticated %}
+        Hello, {{ request.user }}! <a href="{% url 'researcher_req:logout' %}">Logout</a>
+        <div><a href="{% url 'researcher_req:index' %}">Index</a></div>
+
+    {% else %}
+        <!-- You are not logged in.  -->
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>

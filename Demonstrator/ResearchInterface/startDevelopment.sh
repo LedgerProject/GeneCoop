@@ -1,5 +1,6 @@
 #!/bin/bash
 env_name=Demonstrator
+settings=labspace.settingsD
 
 if [ "$(uname)" == "Darwin" ]
 then
@@ -20,13 +21,17 @@ then
     conda activate ${env_name}
 fi
 
+pip install -r ./pip_requirements.txt
+
+python manage.py makemigrations --settings=${settings}
+python manage.py migrate --settings=${settings}
+
+. ./createUsers.sh
+
+create_user_cmd superuser | python manage.py shell --settings=${settings}
+create_user_cmd researcher | python manage.py shell --settings=${settings}
 
 
-python manage.py makemigrations --settings=labspace.settingsD
-python manage.py migrate --settings=labspace.settingsD
-
-echo -e 'from django.contrib.auth import get_user_model; \nUser = get_user_model(); \nif not User.objects.filter(username="labspace").exists():\n\tUser.objects.create_superuser("labspace", "admin@localhost", "genecoop")\n' | python manage.py shell --settings=labspace.settingsD
-
-python manage.py runserver --settings=labspace.settingsD
+python manage.py runserver --settings=${settings}
 
 

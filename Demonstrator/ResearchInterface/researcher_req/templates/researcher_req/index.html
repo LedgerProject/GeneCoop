@@ -1,86 +1,78 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <title>Requests</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
-</head>
-
-<body>
-
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-    <div class="container">
-        <h2>New Request</h2>
-
-        <form action="{% url 'researcher_req:add_request' %}" method="post">
-            {% csrf_token %}
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Name of Request</div>
-                    <div class="col col-2">Request Description</div>
-                    <div class="col col-3">Operations</div>
-                    <div class="col col-4">User id</div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Name"><input type="text" name="text" value=""></div>
-                    <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
-                    <div class="col col-3" data-label="Operations">
-                        {% for operation in my_set.operations %}
-                            <input type="checkbox" name="operations" id="operation{{ forloop.counter }}" value="{{ operation.key }}">
-                            <label for="operation{{ forloop.counter }}">{{ operation.text }}</label><br>
-                        {% endfor %}
-                    </div>
-                    <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
-                </li>
-            </ul>
-        </form>
-    </div>
-    
-    <div class="container">
-        <h2>Existing Requests</h2>
+{% block title %}Request{% endblock %}
 
 
+{% block content %}
+
+<div class="container">
+    <h2>New Request</h2>
+
+    <form action="{% url 'researcher_req:add_request' %}" method="post">
+        {% csrf_token %}
         <ul class="responsive-table">
             <li class="table-header">
-                <div class="col col-1">Request Name</div>
+                <div class="col col-1">Name of Request</div>
                 <div class="col col-2">Request Description</div>
                 <div class="col col-3">Operations</div>
                 <div class="col col-4">User id</div>
-                <div class="col col-5">Status</div>
             </li>
-            {% if my_set.requests %}
-                {% for request in my_set.requests %}
-                    <li class="table-row">
-                        <div class="col col-1" data-label="Name"><a
-                                href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
-                        <div class="col col-2" data-label="Description">{{ request.description }}</div>
-                        <div class="col col-3" data-label="Operations">
-                            {% for operation in request.operations %}
-                            <ul>
-                                {% if operation.chosen_option != -1 %}
-                                    <li id="minim">{{ operation.text }} : {{operation.chosen_option_text}}</li>
-                                {% else %}
-                                <li id="minim">{{ operation.text }}</li>
-                                {% endif %}
-                            </ul>
-                            {% endfor %}
-                        </div>
-                        <div class="col col-4" data-label="User_id">{{ request.user_id }}</div>
-                        <div class="col col-5" data-label="Status">{{ request.status }}</div>
-                    </li>
-                {% endfor %}
-            {% else %}
-            <li class="table-row">No requests are available.</li>
-            {% endif %}
+            <li class="table-row">
+                <div class="col col-1" data-label="Name"><input type="text" name="text" value=""></div>
+                <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
+                <div class="col col-3" data-label="Operations">
+                    {% for operation in my_set.operations %}
+                    <input type="checkbox" name="operations" id="operation{{ forloop.counter }}"
+                        value="{{ operation.key }}">
+                    <label for="operation{{ forloop.counter }}">{{ operation.text }}</label><br>
+                    {% endfor %}
+                </div>
+                <div class="col col-4" data-label="Userid"><input type="text" name="user_id" value=""></div>
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
+            </li>
         </ul>
-    </div>
+    </form>
+</div>
 
-</body>
+<div class="container">
+    <h2>Existing Requests</h2>
 
-</html>
+
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-1">Request Name</div>
+            <div class="col col-2">Request Description</div>
+            <div class="col col-3">Operations</div>
+            <div class="col col-4">User id</div>
+            <div class="col col-5">Status</div>
+        </li>
+        {% if my_set.requests %}
+        {% for request in my_set.requests %}
+        <li class="table-row">
+            <div class="col col-1" data-label="Name"><a
+                    href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
+            <div class="col col-2" data-label="Description">{{ request.description }}</div>
+            <div class="col col-3" data-label="Operations">
+                {% for operation in request.operations %}
+                <ul>
+                    {% if operation.chosen_option != -1 %}
+                    <li id="minim">{{ operation.text }} : {{operation.chosen_option_text}}</li>
+                    {% else %}
+                    <li id="minim">{{ operation.text }}</li>
+                    {% endif %}
+                </ul>
+                {% endfor %}
+            </div>
+            <div class="col col-4" data-label="User_id">{{ request.user_id }}</div>
+            <div class="col col-5" data-label="Status">{{ request.status }}</div>
+        </li>
+        {% endfor %}
+        {% else %}
+        <li class="table-row">No requests are available.</li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}
