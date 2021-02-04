@@ -1,5 +1,6 @@
 import logging
 import inspect
+import requests
 from pathlib import Path
 import json, copy
 
@@ -9,6 +10,18 @@ logger = logging.getLogger(__name__)
 
 KEY_SEP='_'
 TOKEN_SEP='_'
+
+def format_request(prepped, encoding=None):
+    # prepped has .method, .path_url, .headers and .body attribute to view the request
+    encoding = encoding or requests.utils.get_encoding_from_headers(prepped.headers)
+    body = prepped.body.decode(encoding) if encoding else '<binary data>' 
+    headers = '\n'.join(['{}: {}'.format(*hv) for hv in prepped.headers.items()])
+    return f"""\
+{prepped.method} {prepped.path_url} HTTP/1.1
+{headers}
+
+{body}"""
+
 
 def gen_token(user_id, operations):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
@@ -32,7 +45,11 @@ def request_to_sign(request):
     ope_json = json.loads(request.operations) 
     for operation in ope_json:
         obj['operations'].append(operation['key'])
-    return obj
+    return json.dumps(obj)
+
+def get_signature(request):
+    logger.debug(f'Getting signature for request: {request}')
+    return json.loads(request.signature)
 
 class baseEntity:
     def __init__(self, text, description, key):

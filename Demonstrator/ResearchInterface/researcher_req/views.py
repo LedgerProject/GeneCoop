@@ -367,7 +367,7 @@ def download_request(request, id):
     # decide the file name
     response['Content-Disposition'] = 'attachment; filename="request.json"'
 
-    response.write(json.dumps(payload))
+    response.write(payload)
 
     return response
 
