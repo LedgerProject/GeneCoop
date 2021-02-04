@@ -1,0 +1,7 @@
+{
+    "message": "{\"text\": \"First\", \"description\": \"Hellooooooooo\", \"user_id\": \"1\", \"token\": \"1_0000_0001_0003\", \"operations\": [\"0000\", \"0001\", \"0003\"]}",
+    "message.signature": {
+        "r": "KBHUJenYcxrDpYc0yRkzNmGWSWVhHB6Ez0mw/6BU1+0=",
+        "s": "V26RsrcSVoRACOrM9C0gLFnN8p93JMv1XKo2RhaXtSE="
+    }
+}

@@ -1,0 +1,14 @@
+rule check version 1.0.0
+Scenario 'ecdh': create the signature of a request
+
+# Loading data
+Given I am 'Signer'
+Given I have my 'keypair'
+Given that I have a 'string' named 'message'
+
+# Here we create the signaturs and we rename them to samething that looks nicer
+When I create the signature of 'message'
+When I rename the 'signature' to 'message.signature'
+
+# Here we print the signature
+Then print the 'message.signature'    

@@ -21,8 +21,8 @@ LOGOP_URL = f"{GENECOOP_URL}/consent/api/log_operation/"
 
 APIROOM_URL = 'http://localhost:3000'
 
-SIGN_URL = f'{APIROOM_URL}/api/genecoop/sign'
-VERIFY_URL = f'{APIROOM_URL}/api/genecoop/verify'
+SIGN_URL = f'{APIROOM_URL}/api/zencoop/sign'
+VERIFY_URL = f'{APIROOM_URL}/api/zencoop/verify'
 
 # Config param
 DO_ENCODING = False

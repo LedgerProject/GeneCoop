@@ -6,3 +6,5 @@ djangodebug.log
 .researcher.json
 .superuser.json
 .institute.json
+
+Demonstrator/zencoop/*.keys

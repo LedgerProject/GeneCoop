@@ -1,0 +1,13 @@
+rule check version 1.0.0 
+Scenario 'ecdh': verify the signature of a request
+
+# Loading data
+Given I have a 'public key' from 'Researcher' 
+Given I have a 'string' named 'message' 
+Given I have a 'signature' named 'message.signature'
+
+# The verification happens here: if the verification would fails, Zenroom would stop and print an error 
+When I verify the 'message' has a signature in 'message.signature' by 'Researcher'
+
+# Here we're printing the original message along with happy statement of success
+Then print 'verification passed' as 'string'
