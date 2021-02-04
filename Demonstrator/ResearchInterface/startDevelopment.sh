@@ -1,5 +1,6 @@
 #!/bin/bash
 env_name=Demonstrator
+settings=labspace.settingsD
 
 if [ "$(uname)" == "Darwin" ]
 then
@@ -22,23 +23,15 @@ fi
 
 pip install -r ./pip_requirements.txt
 
-python manage.py makemigrations --settings=labspace.settingsD
-python manage.py migrate --settings=labspace.settingsD
+python manage.py makemigrations --settings=${settings}
+python manage.py migrate --settings=${settings}
 
-superusername=$(cat .superuser|grep username| cut -d'=' -f2)
-superuseremail=$(cat .superuser|grep email| cut -d'=' -f2)
-superuserpassword=$(cat .superuser|grep password| cut -d'=' -f2)
+. ./createUsers.sh
 
-researchername=$(cat .researcher|grep username| cut -d'=' -f2)
-researcheremail=$(cat .researcher|grep email| cut -d'=' -f2)
-researcherpassword=$(cat .researcher|grep password| cut -d'=' -f2)
-
-templ='from django.contrib.auth import get_user_model; \nUser = get_user_model(); \nif not User.objects.filter(username="USERNAME").exists():\n\tUser.objects.OPERATION("USERNAME", "EMAIL", "PASSWORD")\n'
-
-echo -e ${templ} | sed "s/USERNAME/${superusername}/g" | sed "s/OPERATION/create_superuser/g" | sed "s/PASSWORD/${superuserpassword}/g" |  sed "s/EMAIL/${superuseremail}/g" | python manage.py shell --settings=labspace.settingsD
-echo -e ${templ} | sed "s/USERNAME/${researchername}/g" | sed "s/OPERATION/create_user/g" | sed "s/PASSWORD/${researcherpassword}/g" |  sed "s/EMAIL/${researcheremail}/g" | python manage.py shell --settings=labspace.settingsD
+create_user_cmd superuser | python manage.py shell --settings=${settings}
+create_user_cmd researcher | python manage.py shell --settings=${settings}
 
 
-python manage.py runserver --settings=labspace.settingsD
+python manage.py runserver --settings=${settings}
 
 

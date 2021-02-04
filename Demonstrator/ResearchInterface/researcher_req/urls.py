@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, re_path
 
 from . import views
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('<str:key>/operation/', views.operation_view, name='operation'),
     path('check_login/', views.check_login, name='check_login'),
     path('add_request/', views.add_request, name='add_request'),
-    path('generate_token/', views.generate_token, name='generate_token'),
+    path('download_request/<int:id>', views.download_request, name='download_request'),
     path('perform_action/', views.perform_action, name='perform_action'),
+    path('sign_request/', views.sign_request, name='sign_request'),
 ]

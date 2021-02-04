@@ -21,6 +21,19 @@ def decode_token(token):
     tokens = token.split('_')
     return tokens[0], tokens[1:]
 
+def request_to_sign(request):
+    logger.debug(f'Generating request to be signed for: {request}')
+    obj = {}
+    obj['text'] = request.text
+    obj['description'] = request.description
+    obj['user_id'] = request.user_id
+    obj['token'] = request.token
+    obj['operations'] = []
+    ope_json = json.loads(request.operations) 
+    for operation in ope_json:
+        obj['operations'].append(operation['key'])
+    return obj
+
 class baseEntity:
     def __init__(self, text, description, key):
         self.text = text

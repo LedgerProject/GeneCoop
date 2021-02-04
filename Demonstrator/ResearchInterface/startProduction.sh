@@ -1,5 +1,6 @@
 #!/bin/bash
 env_name=Demonstrator
+settings=labspace.settingsP
 
 if [ ! -f ./manage.py ]
     then
@@ -36,25 +37,17 @@ else
 
     pip install -r ./pip_requirements.txt
 
-    superusername=$(cat .superuser|grep username| cut -d'=' -f2)
-    superuseremail=$(cat .superuser|grep email| cut -d'=' -f2)
-    superuserpassword=$(cat .superuser|grep password| cut -d'=' -f2)
+    . ./createUsers.sh
 
-    researchername=$(cat .researcher|grep username| cut -d'=' -f2)
-    researcheremail=$(cat .researcher|grep email| cut -d'=' -f2)
-    researcherpassword=$(cat .researcher|grep password| cut -d'=' -f2)
+    create_user_cmd superuser | python manage.py shell --settings=${settings}
+    create_user_cmd researcher | python manage.py shell --settings=${settings}
+    
 
-    templ='from django.contrib.auth import get_user_model; \nUser = get_user_model(); \nif not User.objects.filter(username="USERNAME").exists():\n\tUser.objects.OPERATION("USERNAME", "EMAIL", "PASSWORD")\n'
-
-    echo -e ${templ} | sed "s/USERNAME/${superusername}/g" | sed "s/OPERATION/create_superuser/g" | sed "s/PASSWORD/${superuserpassword}/g" |  sed "s/EMAIL/${superuseremail}/g" | python manage.py shell --settings=labspace.settingsP
-    echo -e ${templ} | sed "s/USERNAME/${researchername}/g" | sed "s/OPERATION/create_user/g" | sed "s/PASSWORD/${researcherpassword}/g" |  sed "s/EMAIL/${researcheremail}/g" | python manage.py shell --settings=labspace.settingsP
+    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=${settings}
+    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=${settings}
 
 
-    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=labspace.settingsP
-    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=labspace.settingsP
-
-
-    export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=labspace.settingsP
+    export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=${settings}
 
 fi
 

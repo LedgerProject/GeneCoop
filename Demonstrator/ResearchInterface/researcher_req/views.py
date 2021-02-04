@@ -26,7 +26,6 @@ myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
 
 
-
 def update_request(request_obj):
     """
         Checks whether a request has been signed
@@ -39,7 +38,7 @@ def update_request(request_obj):
     # Perform API call
     logger.debug(f'Perform request {ISSIGNED_URL}/{request_obj.token}')
     cons_req = requests.get(f'{ISSIGNED_URL}/{request_obj.token}')
-    
+
     # print(cons_req.json()['signed'])
     request_obj.not_replied()
 
@@ -50,7 +49,8 @@ def update_request(request_obj):
             request_obj.replied()
 
             # Check what operations are allowed with an API call
-            logger.debug(f'Perform request {ALLOWEDOP_URL}/{request_obj.token}')
+            logger.debug(
+                f'Perform request {ALLOWEDOP_URL}/{request_obj.token}')
             op_req = requests.get(f'{ALLOWEDOP_URL}/{request_obj.token}')
 
             if op_req.status_code == 200:
@@ -60,22 +60,27 @@ def update_request(request_obj):
 
                 # Read and deserialise operations contained in the request
                 logger.debug(f'Start deserialize operations')
-                
+
                 mySerializedOperations.unserialize(request_obj.operations)
-                logger.debug(f'Deserialize operations: {request_obj.operations}')
+                logger.debug(
+                    f'Deserialize operations: {request_obj.operations}')
 
                 for op_result in op_results:
                     # print(f"key: {op_result['key']}")
-                    mySerializedOperations.select_option_key(op_result['key'], op_result['chosen_option'])
+                    mySerializedOperations.select_option_key(
+                        op_result['key'], op_result['chosen_option'])
 
                 request_obj.operations = mySerializedOperations.serialize()
                 logger.debug(f'Serialize operations: {request_obj.operations}')
             else:
-                logger.error(f'Call {ALLOWEDOP_URL}/{request_obj.token} gave {op_req.status_code} with {op_req.text}')
+                logger.error(
+                    f'Call {ALLOWEDOP_URL}/{request_obj.token} gave {op_req.status_code} with {op_req.text}')
     else:
-        logger.error(f'Call {ISSIGNED_URL}/{request_obj.token} gave {cons_req.status_code} with {json.dumps(cons_req.text)}')
+        logger.error(
+            f'Call {ISSIGNED_URL}/{request_obj.token} gave {cons_req.status_code} with {json.dumps(cons_req.text)}')
 
     request_obj.save()
+
 
 def gen_queryset(pk):
     """
@@ -101,15 +106,17 @@ def gen_queryset(pk):
         request_view['description'] = request_obj.description
         request_view['user_id'] = request_obj.user_id
         request_view['status'] = request_obj.status
+        request_view['signature'] = request_obj.signature
 
-        
         mySerializedOperations.unserialize(request_obj.operations)
         operations_view = []
         for operation in mySerializedOperations.operations:
             operation_view = {}
             operation_view['key'] = operation['key']
-            operation_view['text'] = myConfig.get_operation_obj(operation['key']).text
-            operation_view['description'] = myConfig.get_operation_obj(operation['key']).description
+            operation_view['text'] = myConfig.get_operation_obj(
+                operation['key']).text
+            operation_view['description'] = myConfig.get_operation_obj(
+                operation['key']).description
             operation_view['chosen_option'] = operation['chosen_option']
             operation_view['reply'] = operation['reply']
             opt_obj = myConfig.get_option_obj(operation['chosen_option'])
@@ -122,10 +129,9 @@ def gen_queryset(pk):
         logger.debug(f'Operations added: {json.dumps(operations_view)}')
         # print(f"view operations {json.dumps(request_view['operations'])}")
 
-
         requests_view.append(request_view)
         logger.debug(f'Request added: {json.dumps(request_view)}')
-    
+
     if not pk == None:
         #  Return if just one request is needed
         logger.debug(f'Return request: {json.dumps(requests_view[0])}')
@@ -140,7 +146,6 @@ def gen_queryset(pk):
         operations_view.append(operation_view)
         logger.debug(f'Operation added: {json.dumps(operation_view)}')
 
-
     my_set = {}
     my_set['requests'] = requests_view
     my_set['operations'] = operations_view
@@ -148,11 +153,23 @@ def gen_queryset(pk):
     return my_set
 
 
+def generate_token(requestInst):
+    """
+        Generate a token to be sent to the user
+    """
+    mySerializedOperations.unserialize(requestInst.operations)
+    token = labut.gen_token(requestInst.user_id,
+                            mySerializedOperations.operations)
+    requestInst.token = token
+    return
+
 # class LoginView(LoginView):
 #     template_name = 'researcher_req/login.html'
 
+
 class LogoutView(LogoutView):
     template_name = 'researcher_req/logout.html'
+
 
 def login_view(request):
     logger.debug(f'Login view request')
@@ -163,6 +180,7 @@ def login_view(request):
     # logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name)
 
+
 @login_required(login_url='researcher_req:login')
 def profile_view(request):
     """
@@ -172,29 +190,31 @@ def profile_view(request):
     template_name = 'researcher_req/profile.html'
     researcher = Researcher.objects.get(user=request.user)
     researcher_obj = {
-        "name" : researcher.user.username,
+        "name": researcher.user.username,
         "email": researcher.user.email,
-        "publickey" : researcher.publickey,
-        "institute" :researcher.institute,
-        "institute_publickey": researcher.institute_publickey 
+        "publickey": researcher.publickey,
+        "institute": researcher.institute,
+        "institute_publickey": researcher.institute_publickey
     }
-    context = {'researcher' : researcher_obj}
+    context = {'researcher': researcher_obj}
     logger.debug(f'Profile view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
+
 
 @login_required(login_url='researcher_req:login')
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_req/index.html'
-    context = {'my_set' : gen_queryset(None)}
+    context = {'my_set': gen_queryset(None)}
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
+
 
 @login_required(login_url='researcher_req:login')
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_req/request.html'
-    context = {'request' : gen_queryset(pk)}
+    context = {'request': gen_queryset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -217,7 +237,7 @@ def operation_view(request, key):
     ope_view['text'] = ope_obj.text
     ope_view['description'] = ope_obj.description
 
-    context = {'operation' : ope_view}
+    context = {'operation': ope_view}
     logger.debug(f'Operation view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -234,7 +254,7 @@ def check_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                
+
                 # Create researcher associated to user if needed
                 if not hasattr(user, 'researcher'):
                     logger.debug(f'Creating reseacher with user: {user}')
@@ -245,12 +265,13 @@ def check_login(request):
     logger.debug(f'Login failed')
     return HttpResponseRedirect(reverse('researcher_req:login'))
 
+
 def fill_profile(request):
     """
         Save researcher information
     """
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    
+
     researcher = Researcher.objects.get(user=request.user)
     if request.method == 'POST':
         if 'publickey' in request.POST:
@@ -263,8 +284,7 @@ def fill_profile(request):
 
     return HttpResponseRedirect(reverse('researcher_req:index'))
 
-    
-         
+
 @login_required(login_url='researcher_req:login')
 def add_request(request):
     """
@@ -273,43 +293,31 @@ def add_request(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
         if 'operations' in request.POST:
-            web_data= request.POST
+            web_data = request.POST
             # print(f'request {web_data}')
-            
+
+            researcher = Researcher.objects.get(user=request.user)
+
             new_request = Request(text=web_data.get('text'), description=web_data.get(
-                'description'), user_id=web_data.get('user_id'))
-            new_request.save()
-            
+                'description'), user_id=web_data.get('user_id'), researcher=researcher)
+            # new_request.save()
+
             # Add operations to request
             operations_ids = web_data.getlist('operations')
-            
+
             mySerializedOperations.reset()
             for id in operations_ids:
                 mySerializedOperations.add_operation_key(id)
                 # print(f'operation key: {ope_obj.key}')
-                
+
             new_request.operations = mySerializedOperations.serialize()
+            generate_token(new_request)
             new_request.save()
             return HttpResponseRedirect(reverse('researcher_req:request', args=(new_request.id,)))
-    logger.debug(f'{inspect.currentframe().f_code.co_name} returning without action')
+    logger.debug(
+        f'{inspect.currentframe().f_code.co_name} returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
 
-@login_required(login_url='researcher_req:login')
-def generate_token(request):
-    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    if request.method == 'POST':
-        if 'requestID' in request.POST:
-            requestInst = get_object_or_404(Request, id=request.POST.get('requestID'))
-            # print(f'request {request.POST}')
-            # print(f'operation {operation for operation in requestInst.operations.all()}')
-            
-            mySerializedOperations.unserialize(requestInst.operations)
-            token = labut.gen_token(requestInst.user_id, mySerializedOperations.operations)
-            requestInst.token = token
-            requestInst.save()
-            return HttpResponseRedirect(reverse('researcher_req:request', args=(requestInst.id,)))
-    logger.debug(f'{inspect.currentframe().f_code.co_name} returning without action')
-    return HttpResponseRedirect(reverse('researcher_req:index'))
 
 @login_required(login_url='researcher_req:login')
 def perform_action(request):
@@ -320,15 +328,15 @@ def perform_action(request):
             operationKey = request.POST.get('operationKey')
             # cons_req = requests.get(f'{ISSIGNED_URL}/{request_obj.token}')
             requestInst = get_object_or_404(Request, token=token)
-            
+
             url = f'{LOGOP_URL}'
             data = {
-                'token' : token,
-                'ope_key' : operationKey
+                'token': token,
+                'ope_key': operationKey
             }
             logger.debug(f'Perform request: {url}')
-            log_post = requests.post(url, data = data)
-            
+            log_post = requests.post(url, data=data)
+
             if log_post.status_code == 200:
                 logger.info(f'Request returned: {log_post.text}')
                 mySerializedOperations.unserialize(requestInst.operations)
@@ -336,8 +344,50 @@ def perform_action(request):
                 requestInst.operations = mySerializedOperations.serialize()
                 requestInst.save()
             else:
-                logger.error(f'Request returned: {log_post.status_code}, {log_post.text}')
-            
+                logger.error(
+                    f'Request returned: {log_post.status_code}, {log_post.text}')
+
             return HttpResponseRedirect(reverse('researcher_req:request', args=(requestInst.id,)))
     logger.debug(f'Returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
+
+
+@login_required(login_url='researcher_req:login')
+def download_request(request, id):
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    requestInst = get_object_or_404(
+        Request, id=id)
+    # print(f'request {request.POST}')
+    # print(f'operation {operation for operation in requestInst.operations.all()}')
+
+    # payload = requestInst.make_contract()
+    payload = labut.request_to_sign(requestInst)
+    # response content type
+    response = HttpResponse(content_type='text/json')
+    # decide the file name
+    response['Content-Disposition'] = 'attachment; filename="request.json"'
+
+    response.write(json.dumps(payload))
+
+    return response
+
+@login_required(login_url='researcher_req:login')
+def sign_request(request):
+    """
+        Generate new request
+    """
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    if request.method == 'POST':
+        if 'requestID' in request.POST and 'signature' in request.POST:
+            web_data = request.POST
+            print(f'request {web_data.get("signature")}')
+
+            requestInst = get_object_or_404(Request, id=web_data.get('requestID'))
+            requestInst.signature = web_data.get('signature')
+
+            requestInst.save()
+            return HttpResponseRedirect(reverse('researcher_req:request', args=(requestInst.id,)))
+    logger.debug(
+        f'{inspect.currentframe().f_code.co_name} returning without action')
+    return HttpResponseRedirect(reverse('researcher_req:index'))
+

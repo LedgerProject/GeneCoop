@@ -8,7 +8,7 @@
 <div class="container">
     <h2>Request</h2>
 
-    <form action="{% url 'researcher_req:generate_token' %}" method="post">
+    <form action="{% url 'researcher_req:sign_request' %}" method="post">
         {% csrf_token %}
         <ul class="responsive-table">
             <li class="table-header">
@@ -16,19 +16,23 @@
                 <div class="col col-2">Request Description</div>
                 <div class="col col-3">User id</div>
                 <div class="col col-4">Token</div>
-                <div class="col col-5">Status</div>
+                <div class="col col-5">Signature</div>
+                <div class="col col-6">Status</div>
 
             </li>
             <li class="table-row">
-                <div class="col col-1" data-label="Name">{{request.text }}</div>
+                <div class="col col-1" data-label="Name"><a href="{% url 'researcher_req:download_request' request.id %}">{{request.text }}</a></div>
                 <div class="col col-2" data-label="Description">{{ request.description }}</div>
                 <div class="col col-3" data-label="Userid">{{ request.user_id }}</div>
                 <div class="col col-4" data-label="Token">{{ request.token }}</div>
-                <div class="col col-5" data-label="Status">{{ request.status }}</div>
+                <div class="col col-5" data-label="Signature">
+                    <input type="text" id="signature" name="signature" value="{{request.signature}}">
+                </div>
+                <div class="col col-6" data-label="Status">{{ request.status }}</div>
             </li>
             <li class="table-row">
-                <input type="hidden" id="requestID" name="requestID" value={{request.id}}>
-                <div class="col col-1" data-label="Submit"><input type="submit" value="Generate Token"></div>
+                <input type="hidden" id="requestID" name="requestID" value="{{request.id}}">
+                <div class="col col-1" data-label="Submit"><input type="submit" value="Sign Request"></div>
             </li>
         </ul>
     </form>
