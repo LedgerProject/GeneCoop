@@ -37,7 +37,7 @@ else
 
     pip install -r ./pip_requirements.txt
 
-    . ./createUsers.sh
+    . ./util_functions.sh
 
     create_user_cmd superuser | python manage.py shell --settings=${settings}
     create_user_cmd researcher | python manage.py shell --settings=${settings}
@@ -45,6 +45,11 @@ else
 
     export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=${settings}
     export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=${settings}
+
+    if ! check_restroom
+    then
+        exit 1
+    fi
 
 
     export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=${settings}
