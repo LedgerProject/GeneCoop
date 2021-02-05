@@ -82,9 +82,9 @@ def consent(request, pk):
 
 def sign(request, pk):
     template_name = 'genecoop/signconsent.html'
-    context = {'my_set' : gen_queryset(pk)}
+    #todo validate request exists
+    context = {'my_set' : gen_queryset(pk) }
     return render(request, template_name, context)
-
 
 def genconsent(request):
     if request.method == 'POST':
