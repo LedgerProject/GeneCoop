@@ -43,8 +43,8 @@ else
     create_user_cmd researcher | python manage.py shell --settings=${settings}
     
 
-    export SECRET_KEY=$(cat .secret_key); python manage.py makemigrations --settings=${settings}
-    export SECRET_KEY=$(cat .secret_key); python manage.py migrate --settings=${settings}
+    SECRET_KEY=$(cat .secret_key) python manage.py makemigrations --settings=${settings}
+    SECRET_KEY=$(cat .secret_key) python manage.py migrate --settings=${settings}
 
     if ! check_restroom
     then
@@ -52,7 +52,7 @@ else
     fi
 
 
-    export SECRET_KEY=$(cat .secret_key); python manage.py runserver --settings=${settings}
+    SECRET_KEY=$(cat .secret_key) python manage.py runserver --settings=${settings}
 
 fi
 
