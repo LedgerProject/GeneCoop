@@ -6,12 +6,12 @@
         },
         "user": {
             "text": "Array test",
-            "description": "An array test is needed to sequence your DNA from your Saliva:$pd$, and to produce a digital version of your DNA, which is needed for tumor classification in this research."
+            "description": "An array test is needed to sequence your DNA from your <pd>Saliva</pd>, and to produce a digital version of your DNA, which is needed for tumor classification in this research."
         },
         "statements":[
-                "I will send a sample of my Saliva:$pd$  for sequencing directly to Erasmus MC:$org$.",
-                "The array test will be performed by Erasmus MC:$org$, after which the sample will be stored at Erasmus MC:$org$ only during the array test, after which it will be destroyed.",
-                "As a result of the array test my Raw DNA Data File:$pd$  will be stored on SURF LabSafe:$tech$ . and managed and protected by Genecoop Cooperation:$org$."
+                "I will send a sample of my <pd>Saliva</pd>  for sequencing directly to <org>Erasmus MC</org>.",
+                "The array test will be performed by <org>Erasmus MC</org>, after which the sample will be stored at <org>Erasmus MC</org> only during the array test, after which it will be destroyed.",
+                "As a result of the array test my <pd>Raw DNA Data File</pd>  will be stored on <tech>SURF LabSafe</tech> . and managed and protected by <org>Genecoop Cooperation</org>."
             ],
         "required": true,
         "key": 0,
@@ -49,9 +49,9 @@
         },
         "key": 1,
         "statements" : [
-            "The analysis will be performed by Genecoop Principal Investigator using Omnigen-GCP:$tech$",
-            "This analysis needs access to my Raw DNA Data File:$pd$  stored on SURF LabSafe:$tech$ managed by Genecoop Cooperation:$org$",
-            "I understand that as a result of the CNV analysis a CNV Analysis Report:$pd$  will be stored on SURF LabSafe:$tech$ managed and protected by Genecoop Cooperation:$org$"
+            "The analysis will be performed by <org>Genecoop Principal Investigator</org> using <tech>Omnigen-GCP</tech>",
+            "This analysis needs access to my <pd>Raw DNA Data File</pd>  stored on <tech>SURF LabSafe</tech> managed by <org>Genecoop Cooperation</org>",
+            "I understand that as a result of the CNV analysis a <pd>CNV Analysis Report</pd>  will be stored on <tech>SURF LabSafe</tech> managed and protected by <org>Genecoop Cooperation</org>"
         ],
         "required":true,
         "options": [
@@ -87,11 +87,11 @@
             "description": "DBM discovery is needed to improve personalized drug treatment in the future, for you and for others. Biomarkers discovered in this analysis can be used for predictive, diagnostic or prognostic purposes."
         },
         "statements": [
-            "The analysis will be performed by Genecoop Principal Investigator:$org$ using Svastia on Amazon Web Services:$tech$.",
-            "I understand that this analysis needs access to my Raw DNA Data File:$pd$  stored on SURF LabSafe:$tech$ managed by Genecoop Cooperation:$org$.",
-            "I understand that a copy of my Raw DNA Data File:$pd$  is stored on Amazon Web Services:$tech$ during the analysis.",
-            "I understand that the result of the DBM a Biomarker Analysis Report:$pd$  will be stored on SURF LabSafe:$tech$.",
-            "I understand that anonymised data from my Biomarker Analysis Report:$pd$  will be collected and made available for request through the GeneCoop Data Catalogue:$tech$"
+            "The analysis will be performed by <org>Genecoop Principal Investigator</org> using <tech>Svastia on Amazon Web Services</tech>.",
+            "I understand that this analysis needs access to my <pd>Raw DNA Data File</pd>  stored on <tech>SURF LabSafe</tech> managed by <org>Genecoop Cooperation:</org>.",
+            "I understand that a copy of my <pd>Raw DNA Data File</pd>  is stored on <tech>Amazon Web Services</tech> during the analysis.",
+            "I understand that the result of the DBM a <pd>Biomarker Analysis Report</pd>  will be stored on <tech>SURF LabSafe</tech>.",
+            "I understand that anonymised data from my <pd>Biomarker Analysis Report</pd>  will be collected and made available for request through the <tech>GeneCoop Data Catalogue</tech>"
         ], 
         "required": false,
         "key": 2,
@@ -128,9 +128,9 @@
             "text": "DNA data in catalogue for new research",
             "description": "This allows other researchers to learn as much as possible from my dna data in the future. You will always be asked for informed consent before access is granted.",
             "statements": [
-                "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of my personal data that are stored in the SURF LabSafe:$tech$",
-                "I understand that the catalog needs parts of my personal data, and they will be stored in a database managed by GenCoop Cooperation:$org$",
-                "I understand that researchers can ask me for consent in the future to participate in new research through GeneCoop:$org$"
+                "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of my personal data that are stored in the <tech>SURF LabSafe</tech>",
+                "I understand that the catalog needs parts of my personal data, and they will be stored in a database managed by <org>GenCoop Cooperation</org>",
+                "I understand that researchers can ask me for consent in the future to participate in new research through <org>GeneCoop</org>"
             ]
 
         },

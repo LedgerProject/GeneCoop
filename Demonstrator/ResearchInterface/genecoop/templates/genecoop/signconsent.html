@@ -1,4 +1,6 @@
 {% load static %}
+{% load genecoop_extras %}
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,7 +29,7 @@
                     <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
                     <ul>
                         {% for statement in operation.statements %}
-                        <li>{{ statement }}</li>
+                        <li>{{ statement|org|pd|tech|safe}}</li>
                         {% endfor %}
                     </ul>
                     <br/>
