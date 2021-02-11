@@ -1,27 +1,26 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <title>GeneCoop Request for Consent</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'genecoop/user.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>GeneCoop Request for Consent</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'genecoop/user.css' %}">
-</head>
-
-<body>
-    <div><a href="{% url 'genecoop:index' %}">Home</a></div>
-
-    <div class="consent_page">
-        <h1>GeneCoop Request for Consent</h1>
-        <header class="consent_request_header">
-            <h2 class="consent_request_title">{{ my_request.description }}</h2>
-            <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user }}&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> asks for your consent to the following permissions:
-            </p>
-        </header>
-        <form class="consent_request" action="{% url 'genecoop:signconsent' %}" method="post">
-            {% csrf_token %}
+    <body>
+        <main class="consent_page">
+            <div><a href="{% url 'genecoop:index' %}">Home</a></div>
+            <h1 class="consent_request_label">GeneCoop Request for Consent</h1>
+            <form class="consent_request" action="{% url 'genecoop:signconsent' %}" method="post">
+                <header class="consent_request_header">
+                    <h2 class="consent_request_title">{{ my_request.description }}</h2>
+                    <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user }}&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> asks for your consent to the following permissions:
+                    </p>
+                </header>
+                {% csrf_token %}
                 {% for operation in my_set.operations %}
-                
+
                 <section class="consent_request_item">
                     <h3 class="consent_request_item_title">{{ operation.text}}</h3>
                     <h4 class="consent_request_section_title">Purpose</h4>
@@ -32,14 +31,14 @@
                     </ul>
                     <br/>
                     <strong>
-                    <div data-label="Options">
+                        <div data-label="Options">
                             I agree to this:&nbsp;
                             {% for option in operation.options %}
-                                <label for="{{ operation.key }}">{{ option.text }}</label>
-                                <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.key }}">
+                            <label for="{{ operation.key }}">{{ option.text }}</label>
+                            <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.key }}">
                             {% endfor %}
                             ([TODO optionality])
-                    </div>
+                        </div>
                     </strong>
                 </section>
                 {% endfor %}
@@ -50,13 +49,13 @@
                         <li>[TODO selected statements] (dynamic)</li>
                     </ul>
                 </section>
- 
+
                 <footer class="consent_sign_footer">
                     <input type="hidden" id="consentID" name="consentID" value={{my_set.token}}>
                     <input type="submit" data-label="Submit" class="button" value="Sign agreement" />
                 </footer>
-        </form>
-    </div>
-</body>
+            </form>
+        </main>
+    </body>
 
 </html>
