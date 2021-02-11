@@ -2,18 +2,18 @@
     {
         "researcher": {
             "text": "Array test including QC and Data curation",
-            "description": "Tier 1 assay Needed for tumor classification",
-            "statements":[]
+            "description": "Tier 1 assay Needed for tumor classification"
         },
         "user": {
             "text": "Array test",
-            "description": "An array test is needed to sequence your DNA from your Saliva:$pd$, and to produce a digital version of your DNA, which is needed for tumor classification in this research.",
-            "statements":[
+            "description": "An array test is needed to sequence your DNA from your Saliva:$pd$, and to produce a digital version of your DNA, which is needed for tumor classification in this research."
+        },
+        "statements":[
                 "I will send a sample of my Saliva:$pd$  for sequencing directly to Erasmus MC:$org$.",
                 "The array test will be performed by Erasmus MC:$org$, after which the sample will be stored at Erasmus MC:$org$ only during the array test, after which it will be destroyed.",
                 "As a result of the array test my Raw DNA Data File:$pd$  will be stored on SURF LabSafe:$tech$ . and managed and protected by Genecoop Cooperation:$org$."
-            ]
-        },
+            ],
+        "required": true,
         "key": 0,
         "options": [
             {
@@ -41,15 +41,15 @@
     {
         "researcher": {
             "text": "Analysis II CNV",
-            "description": "Needed for tumor classification and personalized advise",
-            "statements": []
+            "description": "Needed for tumor classification and personalized advise"
         },
         "user": {
             "text": "Analysis II CNV",
-            "description": "Better insight in Cancer treatment and prediction",
-            "statements" : []
+            "description": "Better insight in Cancer treatment and prediction"
         },
         "key": 1,
+        "statements" : [],
+        "required":true,
         "options": [
             {
                 "text": "yes",
@@ -76,15 +76,14 @@
     {
         "researcher": {
             "text": "Analysis III Drug biomarker discover",
-            "description": "Optimize personalized drug treatment",
-            "statements": []
+            "description": "Optimize personalized drug treatment"
         },
         "user": {
             "text": "Drug biomarker discover",
-            "description": "Interest in personal use but not to develop new drugs and make company better",
-            "statements": []
-
+            "description": "Interest in personal use but not to develop new drugs and make company better"
         },
+        "statements": [], 
+        "required": false,
         "key": 2,
         "options": [
             {
@@ -122,6 +121,8 @@
 
         },
         "key": 3,
+        "statements": [],
+        "required": false,
         "options": [
             {
                 "text": "yes",
