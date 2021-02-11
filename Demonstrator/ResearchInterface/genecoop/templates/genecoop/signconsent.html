@@ -27,7 +27,9 @@
                     <p class="consent_request_section_text">{{ operation.description}}</p>
                     <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
                     <ul>
-                        <li>[TODO personal data statements]</li>
+                        {% for statement in operation.statements %}
+                        <li>{{ statement }}</li>
+                        {% endfor %}
                     </ul>
                     <br/>
                     <strong>

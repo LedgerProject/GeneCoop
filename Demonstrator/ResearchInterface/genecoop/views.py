@@ -47,13 +47,14 @@ def gen_queryset(pk, include_log=False):
                 opt_obj = myConfig.get_option_obj(opt_key)
                 opt_entry = {
                     'key': opt_obj.key,
-                    'text': opt_obj.text
+                    'text': opt_obj.text,
                 }
                 option_entries.append(opt_entry)
             ope_entry = {
                 'text': ope_obj.text,
                 'key': ope_obj.key,
                 'description': ope_obj.description,
+                'statements': ope_obj.statements,
                 'chosen_option': operation['chosen_option'],
                 'options': option_entries
             }

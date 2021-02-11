@@ -62,8 +62,9 @@ class baseEntity:
 
 
 class Operation(baseEntity):
-    def __init__(self, text, description, key):
+    def __init__(self, text, description, key, statements):
         super(Operation,self).__init__( text, description, key )
+        self.statements = statements 
         self.options = []
     
     def add_option_key(self, option_key):
@@ -146,7 +147,7 @@ class ConsentConfig:
             operations = json.loads(fp.read())
 
             for operation in operations:
-                anOperation = Operation(text=operation[self.role]['text'], description=operation[self.role]['description'], key=f"{operation['key']}".zfill(4))
+                anOperation = Operation(text=operation[self.role]['text'], description=operation[self.role]['description'], statements=operation[self.role]['statements'], key=f"{operation['key']}".zfill(4))
 
                 for option in operation['options']:
                     opt_key = f"{option['key']}".zfill(4)
