@@ -26,11 +26,16 @@ pip install -r ./pip_requirements.txt
 python manage.py makemigrations --settings=${settings}
 python manage.py migrate --settings=${settings}
 
-. ./createUsers.sh
+. ./util_functions.sh
+
 
 create_user_cmd superuser | python manage.py shell --settings=${settings}
 create_user_cmd researcher | python manage.py shell --settings=${settings}
 
+if ! check_restroom
+then
+    exit 1
+fi
 
 python manage.py runserver --settings=${settings}
 
