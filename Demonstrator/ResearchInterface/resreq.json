@@ -44,11 +44,15 @@
             "description": "Needed for tumor classification and personalized advise"
         },
         "user": {
-            "text": "Analysis II CNV",
-            "description": "Better insight in Cancer treatment and prediction"
+            "text": "Copy Number Variation",
+            "description": "Copy Number Variation is needed in this research for better insight in cancer treatment and prediction."
         },
         "key": 1,
-        "statements" : [],
+        "statements" : [
+            "The analysis will be performed by Genecoop Principal Investigator using Omnigen-GCP:$tech$",
+            "This analysis needs access to my Raw DNA Data File:$pd$  stored on SURF LabSafe:$tech$ managed by Genecoop Cooperation:$org$",
+            "I understand that as a result of the CNV analysis a CNV Analysis Report:$pd$  will be stored on SURF LabSafe:$tech$ managed and protected by Genecoop Cooperation:$org$"
+        ],
         "required":true,
         "options": [
             {
@@ -80,9 +84,15 @@
         },
         "user": {
             "text": "Drug biomarker discover",
-            "description": "Interest in personal use but not to develop new drugs and make company better"
+            "description": "DBM discovery is needed to improve personalized drug treatment in the future, for you and for others. Biomarkers discovered in this analysis can be used for predictive, diagnostic or prognostic purposes."
         },
-        "statements": [], 
+        "statements": [
+            "The analysis will be performed by Genecoop Principal Investigator:$org$ using Svastia on Amazon Web Services:$tech$.",
+            "I understand that this analysis needs access to my Raw DNA Data File:$pd$  stored on SURF LabSafe:$tech$ managed by Genecoop Cooperation:$org$.",
+            "I understand that a copy of my Raw DNA Data File:$pd$  is stored on Amazon Web Services:$tech$ during the analysis.",
+            "I understand that the result of the DBM a Biomarker Analysis Report:$pd$  will be stored on SURF LabSafe:$tech$.",
+            "I understand that anonymised data from my Biomarker Analysis Report:$pd$  will be collected and made available for request through the GeneCoop Data Catalogue:$tech$"
+        ], 
         "required": false,
         "key": 2,
         "options": [
@@ -116,8 +126,12 @@
         },
         "user": {
             "text": "DNA data in catalogue for new research",
-            "description": "Learn as much from my DNA data.",
-            "statements": []
+            "description": "This allows other researchers to learn as much as possible from my dna data in the future. You will always be asked for informed consent before access is granted.",
+            "statements": [
+                "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of my personal data that are stored in the SURF LabSafe:$tech$",
+                "I understand that the catalog needs parts of my personal data, and they will be stored in a database managed by GenCoop Cooperation:$org$",
+                "I understand that researchers can ask me for consent in the future to participate in new research through GeneCoop:$org$"
+            ]
 
         },
         "key": 3,
