@@ -13,6 +13,10 @@
                 "The array test will be performed by <org>Erasmus MC</org>, after which the sample will be stored at <org>Erasmus MC</org> only during the array test, after which it will be destroyed.",
                 "As a result of the array test my <pd>Raw DNA Data File</pd>  will be stored on <tech>SURF LabSafe</tech> . and managed and protected by <org>Genecoop Cooperation</org>."
             ],
+        "permissions":[
+           "<org>Erasmus MC</org> will access my <pd>Saliva</pd> for an Array Test",
+           "<org>Erasmus MC</org> will store a <pd>Raw DNA data file</pd> on <tech>SURF LabSafe</tech>"
+        ],
         "required": true,
         "key": 0,
         "options": [
@@ -53,6 +57,13 @@
             "This analysis needs access to my <pd>Raw DNA Data File</pd>  stored on <tech>SURF LabSafe</tech> managed by <org>Genecoop Cooperation</org>",
             "I understand that as a result of the CNV analysis a <pd>CNV Analysis Report</pd>  will be stored on <tech>SURF LabSafe</tech> managed and protected by <org>Genecoop Cooperation</org>"
         ],
+        "permissions":[
+           "<org>GeneCoop Principal Investigator</org> will access my <pd>Raw DNA data file</pd> on <tech>SURF LabSafe</tech>",
+           "<org>GeneCoop Principal Investigator</org> will analyse my <pd>Raw DNA data file</pd> using <tech>Omnigen-GCP</tech>",
+           "<org>GeneCoop Principal Investigator</org> will store a <pd>Raw DNA data file</pd> on <tech>SURF LabSafe</tech>"
+
+        ],
+
         "required":true,
         "options": [
             {
@@ -93,6 +104,7 @@
             "I understand that the result of the DBM a <pd>Biomarker Analysis Report</pd>  will be stored on <tech>SURF LabSafe</tech>.",
             "I understand that anonymised data from my <pd>Biomarker Analysis Report</pd>  will be collected and made available for request through the <tech>GeneCoop Data Catalogue</tech>"
         ], 
+        "permissions":["TODO"],
         "required": false,
         "key": 2,
         "options": [
@@ -136,6 +148,7 @@
         },
         "key": 3,
         "statements": [],
+        "permissions":["TODO"],
         "required": false,
         "options": [
             {
