@@ -14,8 +14,8 @@
     <div class="consent_page">
         <h1>GeneCoop Request for Consent</h1>
         <header class="consent_request_header">
-            <h2 class="consent_request_title">[[TODO research name]]</h2>
-            <p class="consent_request_description"><i class="organisation">[TODO RESEARCHER]&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> asks for your consent to the following permissions:
+            <h2 class="consent_request_title">{{ my_request.description }}</h2>
+            <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user }}&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> asks for your consent to the following permissions:
             </p>
         </header>
         <form class="consent_request" action="{% url 'genecoop:signconsent' %}" method="post">
@@ -45,7 +45,7 @@
                 {% endfor %}
                 <section>
                     <h2>Summary of permissions</h2>
-                    <p>As part of [TODO research name] conducted by [TODO researcher name] I agree to the following:
+                    <p>As part of {{ my_request.description }} conducted by {{ my_request.researcher.user }} I agree to the following:
                     <ul>
                         <li>[TODO selected statements] (dynamic)</li>
                     </ul>

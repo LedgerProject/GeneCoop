@@ -98,7 +98,9 @@ def consent(request, pk):
 
 def sign(request, pk):
     template_name = 'genecoop/signconsent.html'
-    context = {'my_set': gen_queryset(pk)}
+    my_set = gen_queryset(pk)
+    my_request = get_object_or_404(Request, token=pk)
+    context = {'my_set': my_set, 'my_request': my_request}
     return render(request, template_name, context)
 
 
