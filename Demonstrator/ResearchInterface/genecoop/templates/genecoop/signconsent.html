@@ -34,7 +34,7 @@
                     </ul>
                     <br/>
                     <strong>
-                        <div data-label="Options">
+                        <div data-label="Options" {%if operation.required %} class="mandatory" {% endif %}>
                             I agree to this:&nbsp;
                             {% for option in operation.options %}
                             <label for="{{ operation.key }}">{{ option.text }}</label>
@@ -61,7 +61,7 @@
 
                 <footer class="consent_sign_footer">
                     <input type="hidden" id="consentID" name="consentID" value={{my_set.token}}>
-                    <input type="submit" data-label="Submit" class="button" value="Sign agreement" />
+                    <input id="submitButton" type="submit" data-label="Submit" class="button" value="Sign agreement" disabled />
                 </footer>
             </form>
         </main>
