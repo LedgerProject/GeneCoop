@@ -62,9 +62,10 @@ class baseEntity:
 
 
 class Operation(baseEntity):
-    def __init__(self, text, description, key, statements, required):
+    def __init__(self, text, description, key, statements, permissions, required):
         super(Operation,self).__init__( text, description, key )
         self.statements = statements 
+        self.permissions = permissions
         self.required = required
         self.options = []
     
@@ -151,6 +152,7 @@ class ConsentConfig:
                 anOperation = Operation(text=operation[self.role]['text'], 
                                         description=operation[self.role]['description'], 
                                         statements=operation['statements'], 
+                                        permissions=operation['permissions'],
                                         required=(operation['required']),
                                         key=f"{operation['key']}".zfill(4))
 

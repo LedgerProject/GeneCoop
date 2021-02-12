@@ -55,6 +55,7 @@ def gen_queryset(pk, include_log=False):
                 'key': ope_obj.key,
                 'description': ope_obj.description,
                 'statements': ope_obj.statements,
+                'permissions': ope_obj.permissions,
                 'required': ope_obj.required,
                 'chosen_option': operation['chosen_option'],
                 'options': option_entries

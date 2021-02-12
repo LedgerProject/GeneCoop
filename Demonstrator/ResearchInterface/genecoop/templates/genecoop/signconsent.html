@@ -38,9 +38,9 @@
                             I agree to this:&nbsp;
                             {% for option in operation.options %}
                             <label for="{{ operation.key }}">{{ option.text }}</label>
-                            <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.key }}">
+                            <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}" value="{{ option.key }}" onchange="return onAgreementChange(event);">
                             {% endfor %}
-                                           </div>
+                        </div>
                     </strong>
                     <br/>
                     ({% if operation.required == True  %}Required{% else %}Optional{% endif %})
@@ -50,8 +50,12 @@
                 <section>
                     <h2>Summary of permissions</h2>
                     <p>As part of {{ my_request.description }} conducted by {{ my_request.researcher.user }} I agree to the following:
-                    <ul>
-                        <li>[TODO selected statements] (dynamic)</li>
+                    <ul id="permissions">
+                    {% for operation in my_set.operations %}
+                        {% for permission in operation.permissions %}
+                        <li style="display:none" class="op_{{operation.key}}">{{ permission|org|pd|tech|safe }}</li>
+                        {% endfor %}
+                    {% endfor %}
                     </ul>
                 </section>
 
@@ -61,6 +65,7 @@
                 </footer>
             </form>
         </main>
+        <script type="text/javascript" src="{% static 'genecoop/user.js' %}"></script>
     </body>
 
 </html>
