@@ -1,0 +1,51 @@
+{
+  "manifest_version": 2,
+  "name": "genecoop_research",
+  "description": "Sign requests for consent to be used with Genecoop",
+  "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/web_ext",
+  "version": "0.0.1",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "research@genecoop.waag.org"
+    }
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "64": "icons/icon.png"
+  },
+  "background": {
+    "scripts": [
+      "background_script.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://genecoop.waag.org/*",
+        "*://localhost:8000/*"
+      ],
+      "js": ["content_script.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "64": "icons/icon.png"
+    },
+    "default_popup": "browserAction/popup.html",
+    "default_title": "genecoop_research"
+  },
+  "page_action": {
+    "default_icon": {
+      "48": "icons/beasts-48.png"
+    },
+    "default_popup": "pageAction/index.html",
+    "default_title": "genecoop_research"
+  },
+  "options_ui": {
+    "page": "options/index.html"
+  },
+  "web_accessible_resources": [
+  ]
+}
