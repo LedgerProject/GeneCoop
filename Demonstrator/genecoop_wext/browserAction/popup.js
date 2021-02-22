@@ -36,8 +36,7 @@ function listenForClicks() {
         function sign(tabs) {
             browser.tabs.insertCSS({ code: signPage }).then(() => {
                 browser.tabs.sendMessage(tabs[0].id, {
-                    command: "sign",
-                    key: "paperino"
+                    command: "sign"
                 });
             });
         }
@@ -45,8 +44,7 @@ function listenForClicks() {
         function verify(tabs) {
             browser.tabs.insertCSS({ code: verifyPage }).then(() => {
                 browser.tabs.sendMessage(tabs[0].id, {
-                    command: "verify",
-                    key: "pluto"
+                    command: "verify"
                 });
             });
         }

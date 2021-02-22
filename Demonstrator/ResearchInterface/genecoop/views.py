@@ -116,7 +116,7 @@ def verify_consent(request):
 
             requestInst = get_object_or_404(Request, token=token)
 
-            requestData = labut.request_to_sign(requestInst)
+            requestData = requestInst.token
             signature = labut.get_signature(requestInst)
 
             if DO_ENCODING:

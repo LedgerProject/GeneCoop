@@ -153,16 +153,6 @@ def gen_queryset(pk):
     return my_set
 
 
-def generate_token(requestInst):
-    """
-        Generate a token to be sent to the user
-    """
-    mySerializedOperations.unserialize(requestInst.operations)
-    token = labut.gen_token(requestInst.user_id,
-                            mySerializedOperations.operations)
-    requestInst.token = token
-    return
-
 # class LoginView(LoginView):
 #     template_name = 'researcher_req/login.html'
 
@@ -310,8 +300,10 @@ def add_request(request):
                 mySerializedOperations.add_operation_key(id)
                 # print(f'operation key: {ope_obj.key}')
 
+            token = labut.gen_token(new_request.text, new_request.description, new_request.user_id,
+                                    mySerializedOperations.operations)
+            new_request.token = token
             new_request.operations = mySerializedOperations.serialize()
-            generate_token(new_request)
             new_request.save()
             return HttpResponseRedirect(reverse('researcher_req:request', args=(new_request.id,)))
     logger.debug(
@@ -361,7 +353,7 @@ def download_request(request, id):
     # print(f'operation {operation for operation in requestInst.operations.all()}')
 
     # payload = requestInst.make_contract()
-    payload = labut.request_to_sign(requestInst)
+    payload = requestInst.token
     # response content type
     response = HttpResponse(content_type='text/json')
     # decide the file name
@@ -370,6 +362,7 @@ def download_request(request, id):
     response.write(payload)
 
     return response
+
 
 @login_required(login_url='researcher_req:login')
 def sign_request(request):
@@ -382,7 +375,8 @@ def sign_request(request):
             web_data = request.POST
             print(f'request {web_data.get("signature")}')
 
-            requestInst = get_object_or_404(Request, id=web_data.get('requestID'))
+            requestInst = get_object_or_404(
+                Request, id=web_data.get('requestID'))
             requestInst.signature = web_data.get('signature')
 
             requestInst.save()
@@ -390,4 +384,3 @@ def sign_request(request):
     logger.debug(
         f'{inspect.currentframe().f_code.co_name} returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
-

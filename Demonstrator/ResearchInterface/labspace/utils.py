@@ -1,6 +1,7 @@
 import logging
 import inspect
 import requests
+import hashlib
 from pathlib import Path
 import json, copy
 
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 KEY_SEP='_'
 TOKEN_SEP='_'
+OPCODE_LEN = 3
 
 def format_request(prepped, encoding=None):
     # prepped has .method, .path_url, .headers and .body attribute to view the request
@@ -23,16 +25,21 @@ def format_request(prepped, encoding=None):
 {body}"""
 
 
-def gen_token(user_id, operations):
+def gen_token(text, description, user_id, operations):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    opconcat = TOKEN_SEP.join([f"{operation['key']}".zfill(4) for operation in operations])
-    token = f'{user_id}{TOKEN_SEP}{opconcat}'
+    prelude = f'{text}{TOKEN_SEP}{description}'.encode()
+    hash_object = hashlib.sha1(prelude)
+    hex_dig = hash_object.hexdigest()
+
+    opconcat = "".join([f"{operation['key']}".zfill(OPCODE_LEN) for operation in operations])
+    token = f'{hex_dig}{TOKEN_SEP}{user_id}{TOKEN_SEP}{opconcat}'
     return token
 
 def decode_token(token):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    tokens = token.split('_')
-    return tokens[0], tokens[1:]
+    tokens = token.split(TOKEN_SEP)
+    operations = tokens[2]
+    return tokens[1], [operations[i:i + OPCODE_LEN] for i in range(0, len(operations), OPCODE_LEN)]
 
 def request_to_sign(request):
     logger.debug(f'Generating request to be signed for: {request}')
@@ -154,10 +161,10 @@ class ConsentConfig:
                                         statements=operation['statements'], 
                                         permissions=operation['permissions'],
                                         required=(operation['required']),
-                                        key=f"{operation['key']}".zfill(4))
+                                        key=f"{operation['key']}".zfill(OPCODE_LEN))
 
                 for option in operation['options']:
-                    opt_key = f"{option['key']}".zfill(4)
+                    opt_key = f"{option['key']}".zfill(OPCODE_LEN)
                     option_key = f"{anOperation.key}{KEY_SEP}{opt_key}"
                     anOption = Option(text=option['text'], description=option[self.role]['description'], key=option_key)
                     anOption.set_operation_key(anOperation.key)
