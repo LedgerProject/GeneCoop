@@ -12,9 +12,9 @@ function checkOptionality()
     let button = document.getElementById("submitButton");
     var mandatory_options = document.querySelectorAll('.mandatory');
     let checked = Array.from(mandatory_options).map(item =>{
-        //the yes options is the one of which the value ends with 0000, there is only one.
+        //the yes options is the one of which the value ends with _000, there is only one.
         let yes = Array.from(item.getElementsByTagName('input'))
-            .filter(el => el.value.endsWith("0000"))[0];
+            .filter(el => el.value.endsWith("_000"))[0];
         return yes.checked;
     });
 
@@ -25,7 +25,7 @@ function checkOptionality()
 //toggle visibility of li in permissions, based on agreements
 function togglePermissions(e)
 {
-    var selected = e.target.value.endsWith('0000');//yes value
+    var selected = e.target.value.endsWith('_000');//yes value
     var selector = '.op_' + e.target.id;
     var permissions = document.getElementById('permissions').querySelectorAll(selector);
     permissions.forEach(function(permission){
