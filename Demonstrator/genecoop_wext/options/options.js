@@ -14,8 +14,13 @@ function saveOptions(e) {
 function restoreOptions() {
 
     function setCurrentChoice(result) {
-        pubkeyInput.value = result.authCredentials.public_key || "";
-        prikeyInput.value = result.authCredentials.private_key || "";
+        if (result.authCredentials !== undefined) {
+            pubkeyInput.value = result.authCredentials.public_key || "";
+            prikeyInput.value = result.authCredentials.private_key || "";
+        }else{
+            pubkeyInput.value = "";
+            prikeyInput.value = "";
+        }
     }
 
     function onError(error) {

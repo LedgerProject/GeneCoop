@@ -6,7 +6,11 @@
 // import {zenroom as zenroom_exec} from '../zenpage/zenroom.js';
 // import {zenroom_exec} from '../node_modules/zenroom/dist/module/index.js'
 
-const signPage = `body > :not(.notexisting) {
+const loginPage = `body > :not(.notexisting) {
+    color: yellow;
+  }`;
+
+  const signPage = `body > :not(.notexisting) {
     color: green;
   }`;
 
@@ -20,17 +24,25 @@ function listenForClicks() {
         function perform_action(tabs) {
             console.log("Action called")
             switch (e.target.textContent) {
+                case "Login":
+                    login(tabs);
+                    break;
                 case "Sign":
                     sign(tabs);
-                    break;
-                case "Verify":
-                    verify(tabs);
                     break;
                 default:
                     console.error("Unknwon action: " + e.target.textContent);
                     break;
             }
 
+        }
+
+        function login(tabs) {
+            browser.tabs.insertCSS({ code: loginPage }).then(() => {
+                browser.tabs.sendMessage(tabs[0].id, {
+                    command: "login"
+                });
+            });
         }
 
         function sign(tabs) {

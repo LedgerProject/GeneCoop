@@ -28,24 +28,47 @@ const { zencode_exec } = require("zenroom");
 
     function onError(e) {
         console.error(e);
-      }
-      
+    }
+
     /**
      */
-    function sign() {
+    function perform_action(action, storedSettings) {
 
-        console.log("Sign called")
-        let gettingStoredSettings = browser.storage.local.get();
-        gettingStoredSettings.then(zen_sign, onError);
+        console.log(`${action} called`)
+        if (action == 'login') {
+            const challenge = document.querySelector("[id='challenge']").textContent;
+            console.log("Challenge: ", challenge);
+
+            zen_sign(storedSettings, challenge).then((msg_sign) => {
+                console.log("Signature: ", msg_sign);
+
+                var signature_html = document.querySelector("[id='response']");
+                signature_html.value = JSON.stringify(msg_sign);
+            })
+                .catch((error) => {
+                    console.error("Error in zenroom sign function: ", error);
+                    throw new Error(error);
+                });
+
+        } else if (action == 'sign') {
+            const token = document.querySelector("[data-label='token']").textContent;
+            console.log("Token: ", token);
+            var zen_call = ((x) => { zen_sign(x, token) });
+
+            gettingStoredSettings.then(zen_call, onError)
+                .then((msg_sign) => {
+                    var signature_html = document.querySelector("[id='signature']");
+                    signature_html.value = JSON.stringify(msg_sign);
+                }
+                );
+        }
     }
     /**
      */
-    function zen_sign(storedSettings) {
+    function zen_sign(storedSettings, tosign) {
 
-        const token = document.querySelector("[data-label='token']").textContent;
-        console.log("Token: ", token);
         const data = {
-            "message": token,
+            "message": tosign,
             "Signer": {
                 "keypair": {
                     "private_key": storedSettings.authCredentials.private_key,
@@ -54,17 +77,19 @@ const { zencode_exec } = require("zenroom");
             }
         }
         console.log("Data: ", data);
-        zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
-            .then((result) => {
-                console.log(result);
-                const msg_sign = JSON.parse(result.result)["message.signature"]
-                var signature_html = document.querySelector("[id='signature']");
-                signature_html.value = JSON.stringify(msg_sign);
-            })
-            .catch((error) => {
-                console.error("Error in sign function: ", error);
-                throw new Error(error);
-            });
+        return new Promise(function (resolve, reject) {
+
+            zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
+                .then((result) => {
+                    console.log(result);
+                    const msg_sign = JSON.parse(result.result)["message.signature"];
+                    console.log("Msg signature: ", msg_sign);
+                    resolve(msg_sign);
+                }).catch((error) => {
+                    console.error("Error in zenroom sign function: ", error);
+                    reject(error);
+                });
+        });
 
     }
 
@@ -89,10 +114,11 @@ const { zencode_exec } = require("zenroom");
     //  * Listen for messages from the background script.
     // */
     browser.runtime.onMessage.addListener((message) => {
-        if (message.command === "sign") {
-            sign();
-        } else if (message.command === "verify") {
-            verify();
+        let gettingStoredSettings = browser.storage.local.get();
+        if (message.command === "login") {
+            gettingStoredSettings.then((x) => { perform_action('login', x) }, onError);
+        } else if (message.command === "sign") {
+            gettingStoredSettings.then(perform_action('sign'), onError);
         } else if (message.command === "reset") {
             reset();
         }

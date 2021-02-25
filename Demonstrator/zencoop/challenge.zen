@@ -1,0 +1,4 @@
+Given nothing
+When I create the random object of '256' bits
+and I rename the 'random_object' to '256BitsChallenge'
+Then print the '256BitsChallenge'

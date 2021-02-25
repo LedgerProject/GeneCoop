@@ -14,7 +14,7 @@
     "storage"
   ],
   "icons": {
-    "64": "icons/icon.png"
+    "64": "icons/logo_64.png"
   },
   "background": {
     "scripts": [
@@ -32,7 +32,7 @@
   ],
   "browser_action": {
     "default_icon": {
-      "64": "icons/icon.png"
+      "64": "icons/logo_64.png"
     },
     "default_popup": "browserAction/popup.html",
     "default_title": "genecoop_research"

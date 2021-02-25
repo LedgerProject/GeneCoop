@@ -1,24 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 
 {% block content %}
 
-<h2>Log In</h2>
+
 {% if request.user.is_authenticated %}
-      Hello {{ request.user }} <a href="{% url 'researcher_req:logout' %}">Logout</a>
+<h2>Log In</h2>
+Hello {{ request.user }} <a href="{% url 'researcher_req:logout' %}">Logout</a>
 {% else %}
-<form action="{% url 'researcher_req:check_login' %}" method="post">
-    {% csrf_token %}
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="">
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="active"> Sign In </h2>
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="{% static 'researcher_req/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+        </div>
+        <h3 id="challenge" class="fadeIn second">challengeeeeee</h3>
+        <!-- Login Form -->
+        <form action="{% url 'researcher_req:check_login' %}" method="post">
+            {% csrf_token %}
+            <input type="text" id="username" class="fadeIn second" name="username" placeholder="username">
+            <input type="text" id="response" class="fadeIn third" name="response" placeholder="response">
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
     </div>
-    <button type="submit">Log In</button>
-</form>
+</div>
+
 {% endif %}
 
 {% endblock %}
