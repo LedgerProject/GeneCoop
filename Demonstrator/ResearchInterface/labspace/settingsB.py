@@ -41,7 +41,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'genecoop.views.ReadConfMiddleware',
 ]
-
+AUTHENTICATION_BACKENDS = (
+    # ... other backends
+    'labspace.challenge_auth.ChallengeAuthBackend',
+)
 ROOT_URLCONF = 'labspace.urls'
 
 TEMPLATES = [

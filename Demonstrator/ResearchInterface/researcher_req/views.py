@@ -26,6 +26,14 @@ myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
 
 
+def generate_random_challenge():
+    """
+        This function calls zenroom to generate
+        a random string to be used as challenge
+    """
+    return "zenroompythonbindingsdonotwork"
+
+
 def update_request(request_obj):
     """
         Checks whether a request has been signed
@@ -168,7 +176,8 @@ def login_view(request):
     template_name = 'researcher_req/login.html'
     # context = {'my_set' : gen_queryset(None)}
     # logger.debug(f'Index view rendering: {json.dumps(context)}')
-    return render(request, template_name)
+    context = {'challenge': generate_random_challenge()}
+    return render(request, template_name, context)
 
 
 @login_required(login_url='researcher_req:login')
@@ -238,10 +247,12 @@ def check_login(request):
     """
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'username' in request.POST and 'password' in request.POST:
+        if 'username' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
             username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
+            challenge = request.POST['challenge']
+            response = request.POST['response']
+            user = authenticate(request, username=username,
+                                is_challenge=True, challenge=challenge, response=response)
             if user is not None:
                 login(request, user)
 

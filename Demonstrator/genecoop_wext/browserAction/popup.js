@@ -7,7 +7,7 @@
 // import {zenroom_exec} from '../node_modules/zenroom/dist/module/index.js'
 
 const loginPage = `body > :not(.notexisting) {
-    color: yellow;
+    color: red;
   }`;
 
   const signPage = `body > :not(.notexisting) {
@@ -34,7 +34,6 @@ function listenForClicks() {
                     console.error("Unknwon action: " + e.target.textContent);
                     break;
             }
-
         }
 
         function login(tabs) {
@@ -116,6 +115,5 @@ function reportExecuteScriptError(error) {
 console.log("popup start")
 // browser.tabs.executeScript({ file: "/zenpage/zenpage.js" })
     browser.tabs.executeScript({ file: "/zenpage/zenpage.bundle.js" })
-    // browser.tabs.executeScript({ file: "/zenpage/beastify.js" })
     .then(listenForClicks)
     .catch(reportExecuteScriptError);

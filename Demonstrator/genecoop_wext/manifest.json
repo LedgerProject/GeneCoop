@@ -42,7 +42,7 @@
     "default_title": "genecoop_research"
   },
   "options_ui": {
-    "page": "options/index.html"
+    "page": "options/options.html"
   },
   "web_accessible_resources": [
   ]

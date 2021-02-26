@@ -36,15 +36,19 @@ const { zencode_exec } = require("zenroom");
 
         console.log(`${action} called`)
         if (action == 'login') {
-            const challenge = document.querySelector("[id='challenge']").textContent;
+            var username_html = document.querySelector("[id='username']");
+            username_html.value = storedSettings.authCredentials.username;
+
+            const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
 
-            zen_sign(storedSettings, challenge).then((msg_sign) => {
-                console.log("Signature: ", msg_sign);
+            zen_sign(storedSettings, challenge)
+                .then((msg_sign) => {
+                    console.log("Signature: ", msg_sign);
 
-                var signature_html = document.querySelector("[id='response']");
-                signature_html.value = JSON.stringify(msg_sign);
-            })
+                    var signature_html = document.querySelector("[id='response']");
+                    signature_html.value = JSON.stringify(msg_sign);
+                })
                 .catch((error) => {
                     console.error("Error in zenroom sign function: ", error);
                     throw new Error(error);
@@ -53,14 +57,18 @@ const { zencode_exec } = require("zenroom");
         } else if (action == 'sign') {
             const token = document.querySelector("[data-label='token']").textContent;
             console.log("Token: ", token);
-            var zen_call = ((x) => { zen_sign(x, token) });
 
-            gettingStoredSettings.then(zen_call, onError)
+            zen_sign(storedSettings, token)
                 .then((msg_sign) => {
+                    console.log("Signature: ", msg_sign);
+
                     var signature_html = document.querySelector("[id='signature']");
                     signature_html.value = JSON.stringify(msg_sign);
-                }
-                );
+                })
+                .catch((error) => {
+                    console.error("Error in zenroom sign function: ", error);
+                    throw new Error(error);
+                });
         }
     }
     /**
@@ -118,7 +126,7 @@ const { zencode_exec } = require("zenroom");
         if (message.command === "login") {
             gettingStoredSettings.then((x) => { perform_action('login', x) }, onError);
         } else if (message.command === "sign") {
-            gettingStoredSettings.then(perform_action('sign'), onError);
+            gettingStoredSettings.then((x) => { perform_action('sign', x) }, onError);
         } else if (message.command === "reset") {
             reset();
         }

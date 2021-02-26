@@ -6,19 +6,19 @@
     <meta charset="utf-8">
     <title>{% block title %}Researcher Space{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/login.css' %}">
 </head>
 
 <body>
-    {% if request.user.is_authenticated %}
-        Hello, {{ request.user }}! <a href="{% url 'researcher_req:logout' %}">Logout</a>
-        <div><a href="{% url 'researcher_req:index' %}">Index</a></div>
-
+    {% if user.is_authenticated %}
+        {% include "header.html" %}
+        {% block content %}
+        {% endblock %}
     {% else %}
-        <!-- You are not logged in.  -->
+        <!-- User not logged in.  -->
+        <div>User logged out</div>
+        <div><a href="{% url 'researcher_req:login' %}">Login</a></div>
     {% endif %}
-    {% block content %}
-    {% endblock %}
+    
 </body>
 
 </html>
