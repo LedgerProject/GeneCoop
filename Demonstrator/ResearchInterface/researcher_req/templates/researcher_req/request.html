@@ -16,23 +16,20 @@
                 <div class="col col-2">Request Description</div>
                 <div class="col col-3">User id</div>
                 <div class="col col-4">Token</div>
-                <div class="col col-5">Signature</div>
-                <div class="col col-6">Status</div>
+                <div class="col col-5">Status</div>
 
             </li>
             <li class="table-row">
-                <div class="col col-1" data-label="name"><a href="{% url 'researcher_req:download_request' request.id %}">{{ request.text }}</a></div>
+                <div class="col col-1" data-label="name">{{ request.text }}</div>
                 <div class="col col-2" data-label="description">{{ request.description }}</div>
                 <div class="col col-3" data-label="userid">{{ request.user_id }}</div>
                 <div class="col col-4" data-label="token">{{ request.token }}</div>
-                <div class="col col-5" data-label="signature">
-                    <input type="text" id="signature" name="signature" value="{{request.signature}}">
-                </div>
-                <div class="col col-6" data-label="status">{{ request.status }}</div>
+                <div class="col col-5" data-label="status">{{ request.status }}</div>
             </li>
             <li class="table-row">
+                <input type="hidden" id="signature" name="signature" value="{{request.signature}}">
                 <input type="hidden" id="requestID" name="requestID" value="{{request.id}}">
-                <div class="col col-1" data-label="Submit"><input type="submit" value="Sign Request"></div>
+                <div class="col col-1" data-label="Submit"><input id="submit" type="submit" value="Sign Request" disabled="true"></div>
             </li>
         </ul>
     </form>

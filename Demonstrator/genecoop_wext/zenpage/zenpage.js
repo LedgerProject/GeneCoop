@@ -34,15 +34,20 @@ const { zencode_exec } = require("zenroom");
      */
     function perform_action(action, storedSettings) {
 
+
         console.log(`${action} called`)
         if (action == 'login') {
             var username_html = document.querySelector("[id='username']");
+            if (storedSettings.authCredentials === undefined) {
+                username_html.value = "Please set your credentials in the add-on";
+                return;
+            }
             username_html.value = storedSettings.authCredentials.username;
 
             const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
 
-            zen_sign(storedSettings, challenge)
+            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, challenge)
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
 
@@ -58,12 +63,19 @@ const { zencode_exec } = require("zenroom");
             const token = document.querySelector("[data-label='token']").textContent;
             console.log("Token: ", token);
 
-            zen_sign(storedSettings, token)
+            if (storedSettings.authCredentials === undefined) {
+                signature_html.value = "Please set your credentials in the add-on";
+                return;
+            }
+
+            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
 
                     var signature_html = document.querySelector("[id='signature']");
                     signature_html.value = JSON.stringify(msg_sign);
+                    var submit_html = document.querySelector("[id='submit']");
+                    submit_html.disabled = false;
                 })
                 .catch((error) => {
                     console.error("Error in zenroom sign function: ", error);
@@ -73,14 +85,14 @@ const { zencode_exec } = require("zenroom");
     }
     /**
      */
-    function zen_sign(storedSettings, tosign) {
+    function zen_sign(public_key, private_key, tosign) {
 
         const data = {
             "message": tosign,
             "Signer": {
                 "keypair": {
-                    "private_key": storedSettings.authCredentials.private_key,
-                    "public_key": storedSettings.authCredentials.public_key
+                    "private_key": private_key,
+                    "public_key": public_key
                 }
             }
         }

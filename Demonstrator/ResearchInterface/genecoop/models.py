@@ -47,6 +47,7 @@ class ConsentLogger(models.Model):
     user_id = models.CharField(max_length=USERID_LENGTH, default="")
     operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
     token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
+    is_signed = models.BooleanField()
     request_received = models.DateTimeField('date received', default = timezone.make_aware(datetime(1900,1,1)))
 
 
@@ -70,30 +71,31 @@ class ConsentLogger(models.Model):
         consent = Consent.objects.get(token=self.token)
         assert(consent != None)
         self.request_received = timezone.now()
-        self.user_id,  self.operations = labut.decode_token(token)
-        return consent
+        self.user_id = consent.user_id
+        self.operations = consent.operations
+        self.is_signed = consent.is_signed()
 
 
     def log_is_signed(self, token):
-        consent = self.__handle_token__(token)
+        self.__handle_token__(token)
         self.type = self.LogTypes.IS_SIGNED
-        self.message = f"Request received to check whether consent is signed for token: {token}, answer is: {consent.is_signed()}"
+        self.message = f"Request received to check whether consent is signed for token: {token}, answer is: {self.is_signed}"
         
 
     def log_allowed_operations(self, token, op_results):
-        consent = self.__handle_token__(token)
+        self.__handle_token__(token)
         self.type = self.LogTypes.ALLOWED_OPERATIONS
         msg = [ f"(operation: {op['key']}, option: {op['chosen_option']})" for op in op_results]
         self.message = f"Request received to check what operations are allowed, results is {msg}"
         
 
     def log_operation(self, token, ope_key, is_allowed):
-        consent = self.__handle_token__(token)
+        self.__handle_token__(token)
         self.type = self.LogTypes.LOG_OPERATION
         self.message = f'Log operation {ope_key}, which is {"" if is_allowed else "NOT"} allowed'
         
     
     def log_not_signed_operation(self, token, ope_key):
-        consent = self.__handle_token__(token)
+        self.__handle_token__(token)
         self.type = self.LogTypes.LOG_NOTSIGNEDOPERATION
         self.message = f'Request to log operation {ope_key}, which is not signed'
