@@ -2,7 +2,7 @@
 
 zenroom='../../../../crypto/Zenroom_test/zenroom-osx.command'
 
-${zenroom} -z centr_issuer.zen | jq '.' > create_proof.data
+${zenroom} -k centr_issuer.key -z centr_issuer.zen | jq '.' > create_proof.data
 
 ${zenroom} -a create_proof.data -z create_proof.zen | jq '.' > verify_proof.data
 

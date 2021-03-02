@@ -1,7 +1,7 @@
 Scenario 'credential': centralized issuer
 Given that I am known as 'Issuer'
-When I create the issuer keypair
-and I create the credential keypair
+and I have my valid 'issuer keypair'
+When I create the credential keypair
 and I create the credential request
 and I create the credential signature
 and I create the credentials
