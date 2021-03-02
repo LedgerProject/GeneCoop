@@ -66,6 +66,17 @@ def get_signature(request):
     logger.debug(f'Getting signature for request: {request}')
     return json.loads(request.signature)
 
+######################################################
+# Zenroom functionality
+######################################################
+
+def generate_random_challenge():
+    """
+        This function calls zenroom to generate
+        a random string to be used as challenge
+    """
+    return "zenroompythonbindingsdonotwork"
+
 
 class baseEntity:
     def __init__(self, text, description, key):

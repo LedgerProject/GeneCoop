@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
   "name": "genecoop_research",
-  "description": "Sign requests for consent to be used with Genecoop",
-  "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/web_ext",
+  "description": "Support consent requests as defined by Genecoop",
+  "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/",
   "version": "0.0.1",
   "browser_specific_settings": {
     "gecko": {
-      "id": "webext@genecoop.waag.org"
+      "id": "researcher_webext@genecoop.waag.org"
     }
   },
   "permissions": [
@@ -24,8 +24,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://genecoop.waag.org/*",
-        "*://localhost:8000/*"
+        "https://genecoop.waag.org/request/*",
+        "http://localhost/request/*"
       ],
       "js": ["content_script.js"]
     }

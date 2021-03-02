@@ -1,0 +1,8 @@
+Scenario credential: create proof
+Given that have a 'credential keypair'
+and I have a valid 'verifier' inside 'Issuer'
+and I have a valid 'credentials'
+When I aggregate the verifiers
+and I create the credential proof
+Then print the 'credential proof'
+and print the 'verifier'

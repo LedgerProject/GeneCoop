@@ -26,12 +26,6 @@ myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
 
 
-def generate_random_challenge():
-    """
-        This function calls zenroom to generate
-        a random string to be used as challenge
-    """
-    return "zenroompythonbindingsdonotwork"
 
 
 def update_request(request_obj):
@@ -176,7 +170,7 @@ def login_view(request):
     template_name = 'researcher_req/login.html'
     # context = {'my_set' : gen_queryset(None)}
     # logger.debug(f'Index view rendering: {json.dumps(context)}')
-    context = {'challenge': generate_random_challenge()}
+    context = {'challenge': labut.generate_random_challenge()}
     return render(request, template_name, context)
 
 

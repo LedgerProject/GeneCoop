@@ -14,7 +14,7 @@
         <main class="consent_page">
             <div><a href="{% url 'genecoop:index' %}">Home</a></div>
             <h1 class="consent_request_label">GeneCoop Request for Consent</h1>
-            <form class="consent_request" action="{% url 'genecoop:signconsent' %}" method="post">
+            <form class="consent_request" action="{% url 'genecoop:sign_consent' %}" method="post">
                 <header class="consent_request_header">
                     <h2 class="consent_request_title">{{ my_request.description }}</h2>
                     <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user }}&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> asks for your consent to the following permissions:

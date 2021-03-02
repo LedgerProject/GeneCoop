@@ -10,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.core.exceptions import MiddlewareNotUsed
+from django.contrib.auth.decorators import login_required
 
 from .models import Consent
 from researcher_req.models import Request
@@ -86,21 +87,28 @@ def gen_queryset(pk, include_log=False):
     else:
         return my_set[0]
 
+def landing_view(request):
+    logger.debug(f'Landing view request')
+    template_name = 'genecoop/landing.html'
+    context = {'challenge': labut.generate_random_challenge()}
+    return render(request, template_name, context)
 
-def index(request):
+
+@login_required(login_url='genecoop:login')
+def index_view(request):
     template_name = 'genecoop/index.html'
     context = {'my_set': gen_queryset(None)}
     return render(request, template_name, context)
 
-
-def consent(request, pk):
+@login_required(login_url='genecoop:login')
+def consent_view(request, pk):
     template_name = 'genecoop/consent.html'
     context = {'consent': gen_queryset(pk, include_log=True)}
     return render(request, template_name, context)
 
-
-def sign(request, pk):
-    template_name = 'genecoop/signconsent.html'
+@login_required(login_url='genecoop:login')
+def sign_view(request, pk):
+    template_name = 'genecoop/sign.html'
     my_set = gen_queryset(pk)
     my_request = get_object_or_404(Request, token=pk)
     context = {'my_set': my_set, 'my_request': my_request}
@@ -187,7 +195,7 @@ def verify_consent(request):
     return HttpResponseRedirect(reverse('genecoop:index'))
 
 
-def signconsent(request):
+def sign_consent(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
         # print(f'request {request.POST}')

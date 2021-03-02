@@ -9,3 +9,7 @@ djangodebug.log
 
 Demonstrator/zencoop/*.keys
 zenpage.bundle.js
+create_proof.data
+verify_proof.data
+sign.data
+verify_signature.data
