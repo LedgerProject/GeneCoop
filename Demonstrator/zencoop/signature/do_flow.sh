@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zenroom='../../../../crypto/Zenroom_test/zenroom-osx.command'
+zenroom='/Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
 
 ${zenroom} -z challenge.zen | jq '.' > sign.data
 

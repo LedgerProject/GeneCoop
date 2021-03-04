@@ -32,10 +32,10 @@ python manage.py migrate --settings=${settings}
 create_user_cmd superuser | python manage.py shell --settings=${settings}
 create_user_cmd researcher | python manage.py shell --settings=${settings}
 
-if ! check_restroom
-then
-    exit 1
-fi
+# if ! check_restroom
+# then
+#     exit 1
+# fi
 
 python manage.py runserver --settings=${settings}
 

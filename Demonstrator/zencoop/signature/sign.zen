@@ -3,12 +3,12 @@ Scenario 'ecdh': create the signature of a request
 
 # Loading data
 Given I have a 'keypair'
-Given that I have a 'string' named 'message'
+Given that I have a 'string' named 'challenge'
 
 # Here we create the signaturs and we rename them to samething that looks nicer
-When I create the signature of 'message'
-When I rename the 'signature' to 'message.signature'
+When I create the signature of 'challenge'
+When I rename the 'signature' to 'response'
 
 # Here we print the signature
-Then print the 'message'
-and print the 'message.signature'
+Then print the 'challenge'
+and print the 'response'

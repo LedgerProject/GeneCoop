@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 import copy
 import time
+from zenroom import zenroom
 
 logger = logging.getLogger(__name__)
 # print(f'Logger {__name__}')
@@ -48,18 +49,18 @@ def gen_token(text, description, user_id, operations):
 #     return tokens[1], [operations[i:i + OPCODE_LEN] for i in range(0, len(operations), OPCODE_LEN)]
 
 
-def request_to_sign(request):
-    logger.debug(f'Generating request to be signed for: {request}')
-    obj = {}
-    obj['text'] = request.text
-    obj['description'] = request.description
-    obj['user_id'] = request.user_id
-    obj['token'] = request.token
-    obj['operations'] = []
-    ope_json = json.loads(request.operations)
-    for operation in ope_json:
-        obj['operations'].append(operation['key'])
-    return json.dumps(obj)
+# def request_to_sign(request):
+#     logger.debug(f'Generating request to be signed for: {request}')
+#     obj = {}
+#     obj['text'] = request.text
+#     obj['description'] = request.description
+#     obj['user_id'] = request.user_id
+#     obj['token'] = request.token
+#     obj['operations'] = []
+#     ope_json = json.loads(request.operations)
+#     for operation in ope_json:
+#         obj['operations'].append(operation['key'])
+#     return json.dumps(obj)
 
 
 def get_signature(request):
@@ -70,13 +71,72 @@ def get_signature(request):
 # Zenroom functionality
 ######################################################
 
+
 def generate_random_challenge():
     """
         This function calls zenroom to generate
         a random string to be used as challenge
     """
-    return "zenroompythonbindingsdonotwork"
+    contract = """
+        rule check version 1.0.0
+        Given nothing
+        When I create the random object of '512' bits
+        and I rename the 'random_object' to 'challenge'
+        Then print 'challenge'
+    """
 
+    result = zenroom.zencode_exec(contract)
+
+    res_json = json.loads(result.output)
+
+    logger.debug(f"Generated challenge: {res_json['challenge']}")
+
+    return res_json['challenge']
+
+
+def verify_challenge(public_key, challenge, response):
+    """
+        This function calls zenroom to verify
+        the signature of a challenge
+    """
+
+    contract = """
+        rule check version 1.0.0 
+        Scenario 'ecdh': verify the signature of a request
+
+        # Loading data
+        Given I have a 'public key' from 'Researcher' 
+        Given I have a 'string' named 'message' 
+        Given I have a 'signature' named 'message.signature'
+
+        # The verification happens here: if the verification would fails, Zenroom would stop and print an error 
+        When I verify the 'message' has a signature in 'message.signature' by 'Researcher'
+
+        # Here we're printing the original message along with happy statement of success
+        Then print 'verification passed' as 'string'
+    """
+    data = {
+        "message": challenge,
+        "message.signature": response
+    }
+
+    keys = {
+        "Researcher": {
+            "public_key": public_key
+        }
+    }
+
+    print(f'verification data: {public_key}, {challenge}, {response}')
+
+    result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
+
+    print(f'verification: {result}')
+
+
+
+######################################################
+# Classes for the settings read from conf file
+######################################################
 
 class baseEntity:
     def __init__(self, text, description, key):

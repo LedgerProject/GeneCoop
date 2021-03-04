@@ -1,4 +1,5 @@
+rule check version 1.0.0
 Given nothing
-When I create the random object of '256' bits
-and I rename the 'random_object' to 'message'
-Then print the 'message'
+When I create the random object of '512' bits
+and I rename the 'random_object' to 'challenge'
+Then print 'challenge'

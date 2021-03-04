@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 
+from .utils import verify_challenge
 
 class ChallengeAuthBackend(ModelBackend):
     """Log in to Django with a challenge
@@ -18,6 +19,8 @@ class ChallengeAuthBackend(ModelBackend):
             return None
         
         public_key = user.password
+
+        verify_challenge(public_key, challenge, response)
 
         # check response is valid signature of challenge
         # with the user's public_key

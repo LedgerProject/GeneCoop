@@ -6,7 +6,7 @@ app_name = 'genecoop'
 
 urlpatterns = [
     # path('', views.IndexView.as_view(), name='index'),
-    path('login/', views.login_view, name='login'),
+    path('landing/', views.landing_view, name='landing'),
     path('', views.index_view, name='index'),
     # path('<int:pk>/consent', views.ConsentView.as_view(), name='consent'),
     # path('<str:pk>/sign', views.SignConsentView.as_view(), name='sign'),
