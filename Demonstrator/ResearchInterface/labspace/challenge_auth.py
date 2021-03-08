@@ -23,12 +23,13 @@ class ChallengeAuthBackend(ModelBackend):
         
         researcher = Researcher.objects.get(user=user)
 
-        verify_challenge(researcher.publickey, challenge, response)
+        if verify_challenge(researcher.publickey, challenge, response):
+            return user    
 
         # check response is valid signature of challenge
         # with the user's public_key
 
-        return user
+        return None
 
 
     def get_user(self, user_id):

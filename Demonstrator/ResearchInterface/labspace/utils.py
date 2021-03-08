@@ -130,7 +130,7 @@ def verify_challenge(public_key, challenge, response):
 
     keys = f'{{"Researcher": {{"public_key": "{public_key}" }} }}'
     
-    print(f'verification data: {data}, keys: {keys}')
+    logger.debug(f'verification data: {data}, keys: {keys}')
 
     try:
         # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
@@ -144,6 +144,15 @@ def verify_challenge(public_key, challenge, response):
     # result = zenroom.zencode_exec(contract, data=json.dumps(data))
 
     print(f'result: {result}')
+
+    res_json = json.loads(result.output)
+
+    if res_json['output'] == 'verification_passed':
+        logger.debug(f'Verification passed')
+        return True
+
+    logger.debug(f'Verification NOT passed')
+    return False
 
 
 ######################################################
