@@ -3,10 +3,14 @@ from django.utils import timezone
 import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, USERID_LENGTH, KEY_LENGTH, SIGNATURE_LENGTH
 
+
+
+class User(AbstractUser):
+    pass
 
 class Researcher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

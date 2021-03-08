@@ -1,5 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import User
+
+from researcher_req.models import User, Researcher
 
 from .utils import verify_challenge
 
@@ -10,6 +11,8 @@ class ChallengeAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, is_challenge=False, challenge='', response=''):
         # This would be to avoid that all auth attempts use 
         # this mechanism
+        # print('authenticate called')
+
         if not is_challenge or challenge == '' or response == '':
             return None
         
@@ -18,16 +21,14 @@ class ChallengeAuthBackend(ModelBackend):
         except User.DoesNotExist:
             return None
         
-        public_key = user.password
+        researcher = Researcher.objects.get(user=user)
 
-        verify_challenge(public_key, challenge, response)
+        verify_challenge(researcher.publickey, challenge, response)
 
         # check response is valid signature of challenge
         # with the user's public_key
 
         return user
-
-        
 
 
     def get_user(self, user_id):

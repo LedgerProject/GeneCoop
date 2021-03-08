@@ -37,6 +37,6 @@ create_user_cmd researcher | python manage.py shell --settings=${settings}
 #     exit 1
 # fi
 
-python manage.py runserver --settings=${settings}
+python manage.py runserver -v2 --settings=${settings}
 
 

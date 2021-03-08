@@ -41,10 +41,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'genecoop.views.ReadConfMiddleware',
 ]
+
+AUTH_USER_MODEL = 'researcher_req.User'
+
 AUTHENTICATION_BACKENDS = (
-    # ... other backends
+    # Custom auth with public key
     'labspace.challenge_auth.ChallengeAuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
 )
+
 ROOT_URLCONF = 'labspace.urls'
 
 TEMPLATES = [
@@ -168,31 +173,31 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console','file'],
+            'handlers': ['console', 'file'],
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['mail_admins','file'],
+            'handlers': ['mail_admins', 'file'],
             'level': 'ERROR',
             'propagate': False,
         },
         'labspace': {
-            'handlers': ['console','file','mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'DEBUG',
             'filters': ['require_debug_true']
         },
         'labspace.utils': {
-            'handlers': ['console','file','mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'INFO',
             'filters': ['require_debug_true']
         },
         'researcher_req': {
-            'handlers': ['console','file','mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'DEBUG',
             'filters': ['require_debug_true']
         },
         'genecoop': {
-            'handlers': ['console','file','mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'DEBUG',
             'filters': ['require_debug_true']
         }

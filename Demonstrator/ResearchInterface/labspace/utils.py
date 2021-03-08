@@ -85,7 +85,10 @@ def generate_random_challenge():
         Then print 'challenge'
     """
 
-    result = zenroom.zencode_exec(contract)
+    try:
+        result = zenroom.zencode_exec(contract, conf='debug=0')
+    except Exception as e:
+        print(f'Exception in zenroom call: {e}')
 
     res_json = json.loads(result.output)
 
@@ -101,37 +104,46 @@ def verify_challenge(public_key, challenge, response):
     """
 
     contract = """
-        rule check version 1.0.0 
-        Scenario 'ecdh': verify the signature of a request
-
-        # Loading data
-        Given I have a 'public key' from 'Researcher' 
-        Given I have a 'string' named 'message' 
-        Given I have a 'signature' named 'message.signature'
-
-        # The verification happens here: if the verification would fails, Zenroom would stop and print an error 
-        When I verify the 'message' has a signature in 'message.signature' by 'Researcher'
-
-        # Here we're printing the original message along with happy statement of success
-        Then print 'verification passed' as 'string'
+    rule check version 1.0.0
+    Scenario 'ecdh': verify the signature of a request
+    Given I have a 'public key' from 'Researcher'
+    and I have a 'string' named 'challenge'
+    and I have a 'signature' named 'response'
+    When I verify the 'challenge' has a signature in 'response' by 'Researcher'
+    Then print 'verification passed' as 'string'
     """
-    data = {
-        "message": challenge,
-        "message.signature": response
-    }
 
-    keys = {
-        "Researcher": {
-            "public_key": public_key
-        }
-    }
+    # data = {
+    #     "challenge": challenge,
+    #     "response": response
+    # }
 
-    print(f'verification data: {public_key}, {challenge}, {response}')
+    # keys = {
+    #     "Researcher": {
+    #         "public_key": public_key
+    #     }
 
-    result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
+    # }
 
-    print(f'verification: {result}')
+    data = f'{{"challenge": "{challenge}", "response": {response} }}'
+    
 
+    keys = f'{{"Researcher": {{"public_key": "{public_key}" }} }}'
+    
+    print(f'verification data: {data}, keys: {keys}')
+
+    try:
+        # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
+        # breakpoint()
+        result = zenroom.zencode_exec(
+            contract, keys=keys, data=data, conf='debug=0')
+    except Exception as e:
+        logger.error(f'Exception in zenroom call: {e}')
+        print(f'Exception in zenroom call: {e}')
+
+    # result = zenroom.zencode_exec(contract, data=json.dumps(data))
+
+    print(f'result: {result}')
 
 
 ######################################################
