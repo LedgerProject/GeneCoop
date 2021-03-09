@@ -2,10 +2,11 @@ from django.contrib.auth.backends import ModelBackend
 
 from researcher_req.models import User, Researcher
 
-from .utils import verify_challenge
+from .utils import verify_signature
 
 class ChallengeAuthBackend(ModelBackend):
-    """Log in to Django with a challenge
+    """
+    Log in to Django with a challenge
 
     """
     def authenticate(self, request, username=None, is_challenge=False, challenge='', response=''):
@@ -23,12 +24,11 @@ class ChallengeAuthBackend(ModelBackend):
         
         researcher = Researcher.objects.get(user=user)
 
-        if verify_challenge(researcher.publickey, challenge, response):
-            return user    
-
         # check response is valid signature of challenge
         # with the user's public_key
-
+        if verify_signature(researcher.publickey, challenge, response):
+            return user
+        
         return None
 
 

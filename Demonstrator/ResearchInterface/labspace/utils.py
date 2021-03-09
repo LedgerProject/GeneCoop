@@ -97,25 +97,25 @@ def generate_random_challenge():
     return res_json['challenge']
 
 
-def verify_challenge(public_key, challenge, response):
+def verify_signature(public_key, message, signature):
     """
         This function calls zenroom to verify
-        the signature of a challenge
+        the signature of a message
     """
 
     contract = """
     rule check version 1.0.0
     Scenario 'ecdh': verify the signature of a request
     Given I have a 'public key' from 'Researcher'
-    and I have a 'string' named 'challenge'
-    and I have a 'signature' named 'response'
-    When I verify the 'challenge' has a signature in 'response' by 'Researcher'
+    and I have a 'string' named 'message'
+    and I have a 'signature' named 'message.signature'
+    When I verify the 'message' has a signature in 'message.signature' by 'Researcher'
     Then print 'verification passed' as 'string'
     """
 
     # data = {
-    #     "challenge": challenge,
-    #     "response": response
+    #     "message": message,
+    #     "signature": signature
     # }
 
     # keys = {
@@ -125,7 +125,7 @@ def verify_challenge(public_key, challenge, response):
 
     # }
 
-    data = f'{{"challenge": "{challenge}", "response": {response} }}'
+    data = f'{{"message": "{message}", "message.signature": {signature} }}'
     
 
     keys = f'{{"Researcher": {{"public_key": "{public_key}" }} }}'

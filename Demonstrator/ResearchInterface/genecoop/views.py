@@ -13,7 +13,7 @@ from django.core.exceptions import MiddlewareNotUsed
 from django.contrib.auth.decorators import login_required
 
 from .models import Consent
-from researcher_req.models import Request
+from researcher_req.models import Researcher, Request
 
 from labspace.constants import VERIFY_URL, DO_ENCODING
 
@@ -27,7 +27,36 @@ myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
 
 
-def gen_queryset(pk, include_log=False):
+def _gen_operationset(operation_str):
+
+    mySerializedOperations.unserialize(operation_str)
+    operation_entries = []
+    for operation in mySerializedOperations.operations:
+        ope_obj = myConfig.get_operation_obj(operation['key'])
+        option_entries = []
+        for opt_key in ope_obj.options:
+            opt_obj = myConfig.get_option_obj(opt_key)
+            opt_entry = {
+                'key': opt_obj.key,
+                'text': opt_obj.text,
+            }
+            option_entries.append(opt_entry)
+        ope_entry = {
+            'text': ope_obj.text,
+            'key': ope_obj.key,
+            'description': ope_obj.description,
+            'statements': ope_obj.statements,
+            'permissions': ope_obj.permissions,
+            'required': ope_obj.required,
+            'chosen_option': operation['chosen_option'],
+            'options': option_entries
+        }
+        operation_entries.append(ope_entry)
+
+    return operation_entries
+
+
+def _gen_queryset(pk, include_log=False):
 
     consent_set = None
     if pk == None:
@@ -39,34 +68,10 @@ def gen_queryset(pk, include_log=False):
 
     for consent in consent_set:
 
-        mySerializedOperations.unserialize(consent.operations)
-        operation_entries = []
-        for operation in mySerializedOperations.operations:
-            ope_obj = myConfig.get_operation_obj(operation['key'])
-            option_entries = []
-            for opt_key in ope_obj.options:
-                opt_obj = myConfig.get_option_obj(opt_key)
-                opt_entry = {
-                    'key': opt_obj.key,
-                    'text': opt_obj.text,
-                }
-                option_entries.append(opt_entry)
-            ope_entry = {
-                'text': ope_obj.text,
-                'key': ope_obj.key,
-                'description': ope_obj.description,
-                'statements': ope_obj.statements,
-                'permissions': ope_obj.permissions,
-                'required': ope_obj.required,
-                'chosen_option': operation['chosen_option'],
-                'options': option_entries
-            }
-            operation_entries.append(ope_entry)
-
         cons_entry = {
             'text': consent.text,
             'token': consent.token,
-            'operations': operation_entries
+            'operations': _gen_operationset(consent.operations)
         }
         if include_log:
             log_entries = []
@@ -87,32 +92,55 @@ def gen_queryset(pk, include_log=False):
     else:
         return my_set[0]
 
-def landing_view(request):
-    logger.debug(f'Landing view request')
-    template_name = 'genecoop/landing.html'
-    context = {'challenge': labut.generate_random_challenge()}
+
+def token_view(request):
+    logger.debug(f'Token view request')
+    template_name = 'genecoop/token.html'
+    return render(request, template_name)
+
+
+def sign_view(request, token):
+    template_name = 'genecoop/sign.html'
+    my_request = get_object_or_404(Request, token=token)
+    my_ops = {'operations': _gen_operationset(my_request.operations)}
+    context = {'my_ops': my_ops, 'my_request': my_request}
     return render(request, template_name, context)
 
 
-@login_required(login_url='genecoop:login')
+@login_required(login_url='genecoop:token')
 def index_view(request):
     template_name = 'genecoop/index.html'
-    context = {'my_set': gen_queryset(None)}
+    context = {'my_set': _gen_queryset(None)}
     return render(request, template_name, context)
 
-@login_required(login_url='genecoop:login')
+
+@login_required(login_url='genecoop:token')
 def consent_view(request, pk):
     template_name = 'genecoop/consent.html'
-    context = {'consent': gen_queryset(pk, include_log=True)}
+    context = {'consent': _gen_queryset(pk, include_log=True)}
     return render(request, template_name, context)
 
-@login_required(login_url='genecoop:login')
-def sign_view(request, pk):
-    template_name = 'genecoop/sign.html'
-    my_set = gen_queryset(pk)
-    my_request = get_object_or_404(Request, token=pk)
-    context = {'my_set': my_set, 'my_request': my_request}
-    return render(request, template_name, context)
+
+def check_token(request):
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    if request.method == 'POST':
+        if 'token' in request.POST:
+            token = request.POST.get('token')
+            consent_req = get_object_or_404(Request, token=token)
+            public_key = consent_req.researcher.publickey
+            signature = consent_req.signature
+            if labut.verify_signature(public_key, token, signature):
+                logger.debug("Verification passed")
+
+                return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
+            else:
+                logger.warning(f'verification failed for token {token}')
+        else:
+            logger.warning(f'Call missing some parameters')
+
+    logger.warning(
+        f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
+    return HttpResponseRedirect(reverse('genecoop:token'))
 
 
 def verify_consent(request):
@@ -150,7 +178,8 @@ def verify_consent(request):
             verify_response = session.post(
                 VERIFY_URL, json={"data": data})
 
-            logger.debug(f"Verification request: {labut.format_request(verify_response.request, 'utf8')}")
+            logger.debug(
+                f"Verification request: {labut.format_request(verify_response.request, 'utf8')}")
 
             if verify_response.status_code == 200:
                 logger.debug(f"Verification response: {verify_response.text}")
@@ -164,17 +193,18 @@ def verify_consent(request):
 
                     try:
                         new_consent = Consent.objects.get(token=token)
-                        logger.debug(f'Consent with token {token} already exists')
+                        logger.debug(
+                            f'Consent with token {token} already exists')
                         return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
                     except Consent.DoesNotExist as error:
                         # This is not an error, the consent does not yet exist
                         pass
-            
+
                     new_consent = Consent(token=token,
-                              text=f'{datetime.now()}',
-                              description=f'Generated from token {token}',
-                              user_id=user_id)
-                    
+                                          text=f'{datetime.now()}',
+                                          description=f'Generated from token {token}',
+                                          user_id=user_id)
+
                     mySerializedOperations.unserialize(requestInst.operations)
                     new_consent.operations = mySerializedOperations.serialize()
                     new_consent.save()
@@ -182,16 +212,19 @@ def verify_consent(request):
 
                     return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
                 else:
-                    logger.warning(f'verification failed, zenroom response: {zenroom_response}')        
+                    logger.warning(
+                        f'verification failed, zenroom response: {zenroom_response}')
             else:
                 logger.error(
                     f'Error from {VERIFY_URL}: {verify_response.status_code}')
                 logger.error("Request that was sent:")
-                logger.error(labut.format_request(verify_response.request, 'utf8'))
+                logger.error(labut.format_request(
+                    verify_response.request, 'utf8'))
         else:
             logger.warning(f'Call missing some parameters')
 
-    logger.warning(f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
+    logger.warning(
+        f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
     return HttpResponseRedirect(reverse('genecoop:index'))
 
 
