@@ -8,31 +8,26 @@
 <div class="container">
     <h2>Request</h2>
 
-    <form action="{% url 'researcher_req:sign_request' %}" method="post">
-        {% csrf_token %}
-        <ul class="responsive-table">
-            <li class="table-header">
-                <div class="col col-1">Name of Request</div>
-                <div class="col col-2">Request Description</div>
-                <div class="col col-3">User id</div>
-                <div class="col col-4">Token</div>
-                <div class="col col-5">Status</div>
 
-            </li>
-            <li class="table-row">
-                <div class="col col-1" data-label="name">{{ request.text }}</div>
-                <div class="col col-2" data-label="description">{{ request.description }}</div>
-                <div class="col col-3" data-label="userid">{{ request.user_id }}</div>
-                <div class="col col-4" data-label="token">{{ request.token }}</div>
-                <div class="col col-5" data-label="status">{{ request.status }}</div>
-            </li>
-            <li class="table-row">
-                <input type="hidden" id="signature" name="signature" value="{{request.signature}}">
-                <input type="hidden" id="requestID" name="requestID" value="{{request.id}}">
-                <div class="col col-1" data-label="Submit"><input id="submit" type="submit" value="Sign Request" disabled="true"></div>
-            </li>
-        </ul>
-    </form>
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-1">Name of Request</div>
+            <div class="col col-2">Request Description</div>
+            <!-- <div class="col col-3">User id</div> -->
+            <div class="col col-3">Token</div>
+            <div class="col col-4">Status</div>
+
+        </li>
+        <li class="table-row">
+            <div class="col col-1" data-label="name">{{ request.text }}</div>
+            <div class="col col-2" data-label="description">{{ request.description }}</div>
+            <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
+            <div class="col col-3" data-label="token">{{ request.token }}</div>
+            <div class="col col-4" data-label="status">{{ request.status }}</div>
+        </li>
+    </ul>
+    
+    <h2>Operations</h2>
     <ul class="responsive-table">
         <li class="table-header">
             <div class="col col-1">Name of Operation</div>

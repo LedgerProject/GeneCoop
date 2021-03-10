@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 
@@ -26,9 +26,7 @@ myConfig.read_conf()
 mySerializedOperations = labut.SerializeOperations(myConfig)
 
 
-
-
-def update_request(request_obj):
+def _update_request(request_obj):
     """
         Checks whether a request has been signed
         and what operations are allowed
@@ -84,7 +82,31 @@ def update_request(request_obj):
     request_obj.save()
 
 
-def gen_queryset(pk):
+def _gen_desc_op(id):
+    operation_view = {}
+    operation_view['key'] = id
+    operation_view['text'] = myConfig.get_operation_obj(id).text
+    operation_view['description'] = myConfig.get_operation_obj(id).description
+    return operation_view
+
+
+def _gen_operations(operations):
+    # mySerializedOperations.reset()
+    mySerializedOperations.unserialize(operations)
+    operations_view = []
+    for operation in mySerializedOperations.operations:
+        operation_view = _gen_desc_op(operation['key'])
+        operation_view['chosen_option'] = operation['chosen_option']
+        operation_view['reply'] = operation['reply']
+        opt_obj = myConfig.get_option_obj(operation['chosen_option'])
+        if not opt_obj == None:
+            operation_view['chosen_option_text'] = opt_obj.text
+
+        operations_view.append(operation_view)
+    return operations_view
+
+
+def _gen_queryset(pk):
     """
         Return the requests, checking whether 
         they have been signed and what operations
@@ -99,33 +121,18 @@ def gen_queryset(pk):
     requests_view = []
 
     for request_obj in request_set:
-        update_request(request_obj)
+        _update_request(request_obj)
         logger.debug(f'Request {request_obj.id} updated')
         request_view = {}
         request_view['id'] = request_obj.id
         request_view['token'] = request_obj.token
         request_view['text'] = request_obj.text
         request_view['description'] = request_obj.description
-        request_view['user_id'] = request_obj.user_id
+        # request_view['user_id'] = request_obj.user_id
         request_view['status'] = request_obj.status
         request_view['signature'] = request_obj.signature
 
-        mySerializedOperations.unserialize(request_obj.operations)
-        operations_view = []
-        for operation in mySerializedOperations.operations:
-            operation_view = {}
-            operation_view['key'] = operation['key']
-            operation_view['text'] = myConfig.get_operation_obj(
-                operation['key']).text
-            operation_view['description'] = myConfig.get_operation_obj(
-                operation['key']).description
-            operation_view['chosen_option'] = operation['chosen_option']
-            operation_view['reply'] = operation['reply']
-            opt_obj = myConfig.get_option_obj(operation['chosen_option'])
-            if not opt_obj == None:
-                operation_view['chosen_option_text'] = opt_obj.text
-
-            operations_view.append(operation_view)
+        operations_view = _gen_operations(request_obj.operations)
 
         request_view['operations'] = operations_view
         logger.debug(f'Operations added: {json.dumps(operations_view)}')
@@ -159,8 +166,14 @@ def gen_queryset(pk):
 #     template_name = 'researcher_req/login.html'
 
 
-class LogoutView(LogoutView):
+def logout_view(request):
+    logger.debug(f'Logout view request')
     template_name = 'researcher_req/logout.html'
+    # breakpoint()
+    if request.user.is_authenticated:
+        logout(request)
+        return render(request, template_name)
+    return HttpResponseRedirect(reverse('researcher_req:login'))
 
 
 def login_view(request):
@@ -168,7 +181,7 @@ def login_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('researcher_req:index'))
     template_name = 'researcher_req/login.html'
-    # context = {'my_set' : gen_queryset(None)}
+    # context = {'my_set' : _gen_queryset(None)}
     # logger.debug(f'Index view rendering: {json.dumps(context)}')
     context = {'challenge': labut.generate_random_challenge()}
     return render(request, template_name, context)
@@ -183,7 +196,7 @@ def profile_view(request):
     template_name = 'researcher_req/profile.html'
     researcher = Researcher.objects.get(user=request.user)
     researcher_obj = {
-        "name": researcher.user.username,
+        "name": f'{researcher.user.first_name} {researcher.user.last_name}',
         "email": researcher.user.email,
         "publickey": researcher.publickey,
         "institute": researcher.institute,
@@ -198,8 +211,16 @@ def profile_view(request):
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_req/index.html'
-    context = {'my_set': gen_queryset(None)}
+    context = {'my_set': _gen_queryset(None)}
     logger.debug(f'Index view rendering: {json.dumps(context)}')
+    return render(request, template_name, context)
+
+
+@login_required(login_url='researcher_req:login')
+def prepare_request_view(request):
+    logger.debug(f'New Request view request')
+    template_name = 'researcher_req/prepare_request.html'
+    context = {'my_set': _gen_queryset(None)}
     return render(request, template_name, context)
 
 
@@ -207,7 +228,7 @@ def index_view(request):
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_req/request.html'
-    context = {'request': gen_queryset(pk)}
+    context = {'request': _gen_queryset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -281,36 +302,72 @@ def fill_profile(request):
 
 
 @login_required(login_url='researcher_req:login')
-def add_request(request):
+def sign_request(request):
     """
-        Generate new request
+        Prepare new request(s) to be signed
     """
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'operations' in request.POST:
-            web_data = request.POST
+        web_data = request.POST
+        if 'name' in web_data and 'description' in web_data and 'operations' in web_data and 'nr_users' in web_data:
             # print(f'request {web_data}')
-
-            researcher = Researcher.objects.get(user=request.user)
-
-            new_request = Request(text=web_data.get('text'), description=web_data.get(
-                'description'), user_id=web_data.get('user_id'), researcher=researcher)
-            # new_request.save()
-
-            # Add operations to request
             operations_ids = web_data.getlist('operations')
 
-            mySerializedOperations.reset()
-            for id in operations_ids:
-                mySerializedOperations.add_operation_key(id)
-                # print(f'operation key: {ope_obj.key}')
+            operations = [_gen_desc_op(id) for id in operations_ids]
 
-            token = labut.gen_token(new_request.text, new_request.description, new_request.user_id,
-                                    mySerializedOperations.operations)
-            new_request.token = token
-            new_request.operations = mySerializedOperations.serialize()
-            new_request.save()
-            return HttpResponseRedirect(reverse('researcher_req:request', args=(new_request.id,)))
+            nr_users = int(web_data.get('nr_users'))
+
+            tokens = [labut.gen_token(web_data.get('name'), web_data.get(
+                'description'), operations_ids) for _ in range(nr_users)]
+
+            new_request = {
+                "name": web_data.get('name'),
+                "description": web_data.get('description'),
+                "nr_users": nr_users,
+                "operations": operations,
+                "tokens": tokens
+            }
+            template_name = 'researcher_req/sign_request.html'
+            context = {'request': new_request}
+            return render(request, template_name, context)
+    logger.debug(
+        f'{inspect.currentframe().f_code.co_name} returning without action')
+    return HttpResponseRedirect(reverse('researcher_req:prepare_request'))
+
+
+@login_required(login_url='researcher_req:login')
+def store_request(request):
+    """
+        Generate and store the new request
+    """
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    if request.method == 'POST':
+        web_data = request.POST
+        if 'name' in web_data and 'description' in web_data and 'operations' in web_data and 'token' in web_data:
+            
+            researcher = Researcher.objects.get(user=request.user)
+            
+            tokens = web_data.getlist('token')
+            for token in tokens:
+                new_request = Request(text=web_data.get('name'), description=web_data.get(
+                    'description'), researcher=researcher)
+
+                # Add operations to request
+                operations_ids = web_data.getlist('operations')
+
+                mySerializedOperations.reset()
+                for id in operations_ids:
+                    mySerializedOperations.add_operation_key(id)
+                    # print(f'operation key: {ope_obj.key}')
+
+                new_request.operations = mySerializedOperations.serialize()
+
+                new_request.token = token
+                new_request.signature = web_data.get(f'signature-{token}')
+                
+                new_request.save()
+
+            return HttpResponseRedirect(reverse('researcher_req:index'))
     logger.debug(
         f'{inspect.currentframe().f_code.co_name} returning without action')
     return HttpResponseRedirect(reverse('researcher_req:index'))
@@ -367,25 +424,3 @@ def download_request(request, id):
     response.write(payload)
 
     return response
-
-
-@login_required(login_url='researcher_req:login')
-def sign_request(request):
-    """
-        Generate new request
-    """
-    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    if request.method == 'POST':
-        if 'requestID' in request.POST and 'signature' in request.POST:
-            web_data = request.POST
-            print(f'request {web_data.get("signature")}')
-
-            requestInst = get_object_or_404(
-                Request, id=web_data.get('requestID'))
-            requestInst.signature = web_data.get('signature')
-
-            requestInst.save()
-            return HttpResponseRedirect(reverse('researcher_req:request', args=(requestInst.id,)))
-    logger.debug(
-        f'{inspect.currentframe().f_code.co_name} returning without action')
-    return HttpResponseRedirect(reverse('researcher_req:index'))

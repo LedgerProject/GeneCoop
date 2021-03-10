@@ -30,7 +30,8 @@ python manage.py migrate --settings=${settings}
 
 
 create_user_cmd superuser | python manage.py shell --settings=${settings}
-create_user_cmd researcher | python manage.py shell --settings=${settings}
+create_user_cmd user | python manage.py shell --settings=${settings}
+create_researcher_cmd | python manage.py shell --settings=${settings}
 
 # if ! check_restroom
 # then

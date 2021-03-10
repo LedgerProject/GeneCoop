@@ -31,11 +31,11 @@ def format_request(prepped, encoding=None):
 {body}"""
 
 
-def gen_token(text, description, user_id, operations):
+def gen_token(text, description, operations):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-    opconcat = "".join([f"{operation['key']}".zfill(OPCODE_LEN)
+    opconcat = "".join([f"{operation}".zfill(OPCODE_LEN)
                         for operation in operations])
-    prelude = f'{time.time()}{TOKEN_SEP}{text}{TOKEN_SEP}{description}{TOKEN_SEP}{user_id}{TOKEN_SEP}{opconcat}'.encode()
+    prelude = f'{time.time()}{TOKEN_SEP}{text}{TOKEN_SEP}{description}{TOKEN_SEP}{opconcat}'.encode()
 
     hash_object = hashlib.blake2b(prelude, digest_size=5)
     token = hash_object.hexdigest()
@@ -88,7 +88,8 @@ def generate_random_challenge():
     try:
         result = zenroom.zencode_exec(contract, conf='debug=0')
     except Exception as e:
-        print(f'Exception in zenroom call: {e}')
+        logger.error(f'Exception in zenroom call: {e}')
+        return None
 
     res_json = json.loads(result.output)
 
@@ -139,11 +140,12 @@ def verify_signature(public_key, message, signature):
             contract, keys=keys, data=data, conf='debug=0')
     except Exception as e:
         logger.error(f'Exception in zenroom call: {e}')
-        print(f'Exception in zenroom call: {e}')
+        # print(f'Exception in zenroom call: {e}')
+        return False
 
     # result = zenroom.zencode_exec(contract, data=json.dumps(data))
 
-    print(f'result: {result}')
+    logger.debug(f'result: {result}')
 
     res_json = json.loads(result.output)
 
@@ -253,7 +255,7 @@ class ConsentConfig:
 
     def read_conf(self):
 
-        print(f'Reading conf file {self.file_path} for role {self.role}')
+        logger.debug(f'Reading conf file {self.file_path} for role {self.role}')
 
         with open(self.file_path, "r") as fp:
             operations = json.loads(fp.read())

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Request{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>Request</h2>
+
+    <form action="{% url 'researcher_req:store_request' %}" method="post">
+        {% csrf_token %}
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-1">Name of Request</div>
+                <div class="col col-2">Request Description</div>
+                <!-- <div class="col col-3">User id</div> -->
+                <div class="col col-3">Operations</div>
+                <div class="col col-4">Token(s)</div>
+
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="name">{{ request.name }}</div>
+                <div class="col col-2" data-label="description">{{ request.description }}</div>
+                <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
+
+                <div class="col col-3" data-label="operations">
+                    <ul>
+                        {% for operation in request.operations %}
+                        <li id="minim">{{ operation.text }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col col-4">
+                    <ul>
+                        {% for token in request.tokens %}
+                        <li id="minim" data-label="token">{{ token }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            <li class="table-row">
+                {% for token in request.tokens %}
+                <input type="hidden" id="signature-{{ token }}" name="signature-{{ token }}" value="">
+                <input type="hidden" id="token" name="token" value="{{ token }}">
+                {% endfor %}
+                <input type="hidden" name="name" value="{{ request.name }}">
+                <input type="hidden" name="description" value="{{ request.description }}">
+                {% for operation in request.operations %}
+                <input type="hidden" name="operations" value="{{ operation.key }}">
+                {% endfor %}
+
+                <div class="col col-1" data-label="Submit"><input id="submit" type="submit" value="Sign Request"
+                        disabled="true"></div>
+            </li>
+        </ul>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -11,14 +11,10 @@
 <body>
     {% if user.is_authenticated %}
         {% include "header.html" %}
-        {% block content %}
-        {% endblock %}
-    {% else %}
-        <!-- User not logged in.  -->
-        <div>User logged out</div>
-        <div><a href="{% url 'researcher_req:login' %}">Login</a></div>
     {% endif %}
-    
+        <!-- User not logged in.  -->
+        {% block content %}
+        {% endblock %}    
 </body>
 
 </html>
