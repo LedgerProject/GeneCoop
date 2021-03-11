@@ -46,8 +46,9 @@ const { zencode_exec } = require("zenroom");
             
             const button = document.querySelector("[id='proceedButton']");
             button.style = 'visibility:visible;';
+
+            //@taco FIXME, come up with a solution where the new text comes from the html page 
             const instruction = document.querySelector("[id='instruction']");
-            console.log('yo' + instruction.textContent);
             instruction.textContent= "Click proceed to continue"
 
             const challenge = document.querySelector("[id='challenge']").value;
