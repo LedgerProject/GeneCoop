@@ -3,6 +3,8 @@
 The demostrator is written in Python (we use v3.8) and is currently based on Django.
 
 ## Installation
+
+### Server
 If you want to run the code on your premises, after cloning this repository perform the following actions:
 
 1. Install Python 3.8
@@ -24,7 +26,27 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
+### Webextensions
+To build the researcher web extension, and save it to your Downloads directory:
+```
+$ cd researcher_webext
+$ npm install
+$ cd zenpage;./prepair_bundle.sh  
+$ web-ext build --a ~/Downloads -n researcher_webext.zip 
+```
+
+To install and configure the researcher web extension in Firefox:
+* Browse to: about:debugging
+* Click "This Firefox" -> "Load temporary add-on"
+* Select the researcher_webext.zip file in your Downloads directory
+* Browse to about:addons
+* Click on "..." -> preferences for the "genecoop_consent" addon
+* Fill in the username, public key, and private key with values from ResearchInterface/.researcher.json secrets file, click save.
+(ask Stefano for a copy)
+* To test if configuration is correct, navigate to locahost:8000/request, it should show the red border, clicking on the extension should show three buttons: 'login', 'sign' and 'reset'.
+
 ## Operations
+
 If these step were successful, you can access the Researcher interface at `http://127.0.0.1:8000/request` and the consent interface at `http://127.0.0.1:8000/consent`
 
 With the Researcher interface you can define a consent request; the first page also shows a list of existing requests (the db has been pre-populated to have some instances to show).
