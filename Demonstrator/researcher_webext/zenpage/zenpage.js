@@ -43,8 +43,12 @@ const { zencode_exec } = require("zenroom");
                 return;
             }
             username_html.value = storedSettings.authCredentials.username;
+            
             const button = document.querySelector("[id='proceedButton']");
             button.style = 'visibility:visible;';
+            const instruction = document.querySelector("[id='instruction']");
+            console.log('yo' + instruction.textContent);
+            instruction.textContent= "Click proceed to continue"
 
             const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
