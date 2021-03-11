@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+   background: white;
+}
+
+.wallet-section {
+    position: absolute;
+    right: 1em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.wallet-notification {
+    border: 1px solid;
+    padding: .5em;
+    margin-bottom: .5em;
+    width: 250px;
+    background: white;
+}
+
+.wallet-query {
+    border: 1px solid;
+    padding: .5em;
+    margin-bottom: .5em;
+    width: 250px;
+    background:white;
+}
+.wallet-notification i {
+    font-size: 20px;
+}
+
+.landing_page {
+ max-width: 800px;
+ margin-left:auto;
+ margin-right: auto;
+ margin-top: 4em;
+ font-family: 'Poppins', sans-serif;
+ padding-bottom: 30px;
+}
+
+.landing_page h1 {
+   font-weight:700;
+   font-size: 48px;
+}
+
+.landing_page h2 {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 0.2;
+}
+
+.showcase 
+{
+    display: flex;
+    margin-top: 4em;
+}
+
+.showcase img 
+{
+    float: left;
+    max-height: 200px;
+    padding-right: 1em;
+    padding-top: 2em;
+}
+
