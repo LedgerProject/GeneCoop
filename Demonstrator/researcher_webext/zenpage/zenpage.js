@@ -43,10 +43,13 @@ const { zencode_exec } = require("zenroom");
                 return;
             }
             username_html.value = storedSettings.authCredentials.username;
+            const button = document.querySelector("[id='proceedButton']");
+            button.style = 'visibility:visible;';
 
             const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
 
+            
             zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, challenge)
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
