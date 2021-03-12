@@ -287,15 +287,18 @@ class SerializeOperations:
         It is used to keep track of what operations in consent/request
         have been authorized.
     """
-
+    NO_OPT = -1
+    
     def __init__(self, conf):
         # logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+        
+
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         self.operations = []
         self.entry = {
             'key': -1,
-            'chosen_option': -1,
+            'chosen_option': self.NO_OPT,
             'options': [
                 # {
                 #     'key' : -1
@@ -355,6 +358,17 @@ class SerializeOperations:
                     if opt_key == opt_entry['key']:
                         ope_entry['chosen_option'] = opt_key
                         return
+    
+    def reset_option_key(self, ope_key):
+        """
+        Only reset the option if operation exists
+        """
+        logger.debug(
+            f'Called from {inspect.currentframe().f_back.f_code.co_name}')
+        for ope_entry in self.operations:
+            if ope_key == ope_entry['key']:
+                ope_entry['chosen_option'] = self.NO_OPT
+                return
 
     def set_reply(self, ope_key, reply):
         logger.debug(

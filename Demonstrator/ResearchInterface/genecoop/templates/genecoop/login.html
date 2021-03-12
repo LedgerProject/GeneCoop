@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GeneCoop</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher_req/login.css' %}">
+</head>
+
+<body>
+
+
+{% if request.user.is_authenticated %}
+
+    {% include "header.html" %}
+
+{% else %}
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="active"> Enter token </h2>
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="{% static 'researcher_req/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+        </div>
+        
+        <!-- Login Form -->
+        <form action="{% url 'genecoop:check_token' %}" method="post">
+            {% csrf_token %}
+            <input type="text" id="token" class="fadeIn second" name="token" placeholder="Insert your token">
+            <input type="submit" class="fadeIn fourth" value="Submit">
+        </form>
+    </div>
+</div>
+
+{% endif %}

@@ -18,13 +18,11 @@ const { zencode_exec } = require("zenroom");
 
     const sign_script = `
     rule check version 1.0.0
-    Scenario 'ecdh': create the signature of a contract
+    Scenario 'ecdh': create the signature of a request
     Given I am 'Signer'
     Given I have my 'keypair'
     Given that I have a 'string' named 'message'
-    When I create the hash of 'message' using 'sha512'
-    And I rename the 'hash' to 'hashOfContract'
-    and I create the signature of 'message'
+    When I create the signature of 'message'
     When I rename the 'signature' to 'message.signature'
     Then print the 'message.signature'`;
 
@@ -38,6 +36,17 @@ const { zencode_exec } = require("zenroom");
         // return span.textContent || span.innerText;
         return s.textContent;
       };
+
+    function processContent(contract) {
+        contract = contract.replace(/\n+/g, ' ')
+        contract = contract.replace(/\t+/g, ' ')
+        contract = contract.replace(/\s+/g, ' ')
+        return contract;
+    }
+    function hash_contract(contract) {
+        // no hashing for the moment
+        return contract;
+    };
 
     /**
      */
@@ -79,26 +88,29 @@ const { zencode_exec } = require("zenroom");
             }
 
             contract_text = extractContent(contract);
-            // contract_text = processContent(contract_text);
+            contract_text = processContent(contract_text);
 
-            console.log("Textual Contract: ", contract_text);
+            const hash = hash_contract(contract_text);
 
+            console.log("Textual Contract: ", hash);
 
-            const hash = 
+            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, hash)
+                .then((msg_sign) => {
+                    console.log("Signature: ", msg_sign);
 
-            // zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
-            //     .then((msg_sign) => {
-            //         console.log("Signature: ", msg_sign);
+                    var html = document.querySelector("[id='signature']");
+                    html.value = JSON.stringify(msg_sign);
 
-            //         var signature_html = document.querySelector("[id='signature']");
-            //         signature_html.value = JSON.stringify(msg_sign);
-            //         var submit_html = document.querySelector("[id='submit']");
-            //         submit_html.disabled = false;
-            //     })
-            //     .catch((error) => {
-            //         console.error("Error in zenroom sign function: ", error);
-            //         throw new Error(error);
-            //     });
+                    html = document.querySelector("[id='public_key']");
+                    html.value = storedSettings.authCredentials.public_key;
+
+                    html = document.querySelector("[id='submitButton']");
+                    html.disabled = false;
+                })
+                .catch((error) => {
+                    console.error("Error in zenroom sign function: ", error);
+                    throw new Error(error);
+                });
         }
     }
     /**

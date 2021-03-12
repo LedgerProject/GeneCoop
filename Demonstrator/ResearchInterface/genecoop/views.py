@@ -141,7 +141,7 @@ def login_view(request):
     return render(request, template_name, context)
 
 
-@login_required(login_url='genecoop:token')
+@login_required(login_url='genecoop:login')
 def index_view(request):
     template_name = 'genecoop/index.html'
     context = {'my_set': _gen_queryset(None)}
@@ -213,23 +213,12 @@ def sign_consent(request):
     if request.method == 'POST':
         # print(f'request {request.POST}')
 
-        if 'consentID' in request.POST:
-            token = request.POST.get('consentID')
-
-            myconsent = get_object_or_404(
-                Consent, token=token)
-
-            # print(f'consent op {myconsent.operations}')
-
-            mySerializedOperations.unserialize(myconsent.operations)
-
-            for operation in mySerializedOperations.operations:
-                if f"option-{operation['key']}" in request.POST:
-                    mySerializedOperations.select_option_key(operation['key'], request.POST.get(
-                        f"option-{ operation['key']}"))
-
-            myconsent.operations = mySerializedOperations.serialize()
-            myconsent.sign()
+        if 'token' in request.POST:
+            token = request.POST.get('token')
+            myconsent = get_object_or_404(Consent, token=token)
+                      
+            myconsent.sign(request.POST.get('signature'), request.POST.get('public_key'))
+                       
             myconsent.save()
             return HttpResponseRedirect(reverse('genecoop:index'))
         return HttpResponseRedirect(reverse('genecoop:index'))
