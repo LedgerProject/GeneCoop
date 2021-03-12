@@ -30,6 +30,24 @@ const { zencode_exec } = require("zenroom");
         console.error(e);
     }
 
+    function extractContent(s) {
+        // var span = document.createElement('span');
+        // span.innerHTML = s;
+        // return span.textContent || span.innerText;
+        return s.textContent;
+      };
+
+    function processContent(contract) {
+        contract = contract.replace(/\n+/g, ' ')
+        contract = contract.replace(/\t+/g, ' ')
+        contract = contract.replace(/\s+/g, ' ')
+        return contract;
+    }
+    function hash_contract(contract) {
+        // no hashing for the moment
+        return contract;
+    };
+
     /**
      */
     function perform_action(action, storedSettings) {
@@ -60,22 +78,34 @@ const { zencode_exec } = require("zenroom");
                 });
 
         } else if (action == 'sign') {
-            const token = document.querySelector("[data-label='token']").textContent;
-            console.log("Token: ", token);
+            const contract = document.querySelector("[id='contract']");
+
+            console.log("Contract: ", contract);
 
             if (storedSettings.authCredentials === undefined) {
-                signature_html.value = "Please set your credentials in the add-on";
+                onError("Please set your credentials in the add-on");
                 return;
             }
 
-            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
+            contract_text = extractContent(contract);
+            contract_text = processContent(contract_text);
+
+            const hash = hash_contract(contract_text);
+
+            console.log("Textual Contract: ", hash);
+
+            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, hash)
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
 
-                    var signature_html = document.querySelector("[id='signature']");
-                    signature_html.value = JSON.stringify(msg_sign);
-                    var submit_html = document.querySelector("[id='submit']");
-                    submit_html.disabled = false;
+                    var html = document.querySelector("[id='signature']");
+                    html.value = JSON.stringify(msg_sign);
+
+                    html = document.querySelector("[id='public_key']");
+                    html.value = storedSettings.authCredentials.public_key;
+
+                    html = document.querySelector("[id='submitButton']");
+                    html.disabled = false;
                 })
                 .catch((error) => {
                     console.error("Error in zenroom sign function: ", error);
@@ -139,6 +169,8 @@ const { zencode_exec } = require("zenroom");
             gettingStoredSettings.then((x) => { perform_action('login', x) }, onError);
         } else if (message.command === "sign") {
             gettingStoredSettings.then((x) => { perform_action('sign', x) }, onError);
+        } else if (message.command === "verify") {
+            gettingStoredSettings.then((x) => { perform_action('verify', x) }, onError);
         } else if (message.command === "reset") {
             reset();
         }
