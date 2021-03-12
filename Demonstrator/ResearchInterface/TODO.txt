@@ -1,0 +1,1 @@
+Flow in web-extension sign is not synchronized

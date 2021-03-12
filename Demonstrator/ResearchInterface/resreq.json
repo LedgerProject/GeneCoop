@@ -9,13 +9,13 @@
             "description": "An array test is needed to sequence your DNA from your <pd>Saliva</pd>, and to produce a digital version of your DNA, which is needed for tumor classification in this research."
         },
         "statements":[
-                "I will send a sample of my <pd>Saliva</pd>  for sequencing directly to <org>Erasmus MC</org>.",
-                "The array test will be performed by <org>Erasmus MC</org>, after which the sample will be stored at <org>Erasmus MC</org> only during the array test, after which it will be destroyed.",
-                "As a result of the array test my <pd>Raw DNA Data File</pd>  will be stored on <tech>SURF LabSafe</tech> . and managed and protected by <org>Genecoop Cooperation</org>."
+                "I will send a sample of my <pd>Saliva</pd>  for sequencing directly to <org>Research Center</org>.",
+                "The array test will be performed by <org>Research Center</org>, after which the sample will be stored at <org>Research Center</org> only during the array test, after which it will be destroyed.",
+                "As a result of the array test my <pd>Raw DNA Data File</pd>  will be stored on <tech>SURF LabSafe</tech>, and managed and protected by <org>Genecoop Cooperation</org>."
             ],
         "permissions":[
-           "<org>Erasmus MC</org> will access my <pd>Saliva</pd> for an Array Test",
-           "<org>Erasmus MC</org> will store a <pd>Raw DNA data file</pd> on <tech>SURF LabSafe</tech>"
+           "<org>Research Center</org> will access my <pd>Saliva</pd> for an Array Test",
+           "<org>Research Center</org> will store a <pd>Raw DNA data file</pd> on <tech>SURF LabSafe</tech>"
         ],
         "required": true,
         "key": 0,

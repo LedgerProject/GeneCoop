@@ -13,8 +13,8 @@ class Consent(models.Model):
     user_id = models.CharField(max_length=USERID_LENGTH, default="")
     operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
     token = models.CharField(primary_key=True, max_length=TOKEN_LENGTH, unique=True)
-    request_received = models.DateTimeField('date received', default = timezone.make_aware(datetime(1900,1,1)))
-    request_signed = models.DateTimeField('date signed', default = timezone.make_aware(datetime(1900,1,1)))
+    consent_created = models.DateTimeField('date created', default = timezone.make_aware(datetime(1900,1,1)))
+    consent_signed = models.DateTimeField('date signed', default = timezone.make_aware(datetime(1900,1,1)))
 
     class RequestStatus(models.TextChoices):
         NOTDONE = 'NOT DONE', _('Consent has not been signed yet')
@@ -33,11 +33,17 @@ class Consent(models.Model):
         return self.status == self.RequestStatus.DONE
 
     def sign(self):
-        self.request_signed = timezone.now()
+        self.consent_signed = timezone.now()
         self.status = self.RequestStatus.DONE
     
+    def init(self, operations):
+        self.consent_created = timezone.now()
+        self.status = self.RequestStatus.NOTDONE
+        self.user_id = "not assigned yet"
+        self.operations = operations
+    
     def unsign(self):
-        self.request_signed = timezone.make_aware(datetime(1900,1,1))
+        self.consent_signed = timezone.make_aware(datetime(1900,1,1))
         self.status = self.RequestStatus.NOTDONE
     
 

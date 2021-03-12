@@ -64,7 +64,8 @@ function listenForClicks() {
         * send a "reset" message to the content script in the active tab.
         */
         function reset(tabs) {
-            browser.tabs.removeCSS({ code: signPage })
+            browser.tabs.removeCSS({ code: logiPage })
+                .then(browser.tabs.removeCSS({ code: signPage }))
                 .then(browser.tabs.removeCSS({ code: verifyPage }))
                 .then(() => {
                     browser.tabs.sendMessage(tabs[0].id, {
@@ -82,7 +83,7 @@ function listenForClicks() {
 
         /**
         * Get the active tab,
-        * then call "beastify()" or "reset()" as appropriate.
+        * then call "perform_action()" or "reset()" as appropriate.
         */
         if (e.target.classList.contains("action")) {
             browser.tabs.query({ active: true, currentWindow: true })

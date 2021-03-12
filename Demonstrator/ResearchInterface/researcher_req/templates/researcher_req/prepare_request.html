@@ -18,8 +18,8 @@
                 <div class="col col-4">Users</div>
             </li>
             <li class="table-row">
-                <div class="col col-1" data-label="Name"><input type="text" name="name" value=""></div>
-                <div class="col col-2" data-label="Description"><input type="text" name="description" value=""></div>
+                <div class="col col-1" data-label="Name"><input type="text" name="name" value="" required></div>
+                <div class="col col-2" data-label="Description"><input type="text" name="description" value="" required></div>
                 <div class="col col-3" data-label="Operations">
                     {% for operation in my_set.operations %}
                     <input type="checkbox" name="operations" id="operation{{ forloop.counter }}"

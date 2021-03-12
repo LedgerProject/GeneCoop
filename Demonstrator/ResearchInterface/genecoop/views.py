@@ -99,11 +99,45 @@ def token_view(request):
     return render(request, template_name)
 
 
-def sign_view(request, token):
-    template_name = 'genecoop/sign.html'
+def choose_view(request, token):
+    logger.debug(f'Choose view request')
+    if Consent.objects.filter(token=token).exists():
+        consent = Consent.objects.get(token=token)
+        if consent.is_signed():
+            # The consent already exists and it is signed,
+            # it cannot be modified without logging in
+            logger.debug(f'Consent with token {token} already exists')
+            return HttpResponseRedirect(reverse('genecoop:login'))
+
+    template_name = 'genecoop/choose.html'
     my_request = get_object_or_404(Request, token=token)
     my_ops = {'operations': _gen_operationset(my_request.operations)}
     context = {'my_ops': my_ops, 'my_request': my_request}
+    return render(request, template_name, context)
+
+
+def sign_view(request, token):
+    logger.debug(f'Choose view request')
+
+    template_name = 'genecoop/sign.html'
+
+    my_request = get_object_or_404(Request, token=token)
+    my_referent = {
+        'first_name': my_request.researcher.user.first_name,
+        'last_name': my_request.researcher.user.last_name,
+        'institute': my_request.researcher.institute
+    }
+
+    my_consent = get_object_or_404(Consent, token=token)
+    my_ops = {'operations': _gen_operationset(my_consent.operations)}
+    context = {'my_ops': my_ops, 'my_consent': my_consent,
+               'my_referent': my_referent}
+    return render(request, template_name, context)
+
+
+def login_view(request):
+    template_name = 'genecoop/login.html'
+    context = {'my_set': _gen_queryset(None)}
     return render(request, template_name, context)
 
 
@@ -114,7 +148,7 @@ def index_view(request):
     return render(request, template_name, context)
 
 
-@login_required(login_url='genecoop:token')
+@login_required(login_url='genecoop:login')
 def consent_view(request, pk):
     template_name = 'genecoop/consent.html'
     context = {'consent': _gen_queryset(pk, include_log=True)}
@@ -132,7 +166,7 @@ def check_token(request):
             if labut.verify_signature(public_key, token, signature):
                 logger.debug("Verification passed")
 
-                return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
+                return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
             else:
                 logger.warning(f'verification failed for token {token}')
         else:
@@ -143,89 +177,35 @@ def check_token(request):
     return HttpResponseRedirect(reverse('genecoop:token'))
 
 
-def verify_consent(request):
+def gen_consent(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'token' in request.POST and 'public_key' in request.POST:
+        if 'token' in request.POST:
             token = request.POST.get('token')
-            public_key = request.POST.get('public_key')
+            consent_req = get_object_or_404(Request, token=token)
 
-            requestInst = get_object_or_404(Request, token=token)
+            mySerializedOperations.unserialize(consent_req.operations)
 
-            requestData = requestInst.token
-            signature = labut.get_signature(requestInst)
-
-            if DO_ENCODING:
-                # Standard Base64 Encoding
-                encodedBytes = base64.b64encode(requestData.encode("utf-8"))
-                encodedStr = str(encodedBytes, "utf-8")
-            else:
-                encodedStr = requestData
-
-            data = {
-                "message": encodedStr,
-                "message.signature": {
-                    "r": signature['r'],
-                    "s": signature['s'],
-                },
-                "Researcher": {
-                    "public_key": public_key
-                }
-            }
-
-            # Verify signature
-            session = requests.Session()
-            verify_response = session.post(
-                VERIFY_URL, json={"data": data})
-
-            logger.debug(
-                f"Verification request: {labut.format_request(verify_response.request, 'utf8')}")
-
-            if verify_response.status_code == 200:
-                logger.debug(f"Verification response: {verify_response.text}")
-                zenroom_response = json.loads(verify_response.text)
-
-                if 'output' in zenroom_response and zenroom_response['output'] == 'verification_passed':
-                    # verification is passed, create or retrieve consent
-                    logger.debug("Verification passed")
-
-                    user_id = requestInst.user_id
-
-                    try:
-                        new_consent = Consent.objects.get(token=token)
-                        logger.debug(
-                            f'Consent with token {token} already exists')
-                        return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
-                    except Consent.DoesNotExist as error:
-                        # This is not an error, the consent does not yet exist
-                        pass
-
-                    new_consent = Consent(token=token,
-                                          text=f'{datetime.now()}',
-                                          description=f'Generated from token {token}',
-                                          user_id=user_id)
-
-                    mySerializedOperations.unserialize(requestInst.operations)
-                    new_consent.operations = mySerializedOperations.serialize()
-                    new_consent.save()
-                    logger.debug("New consent created")
-
-                    return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
+            for operation in mySerializedOperations.operations:
+                form_entry = f"option-{operation['key']}"
+                if form_entry in request.POST:
+                    mySerializedOperations.select_option_key(operation['key'],
+                                                             request.POST.get(form_entry))
                 else:
-                    logger.warning(
-                        f'verification failed, zenroom response: {zenroom_response}')
-            else:
-                logger.error(
-                    f'Error from {VERIFY_URL}: {verify_response.status_code}')
-                logger.error("Request that was sent:")
-                logger.error(labut.format_request(
-                    verify_response.request, 'utf8'))
-        else:
-            logger.warning(f'Call missing some parameters')
+                    mySerializedOperations.reset_option_key(operation['key'])
+
+                new_consent = Consent(token=token,
+                                      text=f'{consent_req.text}',
+                                      description=f'{consent_req.description}')
+
+                new_consent.init(mySerializedOperations.serialize())
+                new_consent.save()
+                logger.debug("New consent created in unassigned state")
+                return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
 
     logger.warning(
         f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
-    return HttpResponseRedirect(reverse('genecoop:index'))
+    return HttpResponseRedirect(reverse('genecoop:token'))
 
 
 def sign_consent(request):
@@ -255,3 +235,88 @@ def sign_consent(request):
         return HttpResponseRedirect(reverse('genecoop:index'))
 
     return HttpResponseRedirect(reverse('genecoop:index'))
+
+
+# def verify_consent(request):
+#     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+#     if request.method == 'POST':
+#         if 'token' in request.POST and 'public_key' in request.POST:
+#             token = request.POST.get('token')
+#             public_key = request.POST.get('public_key')
+
+#             requestInst = get_object_or_404(Request, token=token)
+
+#             requestData = requestInst.token
+#             signature = labut.get_signature(requestInst)
+
+#             if DO_ENCODING:
+#                 # Standard Base64 Encoding
+#                 encodedBytes = base64.b64encode(requestData.encode("utf-8"))
+#                 encodedStr = str(encodedBytes, "utf-8")
+#             else:
+#                 encodedStr = requestData
+
+#             data = {
+#                 "message": encodedStr,
+#                 "message.signature": {
+#                     "r": signature['r'],
+#                     "s": signature['s'],
+#                 },
+#                 "Researcher": {
+#                     "public_key": public_key
+#                 }
+#             }
+
+#             # Verify signature
+#             session = requests.Session()
+#             verify_response = session.post(
+#                 VERIFY_URL, json={"data": data})
+
+#             logger.debug(
+#                 f"Verification request: {labut.format_request(verify_response.request, 'utf8')}")
+
+#             if verify_response.status_code == 200:
+#                 logger.debug(f"Verification response: {verify_response.text}")
+#                 zenroom_response = json.loads(verify_response.text)
+
+#                 if 'output' in zenroom_response and zenroom_response['output'] == 'verification_passed':
+#                     # verification is passed, create or retrieve consent
+#                     logger.debug("Verification passed")
+
+#                     user_id = requestInst.user_id
+
+#                     try:
+#                         new_consent = Consent.objects.get(token=token)
+#                         logger.debug(
+#                             f'Consent with token {token} already exists')
+#                         return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
+#                     except Consent.DoesNotExist as error:
+#                         # This is not an error, the consent does not yet exist
+#                         pass
+
+#                     new_consent = Consent(token=token,
+#                                           text=f'{datetime.now()}',
+#                                           description=f'Generated from token {token}',
+#                                           user_id=user_id)
+
+#                     mySerializedOperations.unserialize(requestInst.operations)
+#                     new_consent.operations = mySerializedOperations.serialize()
+#                     new_consent.save()
+#                     logger.debug("New consent created")
+
+#                     return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
+#                 else:
+#                     logger.warning(
+#                         f'verification failed, zenroom response: {zenroom_response}')
+#             else:
+#                 logger.error(
+#                     f'Error from {VERIFY_URL}: {verify_response.status_code}')
+#                 logger.error("Request that was sent:")
+#                 logger.error(labut.format_request(
+#                     verify_response.request, 'utf8'))
+#         else:
+#             logger.warning(f'Call missing some parameters')
+
+#     logger.warning(
+#         f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
+#     return HttpResponseRedirect(reverse('genecoop:index'))

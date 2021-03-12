@@ -82,7 +82,7 @@ function listenForClicks() {
 
         /**
         * Get the active tab,
-        * then call "beastify()" or "reset()" as appropriate.
+        * then call "perform_action()" or "reset()" as appropriate.
         */
         if (e.target.classList.contains("action")) {
             browser.tabs.query({ active: true, currentWindow: true })

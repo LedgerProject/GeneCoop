@@ -18,17 +18,26 @@ const { zencode_exec } = require("zenroom");
 
     const sign_script = `
     rule check version 1.0.0
-    Scenario 'ecdh': create the signature of a request
+    Scenario 'ecdh': create the signature of a contract
     Given I am 'Signer'
     Given I have my 'keypair'
     Given that I have a 'string' named 'message'
-    When I create the signature of 'message'
+    When I create the hash of 'message' using 'sha512'
+    And I rename the 'hash' to 'hashOfContract'
+    and I create the signature of 'message'
     When I rename the 'signature' to 'message.signature'
     Then print the 'message.signature'`;
 
     function onError(e) {
         console.error(e);
     }
+
+    function extractContent(s) {
+        // var span = document.createElement('span');
+        // span.innerHTML = s;
+        // return span.textContent || span.innerText;
+        return s.textContent;
+      };
 
     /**
      */
@@ -60,27 +69,36 @@ const { zencode_exec } = require("zenroom");
                 });
 
         } else if (action == 'sign') {
-            const token = document.querySelector("[data-label='token']").textContent;
-            console.log("Token: ", token);
+            const contract = document.querySelector("[id='contract']");
+
+            console.log("Contract: ", contract);
 
             if (storedSettings.authCredentials === undefined) {
-                signature_html.value = "Please set your credentials in the add-on";
+                onError("Please set your credentials in the add-on");
                 return;
             }
 
-            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
-                .then((msg_sign) => {
-                    console.log("Signature: ", msg_sign);
+            contract_text = extractContent(contract);
+            // contract_text = processContent(contract_text);
 
-                    var signature_html = document.querySelector("[id='signature']");
-                    signature_html.value = JSON.stringify(msg_sign);
-                    var submit_html = document.querySelector("[id='submit']");
-                    submit_html.disabled = false;
-                })
-                .catch((error) => {
-                    console.error("Error in zenroom sign function: ", error);
-                    throw new Error(error);
-                });
+            console.log("Textual Contract: ", contract_text);
+
+
+            const hash = 
+
+            // zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
+            //     .then((msg_sign) => {
+            //         console.log("Signature: ", msg_sign);
+
+            //         var signature_html = document.querySelector("[id='signature']");
+            //         signature_html.value = JSON.stringify(msg_sign);
+            //         var submit_html = document.querySelector("[id='submit']");
+            //         submit_html.disabled = false;
+            //     })
+            //     .catch((error) => {
+            //         console.error("Error in zenroom sign function: ", error);
+            //         throw new Error(error);
+            //     });
         }
     }
     /**
@@ -139,6 +157,8 @@ const { zencode_exec } = require("zenroom");
             gettingStoredSettings.then((x) => { perform_action('login', x) }, onError);
         } else if (message.command === "sign") {
             gettingStoredSettings.then((x) => { perform_action('sign', x) }, onError);
+        } else if (message.command === "verify") {
+            gettingStoredSettings.then((x) => { perform_action('verify', x) }, onError);
         } else if (message.command === "reset") {
             reset();
         }

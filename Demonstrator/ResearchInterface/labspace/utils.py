@@ -147,11 +147,12 @@ def verify_signature(public_key, message, signature):
 
     logger.debug(f'result: {result}')
 
-    res_json = json.loads(result.output)
+    if not result.output == '':
+        res_json = json.loads(result.output)
 
-    if res_json['output'] == 'verification_passed':
-        logger.debug(f'Verification passed')
-        return True
+        if res_json['output'] == 'verification_passed':
+            logger.debug(f'Verification passed')
+            return True
 
     logger.debug(f'Verification NOT passed')
     return False
