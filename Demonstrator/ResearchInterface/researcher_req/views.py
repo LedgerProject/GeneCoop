@@ -271,11 +271,11 @@ def check_login(request):
             if user is not None:
                 login(request, user)
 
-                # Create researcher associated to user if needed
+                # Check researcher is associated to user
                 if not hasattr(user, 'researcher'):
-                    logger.debug(f'Creating reseacher with user: {user}')
-                    researcher = Researcher(user=user)
-                    researcher.save()
+                    logger.error(f'No associated researcher for user: {user}')
+                    return HttpResponseRedirect(reverse('researcher_req:login'))
+                    
                 # Redirect to a success page.
                 return HttpResponseRedirect(reverse('researcher_req:profile'))
     logger.debug(f'Login failed')

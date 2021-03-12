@@ -136,10 +136,14 @@ def sign_view(request, token):
 
 
 def login_view(request):
+    logger.debug(f'Login view request')
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('genecoop:index'))
     template_name = 'genecoop/login.html'
-    context = {'my_set': _gen_queryset(None)}
+    # context = {'my_set' : _gen_queryset(None)}
+    # logger.debug(f'Index view rendering: {json.dumps(context)}')
+    context = {'challenge': labut.generate_random_challenge()}
     return render(request, template_name, context)
-
 
 @login_required(login_url='genecoop:login')
 def index_view(request):
@@ -224,6 +228,33 @@ def sign_consent(request):
         return HttpResponseRedirect(reverse('genecoop:index'))
 
     return HttpResponseRedirect(reverse('genecoop:index'))
+
+
+def check_login(request):
+    """
+        Check credentials and log user in
+    """
+    logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    if request.method == 'POST':
+        if 'public_key' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
+            public_key = request.POST['public_key']
+            challenge = request.POST['challenge']
+            response = request.POST['response']
+            
+            user = authenticate(request, username=username,
+                                is_challenge=True, challenge=challenge, response=response)
+            if user is not None:
+                login(request, user)
+
+                # Create researcher associated to user if needed
+                if not hasattr(user, 'researcher'):
+                    logger.debug(f'Creating reseacher with user: {user}')
+                    researcher = Researcher(user=user)
+                    researcher.save()
+                # Redirect to a success page.
+                return HttpResponseRedirect(reverse('researcher_req:profile'))
+    logger.debug(f'Login failed')
+    return HttpResponseRedirect(reverse('researcher_req:login'))
 
 
 # def verify_consent(request):

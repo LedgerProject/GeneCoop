@@ -69,8 +69,14 @@ const { zencode_exec } = require("zenroom");
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
 
-                    var signature_html = document.querySelector("[id='response']");
-                    signature_html.value = JSON.stringify(msg_sign);
+                    var html = document.querySelector("[id='response']");
+                    html.value = JSON.stringify(msg_sign);
+                    
+                    html = document.querySelector("[id='public_key']");
+                    html.value = storedSettings.authCredentials.public_key;
+                    
+                    const button = document.querySelector("[id='proceedButton']");
+                    button.style = 'visibility:visible;';
                 })
                 .catch((error) => {
                     console.error("Error in zenroom sign function: ", error);
