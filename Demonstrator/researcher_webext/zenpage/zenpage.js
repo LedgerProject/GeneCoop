@@ -53,7 +53,7 @@ const { zencode_exec } = require("zenroom");
 
                     var signature_html = document.querySelector("[id='response']");
                     signature_html.value = JSON.stringify(msg_sign);
-                    const button = document.querySelector("[id='proceedButton']");
+                    var button = document.querySelector("[id='proceedButton']");
                     button.style = 'visibility:visible;';
 
                     //@taco FIXME, come up with a solution where the new text comes from the html page 

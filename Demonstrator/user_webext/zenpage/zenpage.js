@@ -55,13 +55,12 @@ const { zencode_exec } = require("zenroom");
 
         console.log(`${action} called`)
         if (action == 'login') {
-            var username_html = document.querySelector("[id='username']");
+            
             if (storedSettings.authCredentials === undefined) {
-                username_html.value = "Please set your credentials in the add-on";
+                onError("Please set your credentials in the add-on");
                 return;
             }
-            username_html.value = storedSettings.authCredentials.username;
-
+            
             const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
 
@@ -71,11 +70,11 @@ const { zencode_exec } = require("zenroom");
 
                     var html = document.querySelector("[id='response']");
                     html.value = JSON.stringify(msg_sign);
-                    
-                    html = document.querySelector("[id='public_key']");
+
+                    html = document.querySelector("[id='user_id']");
                     html.value = storedSettings.authCredentials.public_key;
                     
-                    const button = document.querySelector("[id='proceedButton']");
+                    var button = document.querySelector("[id='proceedButton']");
                     button.style = 'visibility:visible;';
                 })
                 .catch((error) => {

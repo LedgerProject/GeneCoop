@@ -11,33 +11,45 @@
 <body>
 
 
-{% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
 
     {% include "header.html" %}
 
-{% else %}
+    {% else %}
 
-<!-- Credit https://codepen.io/danzawadzki/pen/EgqKRr  -->
-<div class="wrapper fadeInDown">
-    <div id="formContent">
-        <!-- Tabs Titles -->
-        <h2 class="active">Welcome</h2>
-        <p id="instruction" class="instruction">Please 'Login' from your GeneCoop wallet.<br/> (Click <a href="/static/researcher_req/genecoop_research-0.0.1-an+fx.xpi">here</a> to install the wallet)</p>
-        <!-- Icon -->
-       
-        <!-- Login Form -->
-        <form action="{% url 'researcher_req:check_login' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" id="challenge" name="challenge" value={{ challenge }}>
-            <input type="text" id="username" class="fadeIn second" name="username" placeholder="" readonly>
-            <input type="hidden" id="response" class="fadeIn third" name="response" placeholder="response">
-            <input id="proceedButton" type="submit" class="fadeIn fourth" style="visibility:hidden;" value="Proceed">
-        </form>
-        <div class="fadeIn first">
-            <img src="{% static 'researcher_req/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+    <!-- Credit https://codepen.io/danzawadzki/pen/EgqKRr  -->
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <h2 class="active">Welcome</h2>
+            <div id="no-genecoop-plugin">
+                <p class="instruction">You need GeneCoop add-on to login.<br />
+                    Click <a href="/static/researcher_req/genecoop_research-0.0.1-an+fx.xpi">here</a> to install it.</p>
+
+            </div>
+            <div id="yes-genecoop-plugin" style="display: none;visibility: hidden;">
+                <p id="instruction" class="instruction">Please 'Login' from your GeneCoop wallet.<br /></p>
+
+                <!-- Login Form -->
+                <form action="{% url 'researcher_req:check_login' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="challenge" name="challenge" value={{ challenge }}>
+                    <input type="text" id="username" class="fadeIn second" name="username" placeholder="" readonly>
+                    <input type="hidden" id="response" class="fadeIn third" name="response" placeholder="response">
+                    <input id="proceedButton" type="submit" class="fadeIn fourth" style="visibility:hidden;"
+                        value="Proceed">
+                </form>
+
+            </div>
+
+            <!-- Icon -->
+
+
+            <div class="fadeIn first">
+                <img src="{% static 'researcher_req/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+            </div>
+            <br />
         </div>
-        <br/>  
     </div>
-</div>
 
-{% endif %}
+    {% endif %}

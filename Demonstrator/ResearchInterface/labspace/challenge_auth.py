@@ -9,12 +9,12 @@ class ChallengeAuthBackend(ModelBackend):
     Log in to Django with a challenge
 
     """
-    def authenticate(self, request, username=None, is_challenge=False, challenge='', response=''):
+    def authenticate(self, request, is_researcher, username=None, challenge='', response=''):
         # This would be to avoid that all auth attempts use 
         # this mechanism
         # print('authenticate called')
 
-        if not is_challenge or challenge == '' or response == '':
+        if challenge == '' or response == '':
             return None
         
         try:
@@ -22,11 +22,15 @@ class ChallengeAuthBackend(ModelBackend):
         except User.DoesNotExist:
             return None
         
-        researcher = Researcher.objects.get(user=user)
+        if is_researcher:
+            researcher = Researcher.objects.get(user=user)
+            publickey = researcher.publickey
+        else:
+            publickey = username
 
         # check response is valid signature of challenge
         # with the user's public_key
-        if verify_signature(researcher.publickey, challenge, response):
+        if verify_signature(publickey, challenge, response):
             return user
         
         return None

@@ -266,8 +266,7 @@ def check_login(request):
             username = request.POST['username']
             challenge = request.POST['challenge']
             response = request.POST['response']
-            user = authenticate(request, username=username,
-                                is_challenge=True, challenge=challenge, response=response)
+            user = authenticate(request, is_researcher=True, username=username, challenge=challenge, response=response)
             if user is not None:
                 login(request, user)
 

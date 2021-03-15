@@ -11,11 +11,12 @@ from django.urls import reverse
 from django.views import generic
 from django.core.exceptions import MiddlewareNotUsed
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 from .models import Consent
-from researcher_req.models import Researcher, Request
+from researcher_req.models import User, Researcher, Request
 
-from labspace.constants import VERIFY_URL, DO_ENCODING
+# from labspace.constants import VERIFY_URL, DO_ENCODING
 
 import labspace.utils as labut
 
@@ -220,9 +221,13 @@ def sign_consent(request):
         if 'token' in request.POST:
             token = request.POST.get('token')
             myconsent = get_object_or_404(Consent, token=token)
+
+            if not User.objects.filter(username=request.POST.get('public_key')).exists():
+                user = User(username=request.POST.get('public_key'))
+                user.save()
                       
             myconsent.sign(request.POST.get('signature'), request.POST.get('public_key'))
-                       
+
             myconsent.save()
             return HttpResponseRedirect(reverse('genecoop:index'))
         return HttpResponseRedirect(reverse('genecoop:index'))
@@ -236,25 +241,19 @@ def check_login(request):
     """
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'public_key' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
-            public_key = request.POST['public_key']
+        if 'user_id' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
+            public_key = request.POST['user_id']
             challenge = request.POST['challenge']
             response = request.POST['response']
+
+            user = authenticate(request, is_researcher=False, username=public_key, challenge=challenge, response=response)
             
-            user = authenticate(request, username=username,
-                                is_challenge=True, challenge=challenge, response=response)
             if user is not None:
                 login(request, user)
-
-                # Create researcher associated to user if needed
-                if not hasattr(user, 'researcher'):
-                    logger.debug(f'Creating reseacher with user: {user}')
-                    researcher = Researcher(user=user)
-                    researcher.save()
                 # Redirect to a success page.
-                return HttpResponseRedirect(reverse('researcher_req:profile'))
+                return HttpResponseRedirect(reverse('genecoop:index'))
     logger.debug(f'Login failed')
-    return HttpResponseRedirect(reverse('researcher_req:login'))
+    return HttpResponseRedirect(reverse('genecoop:login'))
 
 
 # def verify_consent(request):
