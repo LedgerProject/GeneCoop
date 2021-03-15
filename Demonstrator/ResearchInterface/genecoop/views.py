@@ -146,10 +146,20 @@ def login_view(request):
     context = {'challenge': labut.generate_random_challenge()}
     return render(request, template_name, context)
 
+def logout_view(request):
+    logger.debug(f'Logout view request')
+    template_name = 'genecoop/logout.html'
+    # breakpoint()
+    if request.user.is_authenticated:
+        logout(request)
+        return render(request, template_name)
+    return HttpResponseRedirect(reverse('genecoop:login'))
+
 @login_required(login_url='genecoop:login')
 def index_view(request):
     template_name = 'genecoop/index.html'
     context = {'my_set': _gen_queryset(None)}
+    
     return render(request, template_name, context)
 
 
@@ -193,20 +203,21 @@ def gen_consent(request):
 
             for operation in mySerializedOperations.operations:
                 form_entry = f"option-{operation['key']}"
+                
                 if form_entry in request.POST:
                     mySerializedOperations.select_option_key(operation['key'],
                                                              request.POST.get(form_entry))
                 else:
                     mySerializedOperations.reset_option_key(operation['key'])
 
-                new_consent = Consent(token=token,
-                                      text=f'{consent_req.text}',
-                                      description=f'{consent_req.description}')
+            new_consent = Consent(token=token,
+                                    text=f'{consent_req.text}',
+                                    description=f'{consent_req.description}')
 
-                new_consent.init(mySerializedOperations.serialize())
-                new_consent.save()
-                logger.debug("New consent created in unassigned state")
-                return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
+            new_consent.init(mySerializedOperations.serialize())
+            new_consent.save()
+            logger.debug("New consent created in unassigned state")
+            return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
 
     logger.warning(
         f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')

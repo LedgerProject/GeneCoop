@@ -10,6 +10,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('check_login/', views.check_login, name='check_login'),
     
+    path('logout/', views.logout_view, name='logout'),
+
     path('token/', views.token_view, name='token'),
     path('check_token/', views.check_token, name='check_token'),
 

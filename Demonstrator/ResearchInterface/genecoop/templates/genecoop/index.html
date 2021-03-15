@@ -1,73 +1,46 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base_user.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <title>GeneCoop Consent Overview</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'genecoop/style.css' %}">
-</head>
+{% block title %}GeneCoop Consent Overview{% endblock %}
 
-<body>
+{% block content %}
 
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <div class="container">
-        <h2>Consent Request</h2>
-        <form action="{% url 'genecoop:verify_consent' %}" method="post">
-            {% csrf_token %}
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Insert Token</div>
-                    <div class="col col-2">Insert Researcher Public Key</div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Token"><input type="text" name="token" value=""></div>
-                    <div class="col col-2" data-label="PublicKey"><input type="text" name="public_key" value=""></div>
-                </li>
-                <li class="table-row">
-                    <div class="col col-1" data-label="Submit"><input type="submit" value="Verify Consent"></div>
-                </li>
-            </ul>
-        </form>
+<div class="container">
+    <h2>Existing Consents</h2>
 
-    </div>
-    <div class="container">
-        <h2>Existing Consents</h2>
-        
-        <ul class="responsive-table">
-            <li class="table-header">
-                <div class="col col-a">Name of Consent</div>
-                <div class="col col-b">Operations</div>
-            </li>
-            {% for consent in my_set %}
-            <li class="table-row">
-                <div class="col col-a" data-label="Name"><a href="{% url 'genecoop:consent' consent.token %}">{{ consent.text}}</a></div>
-                <div class="col col-b" data-label="Operations">
-                    <ul class="responsive-table">
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-a">Name of Consent</div>
+            <div class="col col-b">Operations</div>
+        </li>
+        {% for consent in my_set %}
+        <li class="table-row">
+            <div class="col col-a" data-label="Name"><a href="{% url 'genecoop:consent' consent.token %}">{{consent.text}}</a></div>
+            <div class="col col-b" data-label="Operations">
+                <ul class="responsive-table">
                     {% for operation in consent.operations %}
                     <li class="table-row">
                         <div class="col col-1" data-label="Name">{{ operation.text}}</div>
-                        <div class="col col-2" data-label="Description">{{ operation.description}}</div>
+                        <!-- <div class="col col-2" data-label="Description">{{ operation.description}}</div> -->
                         <div class="col col-3" data-label="Options">
                             <ul>
-                            {% for option in operation.options %}
+                                {% for option in operation.options %}
                                 {% if option.key == operation.chosen_option %}
-                                    <li id="minim"><b>{{ option.text }}</b></li>
+                                <li id="minim"><b>{{ option.text }}</b></li>
                                 {% else %}
-                                    <li id="minim">{{ option.text }}</li>
+                                <li id="minim">{{ option.text }}</li>
                                 {% endif %}
-                            {% endfor %}
+                                {% endfor %}
                             </ul>
                         </div>
                     </li>
                     {% endfor %}
-                    </ul>
-                </div>
-            </li>
-            {% endfor %}  
-        </ul>
-    </div>
-</body>
+                </ul>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 
-</html>
+{% endblock %}

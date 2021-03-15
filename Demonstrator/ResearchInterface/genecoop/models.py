@@ -60,8 +60,8 @@ class ConsentLogger(models.Model):
     message = models.CharField(max_length=LOGMESSAGE_LENGTH)
     # user_id = models.CharField(max_length=USERID_LENGTH, default="")
     operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
-    token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
-    is_signed = models.BooleanField()
+    # token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
+    is_signed = models.BooleanField(default=False)
     request_received = models.DateTimeField(
         'date received', default=timezone.make_aware(datetime(1900, 1, 1)))
 
@@ -84,11 +84,12 @@ class ConsentLogger(models.Model):
         return self.message
 
     def __handle_token__(self, token):
-        self.token = token
-        consent = Consent.objects.get(token=self.token)
+        
+        consent = Consent.objects.get(token=token)
         assert(consent != None)
         self.request_received = timezone.now()
-        self.user_id = consent.user_id
+        # self.token = token
+        # self.user_id = consent.user_id
         self.operations = consent.operations
         self.is_signed = consent.is_signed()
 
