@@ -11,12 +11,6 @@
 <body>
 
 
-{% if request.user.is_authenticated %}
-
-    {% include "header.html" %}
-
-{% else %}
-
 <div class="wrapper fadeInDown">
     <div id="formContent">
         <!-- Tabs Titles -->
@@ -35,5 +29,3 @@
         </form>
     </div>
 </div>
-
-{% endif %}

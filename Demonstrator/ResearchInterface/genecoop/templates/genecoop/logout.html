@@ -1,4 +1,4 @@
-{% extends 'base_res.html' %}
+{% extends 'base_user.html' %}
 
 {% block title %}Logout{% endblock %}
 
@@ -10,7 +10,7 @@ Strange, you are still logged in {{ request.user }}!
 <div class="menu-top">
       <ul>
 
-            <li><a href="{% url 'researcher_req:login' %}">Login</a></li>
+            <li><a href="{% url 'genecoop:login' %}">Login</a></li>
             <li><a href="https://waag.org/en/project/gene-coop" target="_blank">About</a></li>
       </ul>
 </div>

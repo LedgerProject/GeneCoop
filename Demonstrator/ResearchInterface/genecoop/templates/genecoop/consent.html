@@ -1,69 +1,63 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base_user.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <title>GeneCoop Consent</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'genecoop/style.css' %}">
-</head>
+{% block title %}GeneCoop Consent{% endblock %}
 
-<body>
+{% block content %}
 
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-    <div class="container">
-        <h2>Consent Overview</h2>
-        
-        <ul class="responsive-table">
-            <li class="table-header">
-                <div class="col col-a">Name of Consent</div>
-                <div class="col col-b">Operations</div>
-            </li>
-            <li class="table-row">
-                <div class="col col-a" data-label="Name">{{ consent.text}}</div>
-                <div class="col col-b" data-label="Operations">
-                    <ul class="responsive-table">
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<div class="container">
+    <h2>Consent Overview</h2>
+
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-a">Name of Consent</div>
+            <div class="col col-b">Operations</div>
+        </li>
+        <li class="table-row">
+            <div class="col col-a" data-label="Name">{{ consent.text}}</div>
+            <div class="col col-b" data-label="Operations">
+                <ul class="responsive-table">
                     {% for operation in consent.operations %}
                     <li class="table-row">
                         <div class="col col-1" data-label="Name">{{ operation.text}}</div>
                         <div class="col col-2" data-label="Description">{{ operation.description}}</div>
                         <div class="col col-3" data-label="Options">
                             <ul>
-                            {% for option in operation.options %}
+                                {% for option in operation.options %}
                                 {% if option.key == operation.chosen_option %}
-                                    <li id="minim"><b>{{ option.text }}</b></li>
+                                <li id="minim"><b>{{ option.text }}</b></li>
                                 {% else %}
-                                    <li id="minim">{{ option.text }}</li>
+                                <li id="minim">{{ option.text }}</li>
                                 {% endif %}
-                            {% endfor %}
+                                {% endfor %}
                             </ul>
                         </div>
                     </li>
                     {% endfor %}
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <div class="container">
-        <h2>Operation Overview</h2>
-        
-        <ul class="responsive-table">
-            <li class="table-header">
-                <div class="col col-1">Time</div>
-                <div class="col col-2">Message</div>
-                <div class="col col-3">Type</div>
-            </li>
-            {% for log in consent.logs %}
-            <li class="table-row">
-                <div class="col col-1" data-label="Time">{{ log.time }}</div>
-                <div class="col col-2" data-label="Type">{{ log.message }}</div>
-                <div class="col col-3" data-label="Message">{{ log.type }}</div>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-</body>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="container">
+    <h2>Operation Overview</h2>
 
-</html>
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-1">Time</div>
+            <div class="col col-2">Message</div>
+            <div class="col col-3">Type</div>
+        </li>
+        {% for log in consent.logs %}
+        <li class="table-row">
+            <div class="col col-1" data-label="Time">{{ log.time }}</div>
+            <div class="col col-2" data-label="Type">{{ log.message }}</div>
+            <div class="col col-3" data-label="Message">{{ log.type }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
