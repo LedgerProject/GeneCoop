@@ -27,7 +27,7 @@ Quit the server with CONTROL-C.
 ```
 
 ### Webextensions
-To build the researcher web extension, and save it to your Downloads directory:
+To build a development version the researcher web extension, and save it to your Downloads directory:
 ```
 $ cd researcher_webext
 $ npm install
@@ -44,6 +44,13 @@ To install and configure the researcher web extension in Firefox:
 * Fill in the username, public key, and private key with values from ResearchInterface/.researcher.json secrets file, click save.
 (ask Stefano for a copy)
 * To test if configuration is correct, navigate to locahost:8000/request, it should show the red border, clicking on the extension should show three buttons: 'login', 'sign' and 'reset'.
+
+
+To build a signed, downloadable self hosted version of the webextension:
+```
+web-ext sign --api-key=<KEY> --api-secret=<SECRET> --channel=unlisted
+```
+then copy the xpi file to the django static directory
 
 ## Operations
 
