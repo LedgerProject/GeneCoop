@@ -13,3 +13,6 @@ create_proof.data
 verify_proof.data
 sign.data
 verify_signature.data
+node_modules/
+.web-extension-id
+web-ext-artifacts/
