@@ -276,7 +276,7 @@ def check_login(request):
                     return HttpResponseRedirect(reverse('researcher_req:login'))
                     
                 # Redirect to a success page.
-                return HttpResponseRedirect(reverse('researcher_req:profile'))
+                return HttpResponseRedirect(reverse('researcher_req:index'))
     logger.debug(f'Login failed')
     return HttpResponseRedirect(reverse('researcher_req:login'))
 

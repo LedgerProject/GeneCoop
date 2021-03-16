@@ -6,17 +6,17 @@
 // import {zenroom as zenroom_exec} from '../zenpage/zenroom.js';
 // import {zenroom_exec} from '../node_modules/zenroom/dist/module/index.js'
 
-const loginPage = `body > :not(.notexisting) {
-    color: red;
-  }`;
+// const loginPage = `body > :not(.notexisting) {
+//     color: red;
+//   }`;
 
-  const signPage = `body > :not(.notexisting) {
-    color: green;
-  }`;
+//   const signPage = `body > :not(.notexisting) {
+//     color: green;
+//   }`;
 
-const verifyPage = `body > :not(.notexisting) {
-    color: blue;
-  }`;
+// const verifyPage = `body > :not(.notexisting) {
+//     color: blue;
+//   }`;
 
 function listenForClicks() {
     document.addEventListener("click", (e) => {
@@ -37,27 +37,27 @@ function listenForClicks() {
         }
 
         function login(tabs) {
-            browser.tabs.insertCSS({ code: loginPage }).then(() => {
+            // browser.tabs.insertCSS({ code: loginPage }).then(() => {
                 browser.tabs.sendMessage(tabs[0].id, {
                     command: "login"
                 });
-            });
+            // });
         }
 
         function sign(tabs) {
-            browser.tabs.insertCSS({ code: signPage }).then(() => {
+            // browser.tabs.insertCSS({ code: signPage }).then(() => {
                 browser.tabs.sendMessage(tabs[0].id, {
                     command: "sign"
                 });
-            });
+            // });
         }
 
         function verify(tabs) {
-            browser.tabs.insertCSS({ code: verifyPage }).then(() => {
+            // browser.tabs.insertCSS({ code: verifyPage }).then(() => {
                 browser.tabs.sendMessage(tabs[0].id, {
                     command: "verify"
                 });
-            });
+            // });
         }
         /**
         * Remove the CSS from the active tab,

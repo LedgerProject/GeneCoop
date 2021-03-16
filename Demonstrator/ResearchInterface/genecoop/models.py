@@ -59,9 +59,9 @@ class ConsentLogger(models.Model):
     consent = models.ForeignKey(Consent, on_delete=models.CASCADE)
     message = models.CharField(max_length=LOGMESSAGE_LENGTH)
     # user_id = models.CharField(max_length=USERID_LENGTH, default="")
-    operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
+    # operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
     # token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
-    is_signed = models.BooleanField(default=False)
+    # is_signed = models.BooleanField(default=False)
     request_received = models.DateTimeField(
         'date received', default=timezone.make_aware(datetime(1900, 1, 1)))
 
@@ -88,15 +88,16 @@ class ConsentLogger(models.Model):
         consent = Consent.objects.get(token=token)
         assert(consent != None)
         self.request_received = timezone.now()
+        return consent
         # self.token = token
         # self.user_id = consent.user_id
-        self.operations = consent.operations
-        self.is_signed = consent.is_signed()
+        # self.operations = consent.operations
+        # self.is_signed = consent.is_signed()
 
     def log_is_signed(self, token):
-        self.__handle_token__(token)
+        consent = self.__handle_token__(token)
         self.type = self.LogTypes.IS_SIGNED
-        self.message = f"Request received to check whether consent is signed for token: {token}, answer is: {self.is_signed}"
+        self.message = f"Request received to check whether consent is signed for token: {token}, answer is: {consent.is_signed()}"
 
     def log_allowed_operations(self, token, op_results):
         self.__handle_token__(token)
