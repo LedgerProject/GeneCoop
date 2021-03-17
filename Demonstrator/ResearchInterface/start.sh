@@ -10,6 +10,7 @@ then
     settings=labspace.settingsD
 else
     echo -e "Environment unknown: {1}"
+    exit 1
 fi
 
 if [ "$(uname)" == "Darwin" ]
