@@ -6,17 +6,17 @@
 // import {zenroom as zenroom_exec} from '../zenpage/zenroom.js';
 // import {zenroom_exec} from '../node_modules/zenroom/dist/module/index.js'
 
-const loginPage = `body > :not(.notexisting) {
-    color: red;
-  }`;
+// const loginPage = `body > :not(.notexisting) {
+//     color: red;
+//   }`;
 
-const signPage = `body > :not(.notexisting) {
-    color: green;
- }`;
+// const signPage = `body > :not(.notexisting) {
+//     color: green;
+//  }`;
 
-const verifyPage = `body > :not(.notexisting) {
-    color: blue;
-  }`;
+// const verifyPage = `body > :not(.notexisting) {
+//     color: blue;
+//   }`;
 
 function listenForClicks() {
     document.addEventListener("click", (e) => {

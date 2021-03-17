@@ -101,13 +101,13 @@ def log_operation(request):
                         consent_logger.log_operation(token, ope_key, is_allowed)
                         consent_logger.save()
                         if not is_allowed:
-                            return Response({f'error': f'Operation {ope_key} is not allowed for consent {token}'})
+                            return Response({f'error': f'Operation {ope_key} is not allowed, consent {token}'})
                         else:
-                            return Response({f'text': f'Operation {ope_key} is allowed for consent {token}'})
+                            return Response({f'text': f'Operation {ope_key} was allowed and has been logged, consent {token}'})
                     else:
                         consent_logger.log_not_signed_operation(token, ope_key)
                         consent_logger.save()
-                        return Response({f'error': f'Operation {ope_key} has not been signed'})
+                        return Response({f'error': f'User has not replied to operation {ope_key}, consent {token}'})
             return Response({f'error': f'ope_key {ope_key} is not found in consent {token} with operations {mySerializedOperations.operations}'})
         else:
             return Response({f'error': f'Need to provide an operation'})    

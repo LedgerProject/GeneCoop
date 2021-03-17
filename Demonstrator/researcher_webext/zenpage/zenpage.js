@@ -30,6 +30,19 @@ const { zencode_exec } = require("zenroom");
         console.error(e);
     }
 
+    function toggle_instructions(){
+        let div = document.querySelector("[id='action-required-genecoop-plugin']");
+        if( div !== null){
+            div.style = 'display: none;visibility: hidden;';
+        }
+        
+        div = document.querySelector("[id='action-done-genecoop-plugin']");
+        if( div !== null){
+            div.style = 'display: block;visibility:visible;';
+        }
+        
+    }
+
     /**
      */
     async function perform_action(action, storedSettings) {
@@ -53,12 +66,10 @@ const { zencode_exec } = require("zenroom");
 
                     var signature_html = document.querySelector("[id='response']");
                     signature_html.value = JSON.stringify(msg_sign);
+
+                    toggle_instructions();
                     var button = document.querySelector("[id='proceedButton']");
                     button.style = 'visibility:visible;';
-
-                    //@taco FIXME, come up with a solution where the new text comes from the html page 
-                    const instruction = document.querySelector("[id='instruction']");
-                    instruction.textContent= "Click proceed to continue"
 
                 })
                 .catch((error) => {
@@ -97,6 +108,7 @@ const { zencode_exec } = require("zenroom");
             });
 
             console.log("Out of promises: ", status);
+            toggle_instructions();
             var submit_html = document.querySelector("[id='submit']");
             submit_html.disabled = false;
 

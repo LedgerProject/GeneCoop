@@ -48,6 +48,18 @@ const { zencode_exec } = require("zenroom");
         return contract;
     };
 
+    function toggle_instructions(){
+        let div = document.querySelector("[id='action-required-genecoop-plugin']");
+        if( div !== null){
+            div.style = 'display: none;visibility: hidden;';
+        }
+        
+        div = document.querySelector("[id='action-done-genecoop-plugin']");
+        if( div !== null){
+            div.style = 'display: block;visibility:visible;';
+        }
+        
+    }
     /**
      */
     function perform_action(action, storedSettings) {
@@ -73,6 +85,8 @@ const { zencode_exec } = require("zenroom");
 
                     html = document.querySelector("[id='user_id']");
                     html.value = storedSettings.authCredentials.public_key;
+                    
+                    toggle_instructions();
                     
                     var button = document.querySelector("[id='proceedButton']");
                     button.style = 'visibility:visible;';
@@ -108,6 +122,8 @@ const { zencode_exec } = require("zenroom");
 
                     html = document.querySelector("[id='public_key']");
                     html.value = storedSettings.authCredentials.public_key;
+
+                    toggle_instructions();
 
                     html = document.querySelector("[id='submitButton']");
                     html.disabled = false;

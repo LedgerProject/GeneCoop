@@ -34,17 +34,26 @@
                 Date: {{ my_consent.consent_created }}
 
             </div>
-
+            <div id='action-required-genecoop-plugin'><b>Please sign the consent by clicking on "Sign" in GeneCoop's add-on</b></div>
+            <!-- <div id='action-done-genecoop-plugin' style="display: none;visibility: hidden;"><b>Consent signed, click on 'Store agreement' to proceed</b></div> -->
+            
             <footer class="consent_sign_footer">
+                
                 <input type="hidden" id="hash" name="hash" value="">
                 <input type="hidden" id="public_key" name="public_key" value="">
                 <input type="hidden" id="signature" name="signature" value="">
                 <input type="hidden" id="token" name="token" value={{my_consent.token}}>
-                <input id="submitButton" type="submit" data-label="Submit" class="button" value="Sign agreement"
+                <div id='action-done-genecoop-plugin' style="display: none;visibility: hidden;">
+                    <p>You can now store the agreement.<br/>
+                        You will then be redirected to the login page</p>
+                    <input id="submitButton" type="submit" data-label="Submit" class="button" value="Store agreement"
                     disabled />
+                </div>
+                
             </footer>
         </form>
     </main>
+    <script type="text/javascript" src="{% static 'genecoop/box.js' %}"></script>
 </body>
 
 </html>

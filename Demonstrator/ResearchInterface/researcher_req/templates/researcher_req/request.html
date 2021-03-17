@@ -54,7 +54,7 @@
                     {% csrf_token %}
                     <input type="hidden" id="Token" name="Token" value={{request.token}}>
                     <input type="hidden" id="operationKey" name="operationKey" value={{operation.key}}>
-                    <input type="submit" value="Perform Action">
+                    <input type="submit" value="Run Analysis">
                 </form>
                 {% else %}
                 No operation possible

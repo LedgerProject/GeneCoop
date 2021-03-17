@@ -1,13 +1,13 @@
 {
-    "username":"researcherA",
-    "description":"Researcher operating in labspace and seeking user consent",
-    "firstname":"Bert",
-    "lastname":"Eussen",
-    "email": "h.eussen@erasmusmc.nl",
-    "password": "ledgercallproject",
-    "private_key": "3zBMVBNbTGq+o02IDcCMlitcDyMziJ7jXIpHhXo2YvU=",
-    "public_key": "BGRO8HAnOMeESESnhekVyrsr0q9tHNtI3X7eYaNoVfr9wzThRuL6E9WVltW1jT6z1IVHXSdophZJkBEuYjfa4qg=",
-    "institute": "Erasmus MC",
-    "institute_publickey": "BHcNLQ9tr40c+8gF75pnv+zt6ncsVjY0rK9ZS3ad2UoyysIY+hr8QUBBgSw5FPXz7VshN3EELg3M7eWec2gk7L0="
+    "username":"",
+    "description":"",
+    "firstname":"",
+    "lastname":"",
+    "email": "",
+    "password": "",
+    "private_key": "",
+    "public_key": "",
+    "institute": "",
+    "institute_publickey": ""
 
 }
