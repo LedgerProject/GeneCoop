@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "genecoop_consent",
+  "name": "genecoop_donor",
   "description": "Handle consent requests as defined by Genecoop",
   "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "browser_specific_settings": {
     "gecko": {
-      "id": "user_webext@genecoop.waag.org"
+      "id": "dna_donor@genecoop.waag.org"
     }
   },
   "permissions": [

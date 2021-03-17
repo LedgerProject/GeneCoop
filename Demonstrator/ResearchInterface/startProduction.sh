@@ -14,13 +14,6 @@ then
     exit 1
 fi
 
-if [ "$(uname)" == "Darwin" ]
-then
-    conda_shell=~/opt/miniconda3/etc/profile.d/conda.sh
-else
-    conda_shell=~/miniconda3/etc/profile.d/conda.sh
-fi
-
 if [ -z "$STY" ]
 then
     # we are not running in screen
@@ -29,30 +22,7 @@ then
 else
     # we are running in screen, provide commands to execute
 
-    if [ "${CONDA_DEFAULT_ENV} " != "${env_name} " ]
-    then
-        source ${conda_shell}
-        conda activate ${env_name}
-    fi
-
-    pip install -r ./pip_requirements.txt
-
-    . ./util_functions.sh
-
-    create_user_cmd superuser | python manage.py shell --settings=${settings}
-    create_user_cmd researcher | python manage.py shell --settings=${settings}
-    
-
-    SECRET_KEY=$(cat .secret_key) python manage.py makemigrations --settings=${settings}
-    SECRET_KEY=$(cat .secret_key) python manage.py migrate --settings=${settings}
-
-    if ! check_restroom
-    then
-        exit 1
-    fi
-
-
-    SECRET_KEY=$(cat .secret_key) python manage.py runserver --settings=${settings}
+    ./start.sh PROD
 
 fi
 
