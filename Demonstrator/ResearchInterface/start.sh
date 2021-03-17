@@ -34,35 +34,35 @@ fi
 
 pip install -r ./pip_requirements.txt
 
+
+
 if [ "${env_type} " == "PROD " ]
 then
-    SECRET_KEY=$(cat .secret_key) python manage.py makemigrations --settings=${settings}
-    SECRET_KEY=$(cat .secret_key) python manage.py migrate --settings=${settings}
-else
-    python manage.py makemigrations --settings=${settings}
-    python manage.py migrate --settings=${settings}
+    export SECRET_KEY=$(cat .secret_key)
 fi
 
+python manage.py makemigrations --settings=${settings}
+python manage.py migrate --settings=${settings}
 
 . ./util_functions.sh
-
 
 create_user_cmd superuser | python manage.py shell --settings=${settings}
 create_user_cmd user | python manage.py shell --settings=${settings}
 create_researcher_cmd | python manage.py shell --settings=${settings}
 
+python manage.py runserver -v2 --settings=${settings}
 
 # if ! check_restroom
 # then
 #    exit 1
 # fi
 
-if [ "${env_type} " == "PROD " ]
-then
-    SECRET_KEY=$(cat .secret_key) python manage.py runserver --settings=${settings}
-else
-    python manage.py runserver -v2 --settings=${settings}
-fi
+# if [ "${env_type} " == "PROD " ]
+# then
+#     SECRET_KEY=$(cat .secret_key) python manage.py runserver --settings=${settings}
+# else
+#     python manage.py runserver -v2 --settings=${settings}
+# fi
 
 
 
