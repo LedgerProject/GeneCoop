@@ -71,6 +71,7 @@ def _gen_queryset(pk, include_log=False):
 
         cons_entry = {
             'text': consent.text,
+            'description': consent.description,
             'token': consent.token,
             'operations': _gen_operationset(consent.operations)
         }

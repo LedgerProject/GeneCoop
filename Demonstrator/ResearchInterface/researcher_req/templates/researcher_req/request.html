@@ -11,44 +11,44 @@
 
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-1">Name of Request</div>
-            <div class="col col-2">Request Description</div>
+            <div class="col col-14">Name of Request</div>
+            <div class="col col-24">Request Description</div>
             <!-- <div class="col col-3">User id</div> -->
-            <div class="col col-3">Token</div>
-            <div class="col col-4">Status</div>
+            <div class="col col-34">Token</div>
+            <div class="col col-44">Status</div>
 
         </li>
         <li class="table-row">
-            <div class="col col-1" data-label="name">{{ request.text }}</div>
-            <div class="col col-2" data-label="description">{{ request.description }}</div>
+            <div class="col col-14" data-label="name">{{ request.text }}</div>
+            <div class="col col-24" data-label="description">{{ request.description }}</div>
             <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
-            <div class="col col-3" data-label="token">{{ request.token }}</div>
-            <div class="col col-4" data-label="status">{{ request.status }}</div>
+            <div class="col col-34" data-label="token">{{ request.token }}</div>
+            <div class="col col-44" data-label="status">{{ request.status }}</div>
         </li>
     </ul>
     
     <h2>Operations</h2>
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-1">Name of Operation</div>
-            <div class="col col-2">Operation Description</div>
-            <div class="col col-3">Consent</div>
-            <div class="col col-4">Reply</div>
-            <div class="col col-5">Action</div>
+            <div class="col col-15">Name of Operation</div>
+            <div class="col col-25">Operation Description</div>
+            <div class="col col-35">Consent</div>
+            <div class="col col-45">Reply</div>
+            <div class="col col-55">Action</div>
         </li>
         {% for operation in request.operations %}
         <li class="table-row">
-            <div class="col col-1" data-label="Name">{{operation.text }}</div>
-            <div class="col col-2" data-label="Description">{{ operation.description }}</div>
-            <div class="col col-3" data-label="Consent">
+            <div class="col col-15" data-label="Name">{{operation.text }}</div>
+            <div class="col col-25" data-label="Description">{{ operation.description }}</div>
+            <div class="col col-35" data-label="Consent">
                 {% if operation.chosen_option != -1 %}
                 {{operation.chosen_option_text}}
                 {% else %}
                 No reply
                 {% endif %}
             </div>
-            <div class="col col-4" data-label="Reply">{{ operation.reply }}</div>
-            <div class="col col-5" data-label="Submit">
+            <div class="col col-45" data-label="Reply">{{ operation.reply }}</div>
+            <div class="col col-55" data-label="Submit">
                 {% if request.status == "REPLIED" %}
                 <form action="{% url 'researcher_req:perform_action' %}" method="post">
                     {% csrf_token %}

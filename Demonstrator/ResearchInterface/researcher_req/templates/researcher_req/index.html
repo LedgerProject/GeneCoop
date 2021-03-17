@@ -11,20 +11,20 @@
 
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-1">Request Name</div>
-            <div class="col col-2">Request Description</div>
-            <div class="col col-3">Operations</div>
-            <div class="col col-4">Token</div>
+            <div class="col col-14">Request Name</div>
+            <div class="col col-24">Request Description</div>
+            <div class="col col-34">Operations</div>
+            <div class="col col-44">Token</div>
             <!-- <div class="col col-5">Status</div> -->
         </li>
         {% if my_set.requests %}
         {% for request in my_set.requests %}
             {% if request.status != 'REPLIED' %}
             <li class="table-row">
-                <div class="col col-1" data-label="Name"><a
+                <div class="col col-14" data-label="Name"><a
                         href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
-                <div class="col col-2" data-label="Description">{{ request.description }}</div>
-                <div class="col col-3" data-label="Operations">
+                <div class="col col-24" data-label="Description">{{ request.description }}</div>
+                <div class="col col-34" data-label="Operations">
                     {% for operation in request.operations %}
                     <ul>
                         {% if operation.chosen_option != -1 %}
@@ -35,7 +35,7 @@
                     </ul>
                     {% endfor %}
                 </div>
-                <div class="col col-4" data-label="Token">{{ request.token }}</div>
+                <div class="col col-44" data-label="Token">{{ request.token }}</div>
                 <!-- <div class="col col-5" data-label="Status">{{ request.status }}</div> -->
             </li>
             {% endif %}
@@ -51,20 +51,20 @@
 
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-1">Request Name</div>
-            <div class="col col-2">Request Description</div>
-            <div class="col col-3">Operations</div>
-            <div class="col col-4">Token</div>
+            <div class="col col-14">Request Name</div>
+            <div class="col col-24">Request Description</div>
+            <div class="col col-34">Operations</div>
+            <div class="col col-44">Token</div>
             <!-- <div class="col col-5">Status</div> -->
         </li>
         {% if my_set.requests %}
         {% for request in my_set.requests %}
         {% if request.status == 'REPLIED' %}
             <li class="table-row">
-                <div class="col col-1" data-label="Name"><a
+                <div class="col col-14" data-label="Name"><a
                         href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
-                <div class="col col-2" data-label="Description">{{ request.description }}</div>
-                <div class="col col-3" data-label="Operations">
+                <div class="col col-24" data-label="Description">{{ request.description }}</div>
+                <div class="col col-34" data-label="Operations">
                     {% for operation in request.operations %}
                     <ul>
                         {% if operation.chosen_option != -1 %}
@@ -75,7 +75,7 @@
                     </ul>
                     {% endfor %}
                 </div>
-                <div class="col col-4" data-label="Token">{{ request.token }}</div>
+                <div class="col col-44" data-label="Token">{{ request.token }}</div>
                 <!-- <div class="col col-5" data-label="Status">{{ request.status }}</div> -->
             </li>
             {% endif %}
