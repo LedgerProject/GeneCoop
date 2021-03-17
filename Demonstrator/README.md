@@ -1,6 +1,6 @@
 # The Demonstrator
 
-The demostrator is written in Python (we use v3.8) and is currently based on Django.
+The demostrator is written in Python (we use v3.8) and is based on Django.
 
 ## Installation
 
@@ -12,26 +12,35 @@ If you want to run the code on your premises, after cloning this repository perf
 3. (Optional) create a virtual environment and activate it. Ex `conda create -n Demonstrator python==3.8` and then `conda activate Demonstrator`
 4. Install requirements: `pip install -r pip_requirements.txt`
 5. Change directory to `Genecoop/Demonstrator/ResearchInterface`
-6. Run the webserver that serves the apps: `./startDevelopment.sh` for development or `startProduction.sh` for production (runs on Linux with screen)
+6. Fill in your self-created credentials in `researcher.json` and rename it to `.researcher.json`
+7. Fill in your self-created credentials in `superuser.json` and rename it to `.superuser.json`
+8. if you want to run a production version of Django create the file `.secret_key` with a suitable Django secrete key
+9. Run the webserver that serves the apps: `./startDevelopment.sh` for development or `startProduction.sh` for production (runs on Linux with screen)
 
-You should see a message similar to the following:
+You should see some output ending with something similar to the following (for `startDevelopment.sh`):
 ```
-Watching for file changes with StatReloader
+INFO 2021-03-17 18:08:11,377 Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-December 18, 2020 - 00:02:12
-Django version 3.1.4, using settings 'labspace.settingsD'
+March 17, 2021 - 18:08:11
+Django version 3.1.5, using settings 'labspace.settingsD'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-### Webextensions
-To build a development version the researcher web extension, and save it to your Downloads directory:
+### Build Web extensions
+(not needed to run the application, only if you want to modify the web extensions)
+
+There are two web extensions, one for the researcher and one for the DNA donor (user). The instructions are the same for both, here we show the instructions for the researcher one.
+
+In order to build a development version of the researcher web extension, and save it to your Downloads directory, do the following:
 ```
-$ cd researcher_webext
+$ cd researcher_webext # cd user_webext for the user
 $ npm install
-$ cd zenpage;./prepair_bundle.sh  
+$ cd zenpage
+$ ./prepair_bundle.sh
+$ cd ..
 $ web-ext build --a ~/Downloads -n researcher_webext.zip 
 ```
 
@@ -40,30 +49,25 @@ To install and configure the researcher web extension in Firefox:
 * Click "This Firefox" -> "Load temporary add-on"
 * Select the researcher_webext.zip file in your Downloads directory
 * Browse to about:addons
-* Click on "..." -> preferences for the "genecoop_consent" addon
-* Fill in the username, public key, and private key with values from ResearchInterface/.researcher.json secrets file, click save.
-(ask Stefano for a copy)
-* To test if configuration is correct, navigate to locahost:8000/request, it should show the red border, clicking on the extension should show three buttons: 'login', 'sign' and 'reset'.
-
+* Click on "..." -> preferences for the "genecoop_research" addon (genecoop_donor for the user one)
+* Fill in the username, public key, and private key with the values you wrote in `ResearchInterface/.researcher.json`, click save. (for the user you need to generate your own keypair, username is not used at the moment).
+* To test if the configuration is correct, navigate to locahost:8000/request, and click on the extension; you should see two (or more) buttons: 'login' and 'sign'.
 
 To build a signed, downloadable self hosted version of the webextension:
 ```
 web-ext sign --api-key=<KEY> --api-secret=<SECRET> --channel=unlisted
 ```
-then copy the xpi file to the django static directory
+then copy the xpi file to the django static directory (`./ResearchInterface/researcher_req/static/researcher_req/` for the researcher and `./ResearchInterface/genecoop/static/genecoop/` for the user)
 
 ## Operations
 
-If these step were successful, you can access the Researcher interface at `http://127.0.0.1:8000/request` and the consent interface at `http://127.0.0.1:8000/consent`
+If these step were successful, you can access the Researcher interface at `http://127.0.0.1:8000/request` and the consent interface at `http://127.0.0.1:8000/consent`.
 
-With the Researcher interface you can define a consent request; the first page also shows a list of existing requests (the db has been pre-populated to have some instances to show).
+Both pages will show a login window, and the instructions to log in using the web extension.
+In the Researcher interface the first page shows a list of existing requests if there are any, divided in pending (waiting for a reply) and answered.
+In order to create a new consent request you need to click on Create Request in the menu.
 
-After generating a request, you can generate a token. Ideally this token is sent by the researcher to the user, 
-who is supposed to enter the token on the page at `http://127.0.0.1:8000/consent`.
+After generating one or more requests and signing them with the web extension, you can send the user the token corrisponding to the request (externally to this application).
+The recipient of the token can enter it on the page at `http://127.0.0.1:8000/consent`.
 
-When they do so, a consent is generated which is the mapping of the researcher request using a vocabulary the user is supposed to understand (still in development).
-
-The user can then reply to each single question in the consent and sign it. 
-
-For a complete picture of the planned flow that we want to implement
-have a look at the [technical description](https://github.com/LedgerProject/GeneCoop/blob/master/Demonstrator/Documentation/Technical_Design/demonstrator_tech_design.md).
+The user can then reply to each single question in the consent and sign it. Once at least a token is signed, a user can also login to inspect what operations have been performed with their data.
