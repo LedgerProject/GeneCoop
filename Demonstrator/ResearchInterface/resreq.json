@@ -1,8 +1,8 @@
 [
     {
         "researcher": {
-            "text": "Array test including QC and Data curation",
-            "description": "Tier 1 assay Needed for tumor classification"
+            "text": "Array SNP request + Analysis and interpretation",
+            "description": "Tier 1 essay Needed for tumor classification"
         },
         "user": {
             "text": "Array test",
@@ -44,7 +44,7 @@
     },
     {
         "researcher": {
-            "text": "Analysis II CNV",
+            "text": "Copy Number Variation",
             "description": "Needed for tumor classification and personalized advise"
         },
         "user": {
@@ -90,7 +90,7 @@
     },
     {
         "researcher": {
-            "text": "Analysis III Drug biomarker discover",
+            "text": "SNP Variant detection (Biomarker or Pathogenic)",
             "description": "Optimize personalized drug treatment"
         },
         "user": {
@@ -104,7 +104,11 @@
             "I understand that the result of the DBM a <pd>Biomarker Analysis Report</pd>  will be stored on <tech>SURF LabSafe</tech>.",
             "I understand that anonymised data from my <pd>Biomarker Analysis Report</pd>  will be collected and made available for request through the <tech>GeneCoop Data Catalogue</tech>"
         ], 
-        "permissions":["TODO"],
+        "permissions":[
+            "<org>GeneCoop Principal Investigator</org> will analyse my <pd>Raw DNA data file</pd> using <tech>Omnigen-GCP</tech>",
+            "<org>GeneCoop Principal Investigator</org> will store a copy of my <pd>Raw DNA Data File</pd> on <tech>Amazon Web Services</tech> during the analysis.",
+            "<org>GeneCoop Principal Investigator</org> will store a <pd>Biomarker Analysis Report</pd>  on <tech>SURF LabSafe</tech>."
+        ],
         "required": false,
         "key": 2,
         "options": [
@@ -132,7 +136,7 @@
     },
     {
         "researcher": {
-            "text": "Secondary use. DNA data description is published in catalogue for new research",
+            "text": "Population study. DNA data available for secondary use",
         "description": "Description not directly linked to researcher to protect study.",
         "statements":[]
         },
@@ -148,7 +152,7 @@
         },
         "key": 3,
         "statements": [],
-        "permissions":["TODO"],
+        "permissions":["My phenotypical data will be indexed in a catalogue and be searchable by other researchers."],
         "required": false,
         "options": [
             {

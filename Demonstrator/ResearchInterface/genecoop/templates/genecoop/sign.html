@@ -1,5 +1,5 @@
 {% load static %}
-{% load genecoop_extras %}
+{% load genecoop_contract %}
 
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@
 
                 {% for operation in my_ops.operations %}
                 {% for permission in operation.permissions %}
-                - {{ permission }}. <br />
+                - {{ permission|org|pd|tech|safe}}. <br />
                 {% endfor %}
                 {% endfor %}
                 Date: {{ my_consent.consent_created }}
@@ -44,8 +44,8 @@
                 <input type="hidden" id="signature" name="signature" value="">
                 <input type="hidden" id="token" name="token" value={{my_consent.token}}>
                 <div id='action-done-genecoop-plugin' style="display: none;visibility: hidden;">
-                    <p>You can now store the agreement.<br/>
-                        You will then be redirected to the login page</p>
+                    <p>The agreement has been signed. Please proceed to store it.<br/>
+                        You will then be redirected to the login page.</p>
                     <input id="submitButton" type="submit" data-label="Submit" class="button" value="Store agreement"
                     disabled />
                 </div>
@@ -53,7 +53,6 @@
             </footer>
         </form>
     </main>
-    <script type="text/javascript" src="{% static 'genecoop/box.js' %}"></script>
 </body>
 
 </html>
