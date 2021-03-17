@@ -25,9 +25,9 @@
                 <ul class="responsive-table">
                     {% for operation in consent.operations %}
                     <li class="table-row">
-                        <div class="col col-14" data-label="Name">{{ operation.text}}</div>
+                        <div class="col col-34" data-label="Name">{{ operation.text}}</div>
                         <!-- <div class="col col-24" data-label="Description">{{ operation.description}}</div> -->
-                        <div class="col col-24" data-label="Options">
+                        <div class="col col-44" data-label="Options">
                             <ul>
                                 {% for option in operation.options %}
                                 {% if option.key == operation.chosen_option %}
@@ -51,16 +51,16 @@
 
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-14">Time</div>
-            <div class="col col-24">Type</div>
-            <div class="col col-34">Message</div>
+            <div class="col col-13">Time</div>
+            <div class="col col-23">Type</div>
+            <div class="col col-33">Message</div>
             
         </li>
         {% for log in consent.logs %}
         <li class="table-row">
-            <div class="col col-14" data-label="Time">{{ log.time }}</div>
-            <div class="col col-24" data-label="Message">{{ log.type }}</div>
-            <div class="col col-34" data-label="Type">{{ log.message }}</div>
+            <div class="col col-13" data-label="Time">{{ log.time }}</div>
+            <div class="col col-23" data-label="Message">{{ log.type }}</div>
+            <div class="col col-33" data-label="Type">{{ log.message }}</div>
             
         </li>
         {% endfor %}
