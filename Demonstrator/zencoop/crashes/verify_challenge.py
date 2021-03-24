@@ -1,9 +1,9 @@
 import json
 from zenroom import zenroom
 
-def _verify_challenge():
+def create_challenge():
     """
-        This function calls zenroom to generate a random object
+        Call zenroom to create a random challenge
     """
 
     contract = """
@@ -15,79 +15,104 @@ def _verify_challenge():
     """
 
     try:
-        result = zenroom.zencode_exec(contract, conf='debug=0')
+        result = zenroom.zencode_exec(contract)
     except Exception as e:
         print(f'Exception in zenroom call: {e}')
 
+    challenge = json.loads(result.output)['challenge']
+    print(f'challenge: {challenge}')
+    return challenge
 
-    print(f'result: {result}')
-
-
-def verify_challenge(public_key, challenge, response):
+def sign_challenge(public_key, private_key, challenge):
     """
-        This function calls zenroom to verify
-        the signature of a challenge
+        Sign a challenge with the Signer's credentials
+    """
+    
+    contract = """
+    rule check version 1.0.0
+    Scenario 'ecdh': create the signature of a challenge
+    Given I have a 'string' named 'challenge'
+    and I am 'Signer'
+    and I have my 'keypair'
+    When I create the signature of 'challenge'
+    and I rename the 'signature' to 'challenge.signature'
+    Then print the 'challenge.signature'
+    """
+    
+    data = {
+        "challenge": challenge
+    }
 
-        parameters are not used at the moment to reduce source of problems
+    keys = {
+        "Signer": {
+            "keypair": {
+                    "private_key": private_key,
+                    "public_key": public_key
+                }
+        }
+    }
+
+    try:
+        result = zenroom.zencode_exec(
+        contract, keys=json.dumps(keys), data=json.dumps(data))
+    except Exception as e:
+        print(f'Exception in zenroom call: {e}')
+    
+    signature = json.loads(result.output)['challenge.signature']
+    print(f'signature: {signature}')
+
+    return signature
+
+def verify_challenge(public_key, challenge, signature):
+    """
+        Call zenroom to verify the signature of a challenge
     """
 
     contract = """
     rule check version 1.0.0
     Scenario 'ecdh': verify the signature of a request
-    Given I have a 'public key' from 'Researcher'
+    Given I have a 'public key' from 'Signer'
     and I have a 'string' named 'challenge'
-    and I have a 'signature' named 'response'
-    When I verify the 'challenge' has a signature in 'response' by 'Researcher'
+    and I have a 'signature' named 'signature'
+    When I verify the 'challenge' has a signature in 'signature' by 'Signer'
     Then print 'verification passed' as 'string'
     """
     
     data = {
-        "challenge": "hPNnxTr/It/fpy7Hv+4osrD8JN8riCsJbGrErZWwByrjSpBWWbkbrK1+ZJo/5K0Ok6FVSUTldjEvRYG15hNwSw==",
-        "response": {"r":"t1ZwCfJEoH39TCuAVuGzgTQ9XY1ZQlvFp8d0201E+d8=","s":"AuLyBAo2wySg8atLkbNyJAKDU2QxXLTw6hHUfl58584="}
+        "challenge": challenge,
+        "signature": signature
     }
 
     keys = {
-        "Researcher": {
-            "public_key": "BGRO8HAnOMeESESnhekVyrsr0q9tHNtI3X7eYaNoVfr9wzThRuL6E9WVltW1jT6z1IVHXSdophZJkBEuYjfa4qg="
+        "Signer": {
+            "public_key": public_key
         }
 
     }
 
-    # data = {
-    #     "challenge": "SqF+zwzz2KXrwr9ZbMep56/8FexuXjroQwsnHW73bUc4/ffKfOlFOXsXUol97GNh40RxtKmWhCq1F9koK4NLnA==",
-    #     "response": {
-    #         "r": "CEOKU4azUdA+s/EZKdhNlTCFX1rk6d5268w297buE+I=",
-    #         "s": "hJb/O0EiK7QKo83x57VXOszvPOPSuXWb/1IHBgAvKPs="
-    #     }
-    # }
+    try:
+        result = zenroom.zencode_exec(
+        contract, keys=json.dumps(keys), data=json.dumps(data))
+    except Exception as e:
+        print(f'Exception in zenroom call: {e}')
+    
+    verification = json.loads(result.output)['output']
 
-    # keys = {
-    #     "Researcher": {
-    #         "public_key": "BGRO8HAnOMeESESnhekVyrsr0q9tHNtI3X7eYaNoVfr9wzThRuL6E9WVltW1jT6z1IVHXSdophZJkBEuYjfa4qg="
-    #     }
+    print(f'verification: {verification}')
 
-    # }
-
-    print(f'verification data: {json.dumps(data)}, keys: {json.dumps(keys)}')
-
-    # breakpoint()
-    result = zenroom.zencode_exec(
-        contract, keys=json.dumps(keys), data=json.dumps(data), conf='debug=0')
-
-    print(f'result: {result}')
-
+    return verification
 
 def main():
 
-    public_key = 'BGRO8HAnOMeESESnhekVyrsr0q9tHNtI3X7eYaNoVfr9wzThRuL6E9WVltW1jT6z1IVHXSdophZJkBEuYjfa4qg='
-    challenge = '9WXzrRJ1Yhr5wXH/Rqoztflak9JjXyPJCc5V4hT9CLWN3BeuHEkemi4IfCd+lLHKpwiHOUpsIqHrSAKdJNGrsg=='
-    response = {"r": "6rdTSqxyeL/PivuPCyupxWbqjgRh/s2y12NM/Bzetb4=",
-                "s": "D0SRtbdFFkAyidRlD5+HpdgP6Bji2BUYW5m0YNyhKvc="}
-
-    _verify_challenge()
-    verify_challenge(public_key, challenge, response)
+    private_key = "jsrIJB8g3RYAnv9zwu15UcnV0QIQKhFDuVk/Y2l0/RU="
+    public_key = "BHcNLQ9tr40c+8gF75pnv+zt6ncsVjY0rK9ZS3ad2UoyysIY+hr8QUBBgSw5FPXz7VshN3EELg3M7eWec2gk7L0="
     
+    challenge = create_challenge()
+    signature = sign_challenge(public_key, private_key, challenge)
+    verification = verify_challenge(public_key, challenge, signature)
 
+    assert(verification == "verification_passed")
+    
 
 if __name__ == "__main__":
     main()
