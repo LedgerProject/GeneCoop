@@ -123,9 +123,6 @@ def verify_challenge(public_key, challenge, signature):
 
 def main():
 
-    private_key = "jsrIJB8g3RYAnv9zwu15UcnV0QIQKhFDuVk/Y2l0/RU="
-    public_key = "BHcNLQ9tr40c+8gF75pnv+zt6ncsVjY0rK9ZS3ad2UoyysIY+hr8QUBBgSw5FPXz7VshN3EELg3M7eWec2gk7L0="
-    
     keypair = create_keypair()
     challenge = create_challenge()
     signature = sign_challenge(keypair['public_key'], keypair['private_key'], challenge)
