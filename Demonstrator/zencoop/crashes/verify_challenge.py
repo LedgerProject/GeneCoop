@@ -1,6 +1,25 @@
 import json
 from zenroom import zenroom
 
+def create_keypair():
+    contract = """
+        rule check version 1.0.0
+        Scenario 'ecdh': create a keypair
+        Given nothing
+        When I create the keypair
+        Then print 'keypair'
+    """
+
+    try:
+        result = zenroom.zencode_exec(contract)
+    except Exception as e:
+        print(f'Exception in zenroom call: {e}')
+
+    # breakpoint()
+    keypair = json.loads(result.output)['keypair']
+    print(f'challenge: {keypair}')
+    return keypair
+
 def create_challenge():
     """
         Call zenroom to create a random challenge
@@ -107,9 +126,10 @@ def main():
     private_key = "jsrIJB8g3RYAnv9zwu15UcnV0QIQKhFDuVk/Y2l0/RU="
     public_key = "BHcNLQ9tr40c+8gF75pnv+zt6ncsVjY0rK9ZS3ad2UoyysIY+hr8QUBBgSw5FPXz7VshN3EELg3M7eWec2gk7L0="
     
+    keypair = create_keypair()
     challenge = create_challenge()
-    signature = sign_challenge(public_key, private_key, challenge)
-    verification = verify_challenge(public_key, challenge, signature)
+    signature = sign_challenge(keypair['public_key'], keypair['private_key'], challenge)
+    verification = verify_challenge(keypair['public_key'], challenge, signature)
 
     assert(verification == "verification_passed")
     
