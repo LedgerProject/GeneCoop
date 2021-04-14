@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-  </head>
 
-  <body>
+<head>
+  <meta charset="utf-8">
+</head>
 
-    <form>
-        <label>Username<input type="text" id="username" ></label>
-        <label>Public key<input type="text" id="public_key" ></label>
-        <label>Private key<input type="text" id="private_key" ></label>
-        <button type="submit">Save</button>
-    </form>
+<body>
+  <form>
+    <div>
+      <label for="question1">1st question:</label><select name="question1" id="question1"></select>
+      <label>Answer: <input type="text" id="answer1"></label>
+    </div>
+    <div>
+      <label for="question2">2nd question:</label><select name="question2" id="question2"></select>
+      <label>Answer: <input type="text" id="answer2"></label>
+    </div>
+    <div>
+      <label for="question3">3rd question:</label><select name="question3" id="question3"></select>
+      <label>Answer: <input type="text" id="answer3"></label>
+    </div>
+    <button id="submitButton" type="submit">Save</button>
+  </form>
 
-    <script src="options.js"></script>
+  <script src="options.js"></script>
 
-  </body>
+</body>
 
 </html>
