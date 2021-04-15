@@ -3,6 +3,33 @@ const { zencode_exec } = require("zenroom");
 
 const hello_script = 'print("Hello World!")';
 
+function zen_generate(msg_hash) {
+    const generate_script = `
+    rule check version 1.0.0
+    Scenario 'ecdh': create keypair from data
+    Given I have a 'base64 dictionary' named 'hashedAnswers'
+    When I create the hash of 'hashedAnswers'
+    and I rename the 'hash' to 'hashedAnswers.hash'
+    When I create the keypair with secret key 'hashedAnswers.hash'
+    Then print the 'keypair'`;
+
+    console.log("Hash data to generate key: ", JSON.stringify(msg_hash));
+
+    return new Promise(function (resolve, reject) {
+        zencode_exec(generate_script, { data: JSON.stringify(msg_hash), keys: {}, conf: `color=0, debug=0` })
+            .then((result) => {
+                console.log("Result from zenroom generate: ", result.result);
+                const msg_generate = JSON.parse(result.result)["keypair"];
+                console.log("Msg generated: ", JSON.stringify(msg_generate));
+                resolve(msg_generate);
+            }).catch((error) => {
+                console.error("Error in zen_generate function: ", JSON.stringify(error));
+                reject(error);
+            });
+    });
+
+}
+
 function zen_hash(questions, answers) {
     const hash_script = `
     rule check version 1.0.0
@@ -36,7 +63,7 @@ function zen_hash(questions, answers) {
     When I create the hash of 'Answer3'
     and I rename the 'hash' to 'Answer3.hash'
     When I insert 'Answer3.hash' in 'hashedAnswers'
-    Then print 'hashedAnswers'`;
+    Then print the 'hashedAnswers'`;
 
     var ques_ans = {};
 
@@ -51,14 +78,14 @@ function zen_hash(questions, answers) {
     console.log("Hash data to zenroom: ", JSON.stringify(data_tohash));
 
     return new Promise(function (resolve, reject) {
-        zencode_exec(hash_script, { data: JSON.stringify(data_tohash), keys: {}, conf: `color=0, debug=1` })
+        zencode_exec(hash_script, { data: JSON.stringify(data_tohash), keys: {}, conf: `color=0, debug=0` })
             .then((result) => {
-                console.log("Result from zenroom hash: ", JSON.stringify(result));
-                // const msg_sign = JSON.parse(result.result)["hashedAnswers"];
-                // console.log("Msg signature: ", msg_sign);
-                resolve(result);
+                console.log("Result from zenroom hash: ", result.result);
+                const msg_hash = JSON.parse(result.result);
+                // console.log("Msg hash: ", JSON.stringify(msg_hash));
+                resolve(msg_hash);
             }).catch((error) => {
-                console.error("Error in zenroom hash function: ", error);
+                console.error("Error in zen_hash function: ", error);
                 reject(error);
             });
     });
@@ -151,25 +178,47 @@ function zen_sign(public_key, private_key, tosign) {
 
     }
     /**
-     */
-    function perform_action(action, storedSettings) {
-
-
-        console.log(`${action} called`)
+    */
+    function wrapper_action(action, storedSettings) {
         if (storedSettings.authCredentials === undefined && storedSettings.keypair_recovery === undefined) {
             onError("Please select and answer the questions in the add-on settings");
             return;
         }
-        if (storedSettings.authCredentials === undefined){
+        if (storedSettings.authCredentials === undefined) {
             zen_hash(storedSettings.keypair_recovery.selectedQuestionTexts, storedSettings.keypair_recovery.answers)
                 .then((msg_hash) => {
-                    console.log("Hash: ", msg_hash);
+                    zen_generate(msg_hash)
+                        .then((key_pair) => {
+
+                            browser.storage.local.set({
+                                authCredentials: {
+                                    public_key: key_pair.public_key,
+                                    private_key: key_pair.private_key
+                                }
+                            })
+                                .then(() => {
+                                    let gettingStoredSettings = browser.storage.local.get();
+                                    gettingStoredSettings.then((x) => { perform_action(action, x) }, onError);
+
+                                });
+                        });
                 })
                 .catch((error) => {
-                    console.error("Error in zenroom hash function: ", error);
+                    console.error("Error in wrapper_action function: ", error);
                     throw new Error(error);
                 });
-            
+        }
+    }
+
+    /**
+     */
+    function perform_action(action, storedSettings) {
+
+        console.log(`${action} called`)
+
+        if (storedSettings.authCredentials === undefined) {
+            onError("Auth credentials are undefined");
+            return;
         }
 
         if (action == 'login') {
@@ -193,7 +242,7 @@ function zen_sign(public_key, private_key, tosign) {
                     button.style = 'visibility:visible;';
                 })
                 .catch((error) => {
-                    console.error("Error in zenroom sign function: ", error);
+                    console.error("Error in perform_action function: ", error);
                     throw new Error(error);
                 });
 
@@ -202,7 +251,6 @@ function zen_sign(public_key, private_key, tosign) {
 
             console.log("Contract: ", contract);
 
-            
             contract_text = extractContent(contract);
             contract_text = processContent(contract_text);
 
@@ -220,13 +268,16 @@ function zen_sign(public_key, private_key, tosign) {
                     html = document.querySelector("[id='public_key']");
                     html.value = storedSettings.authCredentials.public_key;
 
+                    html = document.querySelector("[id='hash']");
+                    html.value = hash;
+
                     toggle_instructions();
 
                     html = document.querySelector("[id='submitButton']");
                     html.disabled = false;
                 })
                 .catch((error) => {
-                    console.error("Error in zenroom sign function: ", error);
+                    console.error("Error in perform_action function: ", error);
                     throw new Error(error);
                 });
         }
@@ -257,11 +308,11 @@ function zen_sign(public_key, private_key, tosign) {
     browser.runtime.onMessage.addListener((message) => {
         let gettingStoredSettings = browser.storage.local.get();
         if (message.command === "login") {
-            gettingStoredSettings.then((x) => { perform_action('login', x) }, onError);
+            gettingStoredSettings.then((x) => { wrapper_action('login', x) }, onError);
         } else if (message.command === "sign") {
-            gettingStoredSettings.then((x) => { perform_action('sign', x) }, onError);
+            gettingStoredSettings.then((x) => { wrapper_action('sign', x) }, onError);
         } else if (message.command === "verify") {
-            gettingStoredSettings.then((x) => { perform_action('verify', x) }, onError);
+            gettingStoredSettings.then((x) => { wrapper_action('verify', x) }, onError);
         } else if (message.command === "reset") {
             reset();
         }

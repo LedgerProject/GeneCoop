@@ -237,14 +237,22 @@ def sign_consent(request):
             if not User.objects.filter(username=request.POST.get('public_key')).exists():
                 user = User(username=request.POST.get('public_key'))
                 user.save()
-                      
-            myconsent.sign(request.POST.get('signature'), request.POST.get('public_key'))
+            
+            signature = request.POST.get('signature')
+            public_key = request.POST.get('public_key')
+            hash = request.POST.get('hash')
 
-            myconsent.save()
-            return HttpResponseRedirect(reverse('genecoop:index'))
-        return HttpResponseRedirect(reverse('genecoop:index'))
-
-    return HttpResponseRedirect(reverse('genecoop:index'))
+            if labut.verify_signature(public_key, hash, signature):
+                logger.debug("Verification passed")
+                myconsent.sign(signature, public_key)
+                myconsent.save()
+                return HttpResponseRedirect(reverse('genecoop:index'))
+            else:
+                logger.error(f"Verification NOT passed, public_key {public_key}, hash {hash} and signature {signature}")
+    
+    logger.warning(
+        f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
+    return HttpResponseRedirect(reverse('genecoop:token'))
 
 
 def check_login(request):

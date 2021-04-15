@@ -107,10 +107,10 @@ def verify_signature(public_key, message, signature):
     contract = """
     rule check version 1.0.0
     Scenario 'ecdh': verify the signature of a request
-    Given I have a 'public key' from 'Researcher'
+    Given I have a 'public key' from 'Signer'
     and I have a 'string' named 'message'
     and I have a 'signature' named 'message.signature'
-    When I verify the 'message' has a signature in 'message.signature' by 'Researcher'
+    When I verify the 'message' has a signature in 'message.signature' by 'Signer'
     Then print 'verification passed' as 'string'
     """
 
@@ -120,19 +120,19 @@ def verify_signature(public_key, message, signature):
     # }
 
     # keys = {
-    #     "Researcher": {
+    #     "Signer": {
     #         "public_key": public_key
     #     }
 
     # }
 
-    data = f'{{"message": "{message}", "message.signature": {signature} }}'
+    data = f'{{"message": {json.dumps(message)}, "message.signature": {signature} }}'
     
 
-    keys = f'{{"Researcher": {{"public_key": "{public_key}" }} }}'
+    keys = f'{{"Signer": {{"public_key": "{public_key}" }} }}'
     
     logger.debug(f'verification data: {data}, keys: {keys}')
-
+    # breakpoint()
     try:
         # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
         # breakpoint()
