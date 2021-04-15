@@ -207,6 +207,8 @@ function zen_sign(public_key, private_key, tosign) {
                     console.error("Error in wrapper_action function: ", error);
                     throw new Error(error);
                 });
+        }else{
+            perform_action(action, storedSettings);
         }
     }
 
