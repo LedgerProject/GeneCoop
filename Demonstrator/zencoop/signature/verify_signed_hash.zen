@@ -3,11 +3,11 @@ Scenario 'ecdh': verify the signature of a request
 
 # Loading data
 Given I have a 'public key' from 'Signer' 
-and I have a 'string' named 'challenge' 
-and I have a 'signature' named 'response'
+and I have a 'string' named 'message' 
+and I have a 'signature' named 'signature'
 
-# The verification happens here: if the verification would fails, Zenroom would stop and print an error 
-When I verify the 'challenge' has a signature in 'response' by 'Signer'
+When I create the hash of 'message' using 'sha512'
+and I verify the 'hash' has a signature in 'signature' by 'Signer'
 
 # Here we're printing the original message along with happy statement of success
 Then print the string 'verification passed'
