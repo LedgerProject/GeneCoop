@@ -4,8 +4,10 @@ Given I have a 'keypair'
 Given that I have a 'string' named 'message'
 
 When I create the hash of 'message' using 'sha512'
-And I create the signature of 'hash'
+And I rename the 'hash' to 'challenge'
+And I create the signature of 'challenge'
+And I rename the 'signature' to 'response'
 
 Then print the 'message'
-and print the 'hash'
-And print the 'signature'
+And print the 'challenge'
+And print the 'response'

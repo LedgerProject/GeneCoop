@@ -1,10 +1,13 @@
 #!/bin/bash
 
-zenroom='zenroom'
+zenroom='/Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
 # /Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
 
-${zenroom} -z challenge.zen | jq '.' > sign.data
+one=sign.data
+two=verify_signature.data
 
-${zenroom} -a sign.data -k sign.key -z sign.zen | jq '.' > verify_signature.data
+${zenroom} -z challenge.zen | jq '.' > ${one}
 
-${zenroom} -a verify_signature.data -k verify_signature.key -z verify_signature.zen | jq '.'
+${zenroom} -a ${one} -k sign.key -z sign.zen | jq '.' > ${two}
+
+${zenroom} -a ${two} -k verify_signature.key -z verify_signature.zen | jq '.'

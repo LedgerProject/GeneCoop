@@ -2,12 +2,15 @@ rule check version 1.0.0
 Scenario 'ecdh': verify the signature of a request
 
 # Loading data
-Given I have a 'public key' from 'Signer' 
-and I have a 'string' named 'challenge' 
+Given I have a 'public key' from 'Signer'
+and I have a 'string' named 'message'
+and I have a 'base64' named 'challenge' 
 and I have a 'signature' named 'response'
 
 # The verification happens here: if the verification would fails, Zenroom would stop and print an error 
-When I verify the 'challenge' has a signature in 'response' by 'Signer'
+When I create the hash of 'message' using 'sha512'
+and I verify the 'hash' has a signature in 'response' by 'Signer'
+and I verify the 'challenge' has a signature in 'response' by 'Signer'
 
 # Here we're printing the original message along with happy statement of success
 Then print 'verification passed'
