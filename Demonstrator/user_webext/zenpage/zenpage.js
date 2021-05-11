@@ -41,8 +41,6 @@ function zen_hash(questions, answers) {
     Given I have a 'string' named 'Answer2' in 'userChallenges'
     Given I have a 'string' named 'Question3' in 'userChallenges'
     Given I have a 'string' named 'Answer3' in 'userChallenges'
-    When I create the hash of 'userChallenges'
-    and I rename the 'hash' to 'userChallenges.hash'
     When I create the 'base64 dictionary'
     and I rename the 'base64 dictionary' to 'hashedAnswers'
     When I create the hash of 'Question1'
@@ -196,18 +194,18 @@ function zen_sign(public_key, private_key, tosign) {
                                     private_key: key_pair.private_key
                                 }
                             })
-                                .then(() => {
-                                    let gettingStoredSettings = browser.storage.local.get();
-                                    gettingStoredSettings.then((x) => { perform_action(action, x) }, onError);
+                            .then(() => {
+                                let gettingStoredSettings = browser.storage.local.get();
+                                gettingStoredSettings.then((x) => { perform_action(action, x) }, onError);
 
-                                });
+                            });
                         });
                 })
                 .catch((error) => {
                     console.error("Error in wrapper_action function: ", error);
                     throw new Error(error);
                 });
-        }else{
+        } else {
             perform_action(action, storedSettings);
         }
     }

@@ -30,22 +30,22 @@ const { zencode_exec } = require("zenroom");
         console.error(e);
     }
 
-    function toggle_instructions(){
+    function toggle_instructions() {
         let div = document.querySelector("[id='action-required-genecoop-plugin']");
-        if( div !== null){
+        if (div !== null) {
             div.style = 'display: none;visibility: hidden;';
         }
-        
+
         div = document.querySelector("[id='action-done-genecoop-plugin']");
-        if( div !== null){
+        if (div !== null) {
             div.style = 'display: block;visibility:visible;';
         }
-        
+
     }
 
     /**
      */
-    async function perform_action(action, storedSettings) {
+    function perform_action(action, storedSettings) {
 
 
         console.log(`${action} called`)
@@ -55,11 +55,11 @@ const { zencode_exec } = require("zenroom");
                 username_html.value = "Please set your credentials in the add-on";
                 return;
             }
-            username_html.value = storedSettings.authCredentials.username;            
+            username_html.value = storedSettings.authCredentials.username;
             const challenge = document.querySelector("[id='challenge']").value;
             console.log("Challenge: ", challenge);
 
-            
+
             zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, challenge)
                 .then((msg_sign) => {
                     console.log("Signature: ", msg_sign);
@@ -87,31 +87,42 @@ const { zencode_exec } = require("zenroom");
 
             console.log("Tokens: ", token_els);
 
+            let proms = [];
             token_els.forEach(token_el => {
 
                 var token = token_el.textContent
 
                 console.log("Token: ", token);
 
-                zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
-                    .then((msg_sign) => {
-                        console.log("Signature: ", msg_sign);
+                proms.push(new Promise(function (resolve, reject) {
+                    zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, token)
+                        .then((msg_sign) => {
+                            console.log("Signature: ", msg_sign);
 
-                        var signature_html = document.querySelector(`[id='signature-${token}']`);
-                        signature_html.value = JSON.stringify(msg_sign);
-                    })
-                    .catch((error) => {
-                        console.error("Error in zenroom sign function: ", error);
-                        throw new Error(error);
-                    });
+                            var signature_html = document.querySelector(`[id='signature-${token}']`);
+                            signature_html.value = JSON.stringify(msg_sign);
+                            resolve("OK");
+                        })
+                        .catch((error) => {
+                            console.error("Error in zenroom sign function: ", error);
+                            reject(error);
+                        });
+                }));
 
             });
 
-            console.log("Out of promises: ", status);
-            toggle_instructions();
-            var submit_html = document.querySelector("[id='submit']");
-            submit_html.disabled = false;
+            Promise.all(proms)
+                .then((values) => {
+                    console.log("Out of promises: ", values);
+                    toggle_instructions();
+                    var submit_html = document.querySelector("[id='submit']");
+                    submit_html.disabled = false;
 
+                })
+                .catch((error) => {
+                    onError(error);
+                }
+                );
         }
     }
     /**
