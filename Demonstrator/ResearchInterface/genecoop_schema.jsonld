@@ -1,0 +1,75 @@
+{ "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "schema": "https://schema.org/",
+    "obo": "http://purl.obolibrary.org/obo/",
+    "genecoop": "http://genecoop.waag.org/schema/",
+    "defines": {
+       "@reverse": "rdfs:isDefinedBy"
+    }
+  },
+  "@id": "genecoop:",
+  "@type": "owl:Ontology",
+  "defines": [
+    { "@id": "genecoop:Consent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": "obo:ICO_0000061",
+      "rdfs:subclassof": "schema:DigitalDocument",
+      "rdfs:label": "Consent",
+      "rdfs:comment": "This is a consent document derived from (rdfs:subClassOf) ICO:informed consent form for genetic study"
+    },
+    { "@id": "genecoop:Sample",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": "obo:OBI_0001051",
+      "rdfs:label": "Sample",
+      "rdfs:comment": "This is a sample derived from (rdfs:subClassOf) OBI:DNA extract"
+    },
+    { "@id": "genecoop:ProcedureDescription",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "obo:ICO_0000303",
+        "rdfs:label": "ProcedureDescription",
+        "rdfs:comment": "This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of research procedure"
+      },
+      { "@id": "genecoop:PartecipationRisk",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "obo:ICO_0000008",
+        "rdfs:label": "PartecipationRisk",
+        "rdfs:comment": "This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of participation risk"
+      },
+      { "@id": "genecoop:CollectedInformation",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "obo:ICO_0000277",
+        "rdfs:label": "CollectedInformation",
+        "rdfs:comment": "This is a description of collected information derived from (rdfs:subClassOf) ICO:description of collected information"
+      },
+      { "@id": "genecoop:CollectedBiospecimens",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "obo:ICO_0000276",
+        "rdfs:label": "CollectedBiospecimens",
+        "rdfs:comment": "This is a description of collected biospecimens derived from (rdfs:subClassOf) ICO:description of collected biospecimens"
+      },
+      { "@id": "genecoop:Researcher",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "schema:Person",
+        "rdfs:label": "Researcher",
+        "rdfs:comment": "This is a generic researcher, might be derived in the future from a more specific ontology than schema.org"
+      },
+      { "@id": "genecoop:DNADonor",
+        "@type": "owl:Class",
+        "rdfs:subClassOf": "schema:Person",
+        "rdfs:label": "DNADonor",
+        "rdfs:comment": "This is a generic DNA donor, might be derived in the future from a more specific ontology than schema.org"
+      },
+    
+      
+
+      { "@id": "genecoop:contains",
+        "@type": "owl:ObjectProperty",
+        "rdfs:label": "contains",
+        "rdfs:comment": "Used to list elements of the consent",
+        "rdfs:domain": "genecoop:Consent",
+        "rdfs:range": "genecoop:ProcedureDescription"
+      }
+  ]
+}

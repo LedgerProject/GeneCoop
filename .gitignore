@@ -17,3 +17,4 @@ node_modules/
 .web-extension-id
 web-ext-artifacts/
 Demonstrator/Tests
+*.log
