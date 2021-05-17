@@ -1,10 +1,12 @@
 { "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "owl": "http://www.w3.org/2002/07/owl#",
     "schema": "https://schema.org/",
     "obo": "http://purl.obolibrary.org/obo/",
     "genecoop": "http://genecoop.waag.org/schema/",
+    "sio": "http://semanticscience.org/resource/",
     "defines": {
        "@reverse": "rdfs:isDefinedBy"
     }
@@ -14,62 +16,122 @@
   "defines": [
     { "@id": "genecoop:Consent",
       "@type": "owl:Class",
-      "rdfs:subClassOf": "obo:ICO_0000061",
-      "rdfs:subclassof": "schema:DigitalDocument",
+      "rdfs:subClassOf": {"@id": "obo:ICO_0000061"},
+      "rdfs:subclassof": {"@id": "schema:DigitalDocument"},
       "rdfs:label": "Consent",
       "rdfs:comment": "This is a consent document derived from (rdfs:subClassOf) ICO:informed consent form for genetic study"
     },
+    { "@id": "genecoop:Experiment",
+        "@type": "owl:Class",
+        "rdfs:subclassof": {"@id": "sio:SIO_000994"},
+        "rdfs:label": "Experiment",
+        "rdfs:comment": "This is an experiment to carry out on the DNA data, derived from (rdfs:subClassOf) SIO:experiment"
+    },
     { "@id": "genecoop:Sample",
       "@type": "owl:Class",
-      "rdfs:subClassOf": "obo:OBI_0001051",
+      "rdfs:subClassOf": {"@id": "obo:OBI_0001051"},
       "rdfs:label": "Sample",
       "rdfs:comment": "This is a sample derived from (rdfs:subClassOf) OBI:DNA extract"
     },
     { "@id": "genecoop:ProcedureDescription",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "obo:ICO_0000303",
+        "rdfs:subClassOf": {"@id": "obo:ICO_0000303"},
         "rdfs:label": "ProcedureDescription",
         "rdfs:comment": "This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of research procedure"
       },
       { "@id": "genecoop:PartecipationRisk",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "obo:ICO_0000008",
+        "rdfs:subClassOf": {"@id": "obo:ICO_0000008"},
         "rdfs:label": "PartecipationRisk",
         "rdfs:comment": "This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of participation risk"
       },
       { "@id": "genecoop:CollectedInformation",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "obo:ICO_0000277",
+        "rdfs:subClassOf": {"@id": "obo:ICO_0000277"},
         "rdfs:label": "CollectedInformation",
         "rdfs:comment": "This is a description of collected information derived from (rdfs:subClassOf) ICO:description of collected information"
       },
       { "@id": "genecoop:CollectedBiospecimens",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "obo:ICO_0000276",
+        "rdfs:subClassOf": {"@id": "obo:ICO_0000276"},
         "rdfs:label": "CollectedBiospecimens",
         "rdfs:comment": "This is a description of collected biospecimens derived from (rdfs:subClassOf) ICO:description of collected biospecimens"
       },
+      { "@id": "genecoop:ConsentOption",
+        "@type": "owl:Class",
+        "rdfs:label": "ConsentOption",
+        "rdfs:comment": "The consent options available for the consent to an experiment"
+      },
       { "@id": "genecoop:Researcher",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "schema:Person",
+        "rdfs:subClassOf": {"@id": "schema:Person"},
         "rdfs:label": "Researcher",
         "rdfs:comment": "This is a generic researcher, might be derived in the future from a more specific ontology than schema.org"
       },
       { "@id": "genecoop:DNADonor",
         "@type": "owl:Class",
-        "rdfs:subClassOf": "schema:Person",
+        "rdfs:subClassOf": {"@id": "schema:Person"},
         "rdfs:label": "DNADonor",
         "rdfs:comment": "This is a generic DNA donor, might be derived in the future from a more specific ontology than schema.org"
       },
-    
+      
       
 
-      { "@id": "genecoop:contains",
+      { "@id": "genecoop:is_about",
         "@type": "owl:ObjectProperty",
-        "rdfs:label": "contains",
-        "rdfs:comment": "Used to list elements of the consent",
-        "rdfs:domain": "genecoop:Consent",
-        "rdfs:range": "genecoop:ProcedureDescription"
+        "@container": "@list",
+        "rdfs:label": "is about",
+        "rdfs:comment": "Used to list the experiments the consent is about",
+        "rdfs:domain": {"@id": "genecoop:Consent"},
+        "rdfs:range": {"@id": "genecoop:Experiment"}
+      },
+      { "@id": "genecoop:has_key",
+        "@type": "owl:DataProperty",
+        "rdfs:label": "has key",
+        "rdfs:comment": "the key of the experiment or option"
+      },
+      { "@id": "genecoop:is_required",
+        "@type": "owl:DataProperty",
+        "rdfs:label": "is required",
+        "rdfs:comment": "Is the experiment required",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "xsd:boolean"}
+      },
+      { "@id": "genecoop:is_consented",
+        "@type": "owl:DataProperty",
+        "rdfs:label": "is consented",
+        "rdfs:comment": "Has the user consented to the experiment",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "xsd:boolean"}
+      },
+      { "@id": "genecoop:has_procedures",
+        "@type": "owl:ObjectProperty",
+        "@container": "@list",
+        "rdfs:label": "has procedure",
+        "rdfs:comment": "Used to list the procedures for each experiment",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "genecoop:ProcedureDescription"}
+      },
+      { "@id": "genecoop:has_options",
+        "@type": "owl:ObjectProperty",
+        "@container": "@list",
+        "rdfs:label": "has options",
+        "rdfs:comment": "Used to list the options for each experiment",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "genecoop:ConsentOption"}
+      },
+      { "@id": "genecoop:researcher_description",
+        "@type": "owl:DataProperty",
+        "rdfs:subClassOf": {"@id": "schema:description"},
+        "rdfs:label": "Researcher Description",
+        "rdfs:comment": "The description from the point of view of the researcher"
+      },
+      { "@id": "genecoop:donor_description",
+        "@type": "owl:DataProperty",
+        "rdfs:subClassOf": {"@id": "schema:description"},
+        "rdfs:label": "Donor Description",
+        "rdfs:comment": "The description from the point of view of the DNA donor"
       }
+    
   ]
 }
