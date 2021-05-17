@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Sample">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf>obo:OBI_0001051</rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>This is a sample derived from (rdfs:subClassOf) OBI:DNA extract</rdfs:comment>
+    <rdfs:label>Sample</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/ProcedureDescription">
+    <rdfs:label>ProcedureDescription</rdfs:label>
+    <rdfs:comment>This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of research procedure</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf>obo:ICO_0000303</rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Consent">
+    <rdfs:label>Consent</rdfs:label>
+    <rdfs:subClassOf>obo:ICO_0000061</rdfs:subClassOf>
+    <rdfs:subclassof>schema:DigitalDocument</rdfs:subclassof>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:comment>This is a consent document derived from (rdfs:subClassOf) ICO:informed consent form for genetic study</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Researcher">
+    <rdfs:comment>This is a generic researcher, might be derived in the future from a more specific ontology than schema.org</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:subClassOf>schema:Person</rdfs:subClassOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Researcher</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/contains">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>Used to list elements of the consent</rdfs:comment>
+    <rdfs:range>genecoop:ProcedureDescription</rdfs:range>
+    <rdfs:domain>genecoop:Consent</rdfs:domain>
+    <rdfs:label>contains</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/CollectedInformation">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>CollectedInformation</rdfs:label>
+    <rdfs:subClassOf>obo:ICO_0000277</rdfs:subClassOf>
+    <rdfs:comment>This is a description of collected information derived from (rdfs:subClassOf) ICO:description of collected information</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/PartecipationRisk">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:label>PartecipationRisk</rdfs:label>
+    <rdfs:comment>This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of participation risk</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf>obo:ICO_0000008</rdfs:subClassOf>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/CollectedBiospecimens">
+    <rdfs:comment>This is a description of collected biospecimens derived from (rdfs:subClassOf) ICO:description of collected biospecimens</rdfs:comment>
+    <rdfs:subClassOf>obo:ICO_0000276</rdfs:subClassOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>CollectedBiospecimens</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/DNADonor">
+    <rdfs:label>DNADonor</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf>schema:Person</rdfs:subClassOf>
+    <rdfs:comment>This is a generic DNA donor, might be derived in the future from a more specific ontology than schema.org</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+  </rdf:Description>
+</rdf:RDF>
