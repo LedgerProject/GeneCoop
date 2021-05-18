@@ -24,7 +24,7 @@ urlpatterns = [
     path('<int:pk>/', views.request_view, name='request'),
     path('perform_action/', views.perform_action, name='perform_action'),
 
-    path('<str:key>/operation/', views.operation_view, name='operation'),    
+    path('<str:key>/experiment/', views.experiment_view, name='experiment'),    
 
     path('download_request/<int:id>', views.download_request, name='download_request'),
 ]

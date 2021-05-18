@@ -25,36 +25,35 @@ logger = logging.getLogger(__name__)
 
 myConfig = labut.ConsentConfig('user')
 myConfig.read_conf()
-mySerializedOperations = labut.SerializeOperations(myConfig)
+mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
 
-def _gen_operationset(operation_str):
+def _gen_experimentset(experiment_str):
 
-    mySerializedOperations.unserialize(operation_str)
-    operation_entries = []
-    for operation in mySerializedOperations.operations:
-        ope_obj = myConfig.get_operation_obj(operation['key'])
+    mySerializedExperiments.unserialize(experiment_str)
+    experiment_entries = []
+    for experiment in mySerializedExperiments.experiments:
+        exp_obj = myConfig.get_experiment_obj(experiment['key'])
         option_entries = []
-        for opt_key in ope_obj.options:
+        for opt_key in exp_obj.options:
             opt_obj = myConfig.get_option_obj(opt_key)
             opt_entry = {
                 'key': opt_obj.key,
-                'text': opt_obj.text,
+                'name': opt_obj.name,
             }
             option_entries.append(opt_entry)
-        ope_entry = {
-            'text': ope_obj.text,
-            'key': ope_obj.key,
-            'description': ope_obj.description,
-            'statements': ope_obj.statements,
-            'permissions': ope_obj.permissions,
-            'required': ope_obj.required,
-            'chosen_option': operation['chosen_option'],
+        exp_entry = {
+            'name': exp_obj.name,
+            'key': exp_obj.key,
+            'description': exp_obj.description,
+            'procedures': exp_obj.procedures,
+            'required': exp_obj.required,
+            'chosen_option': experiment['chosen_option'],
             'options': option_entries
         }
-        operation_entries.append(ope_entry)
+        experiment_entries.append(exp_entry)
 
-    return operation_entries
+    return experiment_entries
 
 
 def _gen_queryset(pk, include_log=False):
@@ -70,10 +69,10 @@ def _gen_queryset(pk, include_log=False):
     for consent in consent_set:
 
         cons_entry = {
-            'text': consent.text,
+            'name': consent.name,
             'description': consent.description,
             'token': consent.token,
-            'operations': _gen_operationset(consent.operations)
+            'experiments': _gen_experimentset(consent.experiments)
         }
         if include_log:
             log_entries = []
@@ -113,8 +112,8 @@ def choose_view(request, token):
 
     template_name = 'genecoop/choose.html'
     my_request = get_object_or_404(Request, token=token)
-    my_ops = {'operations': _gen_operationset(my_request.operations)}
-    context = {'my_ops': my_ops, 'my_request': my_request}
+    my_exps = {'experiments': _gen_experimentset(my_request.experiments)}
+    context = {'my_exps': my_exps, 'my_request': my_request}
     return render(request, template_name, context)
 
 
@@ -131,8 +130,8 @@ def sign_view(request, token):
     }
 
     my_consent = get_object_or_404(Consent, token=token)
-    my_ops = {'operations': _gen_operationset(my_consent.operations)}
-    context = {'my_ops': my_ops, 'my_consent': my_consent,
+    my_exps = {'experiments': _gen_experimentset(my_consent.experiments)}
+    context = {'my_exps': my_exps, 'my_consent': my_consent,
                'my_referent': my_referent}
     return render(request, template_name, context)
 
@@ -200,22 +199,22 @@ def gen_consent(request):
             token = request.POST.get('token')
             consent_req = get_object_or_404(Request, token=token)
 
-            mySerializedOperations.unserialize(consent_req.operations)
+            mySerializedExperiments.unserialize(consent_req.experiments)
 
-            for operation in mySerializedOperations.operations:
-                form_entry = f"option-{operation['key']}"
+            for experiment in mySerializedExperiments.experiments:
+                form_entry = f"option-{experiment['key']}"
                 
                 if form_entry in request.POST:
-                    mySerializedOperations.select_option_key(operation['key'],
+                    mySerializedExperiments.select_option_key(experiment['key'],
                                                              request.POST.get(form_entry))
                 else:
-                    mySerializedOperations.reset_option_key(operation['key'])
+                    mySerializedExperiments.reset_option_key(experiment['key'])
 
             new_consent = Consent(token=token,
-                                    text=f'{consent_req.text}',
+                                    name=f'{consent_req.name}',
                                     description=f'{consent_req.description}')
 
-            new_consent.init(mySerializedOperations.serialize())
+            new_consent.init(mySerializedExperiments.serialize())
             new_consent.save()
             logger.debug("New consent created in unassigned state")
             return HttpResponseRedirect(reverse('genecoop:sign', args=(token,)))
@@ -338,8 +337,8 @@ def check_login(request):
 #                                           description=f'Generated from token {token}',
 #                                           user_id=user_id)
 
-#                     mySerializedOperations.unserialize(requestInst.operations)
-#                     new_consent.operations = mySerializedOperations.serialize()
+#                     mySerializedExperiments.unserialize(requestInst.experiments)
+#                     new_consent.experiments = mySerializedExperiments.serialize()
 #                     new_consent.save()
 #                     logger.debug("New consent created")
 

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, KEY_LENGTH, SIGNATURE_LENGTH
+from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, KEY_LENGTH, SIGNATURE_LENGTH
 
 
 
@@ -26,9 +26,9 @@ class Researcher(models.Model):
 
 class Request(models.Model):
     researcher = models.ForeignKey(Researcher, on_delete=models.CASCADE)
-    text = models.CharField(max_length=TITLE_LENGTH)
+    name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
-    operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
+    experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
     signature = models.CharField(max_length=SIGNATURE_LENGTH, default="")
     request_sent = models.DateTimeField(

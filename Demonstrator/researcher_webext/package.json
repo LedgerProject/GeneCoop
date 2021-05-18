@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "web-ext": "^6.1.0",
     "zenroom": "^2.2.0"
   }
 }

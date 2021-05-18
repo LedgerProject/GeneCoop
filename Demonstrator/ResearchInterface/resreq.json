@@ -139,7 +139,7 @@
         },
         "user": {
             "text": "DNA data in catalogue for new research",
-            "description": "This allows other researchers to learn as much as possible from my dna data in the future. You will always be asked for informed consent before access is granted.",
+            "description": "This allows other researchers to learn as much as possible from my dna data in the future. I will always be asked for informed consent before access is granted."
         },
         "key": 3,
         "statements": [

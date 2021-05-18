@@ -13,7 +13,7 @@
         <li class="table-header">
             <div class="col col-14">Request Name</div>
             <div class="col col-24">Request Description</div>
-            <div class="col col-34">Operations</div>
+            <div class="col col-34">Experiments</div>
             <div class="col col-44">Token</div>
             <!-- <div class="col col-5">Status</div> -->
         </li>
@@ -22,15 +22,15 @@
             {% if request.status != 'REPLIED' %}
             <li class="table-row">
                 <div class="col col-14" data-label="Name"><a
-                        href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
+                        href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
                 <div class="col col-24" data-label="Description">{{ request.description }}</div>
-                <div class="col col-34" data-label="Operations">
-                    {% for operation in request.operations %}
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in request.experiments %}
                     <ul>
-                        {% if operation.chosen_option != -1 %}
-                        <li id="minim">{{ operation.text }} : {{operation.chosen_option_text}}</li>
+                        {% if experiment.chosen_option != -1 %}
+                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
                         {% else %}
-                        <li id="minim">{{ operation.text }}</li>
+                        <li id="minim">{{ experiment.name }}</li>
                         {% endif %}
                     </ul>
                     {% endfor %}
@@ -53,7 +53,7 @@
         <li class="table-header">
             <div class="col col-14">Request Name</div>
             <div class="col col-24">Request Description</div>
-            <div class="col col-34">Operations</div>
+            <div class="col col-34">Experiments</div>
             <div class="col col-44">Token</div>
             <!-- <div class="col col-5">Status</div> -->
         </li>
@@ -62,15 +62,15 @@
         {% if request.status == 'REPLIED' %}
             <li class="table-row">
                 <div class="col col-14" data-label="Name"><a
-                        href="{% url 'researcher_req:request' request.id %}">{{request.text }}</a></div>
+                        href="{% url 'researcher_req:request' request.id %}">{{request.name }}</a></div>
                 <div class="col col-24" data-label="Description">{{ request.description }}</div>
-                <div class="col col-34" data-label="Operations">
-                    {% for operation in request.operations %}
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in request.experiments %}
                     <ul>
-                        {% if operation.chosen_option != -1 %}
-                        <li id="minim">{{ operation.text }} : {{operation.chosen_option_text}}</li>
+                        {% if experiment.chosen_option != -1 %}
+                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
                         {% else %}
-                        <li id="minim">{{ operation.text }}</li>
+                        <li id="minim">{{ experiment.name }}</li>
                         {% endif %}
                     </ul>
                     {% endfor %}

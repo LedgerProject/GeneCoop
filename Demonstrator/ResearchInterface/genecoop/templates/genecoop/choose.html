@@ -17,51 +17,51 @@
         <h1 class="consent_request_label">GeneCoop Request for Consent</h1>
         <form class="consent_request" action="{% url 'genecoop:gen_consent' %}" method="post">
             <header class="consent_request_header">
-                <h2 class="consent_request_title">{{ my_request.text }}</h2>
+                <h2 class="consent_request_title">{{ my_request.name }}</h2>
                 <p class="consent_request_description">{{ my_request.description }}</p>
                 <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user.first_name }}
                         {{ my_request.researcher.user.last_name }}&nbsp;<sup><i
                                 class="fa fa-briefcase"></i></sup></i> (in the following <b>Genecoop Principal
                         Investigator</b>) from <i>{{ my_request.researcher.institute }}</i> (in the following <b>Research Center</b>)
-                    asks for your consent to the following permissions:
+                    asks for your consent to the following procedures:
                 </p>
             </header>
             {% csrf_token %}
-            {% for operation in my_ops.operations %}
+            {% for experiment in my_exps.experiments %}
             <section class="consent_request_item">
-                <h3 class="consent_request_item_title">{{ operation.text}}</h3>
+                <h3 class="consent_request_item_title">{{ experiment.name}}</h3>
                 <h4 class="consent_request_section_title">Purpose</h4>
-                <p class="consent_request_section_text">{{ operation.description|org|pd|tech|safe}}</p>
+                <p class="consent_request_section_text">{{ experiment.description }}</p>
                 <h4 class="consent_request_section_title">What does it mean for my personal data?</h4>
                 <ul>
-                    {% for statement in operation.statements %}
-                    <li>{{ statement|org|pd|tech|safe}}</li>
+                    {% for procedure in experiment.procedures %}
+                    <li>{{ procedure}}</li>
                     {% endfor %}
                 </ul>
                 <br />
                 <strong>
-                    <div data-label="Options" {%if operation.required %} class="mandatory" {% endif %}>
+                    <div data-label="Options" {%if experiment.required %} class="mandatory" {% endif %}>
                         I agree to this:&nbsp;
-                        {% for option in operation.options %}
-                        <label for="{{ operation.key }}">{{ option.text }}</label>
-                        <input type="radio" name="option-{{ operation.key }}" id="{{ operation.key }}"
+                        {% for option in experiment.options %}
+                        <label for="{{ experiment.key }}">{{ option.name }}</label>
+                        <input type="radio" name="option-{{ experiment.key }}" id="{{ experiment.key }}"
                             value="{{ option.key }}" onchange="return onAgreementChange(event);">
                         {% endfor %}
                     </div>
                 </strong>
                 <br />
-                ({% if operation.required == True %}Required{% else %}Optional{% endif %})
+                ({% if experiment.required == True %}Required{% else %}Optional{% endif %})
 
             </section>
             {% endfor %}
             <section>
-                <h2>Summary of permissions</h2>
-                <p>As part of {{ my_request.text }} conducted by Genecoop Principal Investigator I agree to the
+                <h2>Summary of procedures</h2>
+                <p>As part of {{ my_request.name }} conducted by Genecoop Principal Investigator I agree to the
                     following:
-                <ul id="permissions">
-                    {% for operation in my_ops.operations %}
-                    {% for permission in operation.permissions %}
-                    <li style="display:none" class="op_{{operation.key}}">{{ permission|org|pd|tech|safe }}</li>
+                <ul id="procedures">
+                    {% for experiment in my_exps.experiments %}
+                    {% for procedure in experiment.procedures %}
+                    <li style="display:none" class="op_{{experiment.key}}">{{ procedure }}</li>
                     {% endfor %}
                     {% endfor %}
                 </ul>

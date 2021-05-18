@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Request, Researcher
 
 import labspace.utils as labut
-from labspace.constants import ISSIGNED_URL, ALLOWEDOP_URL, LOGOP_URL
+from labspace.constants import ISSIGNED_URL, ALLOWEDEXP_URL, LOGOP_URL
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -23,13 +23,13 @@ logger = logging.getLogger(__name__)
 
 myConfig = labut.ConsentConfig('researcher')
 myConfig.read_conf()
-mySerializedOperations = labut.SerializeOperations(myConfig)
+mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
 
 def _update_request(request_obj):
     """
         Checks whether a request has been signed
-        and what operations are allowed
+        and what experiments are allowed
     """
     if request_obj.token == None or request_obj.token == "":
         logger.debug(f'Request {request_obj.id} does not have a token yet')
@@ -48,33 +48,33 @@ def _update_request(request_obj):
             logger.debug(f'Request result: {cons_req.json()}')
             request_obj.replied()
 
-            # Check what operations are allowed with an API call
+            # Check what experiments are allowed with an API call
             logger.debug(
-                f'Perform request {ALLOWEDOP_URL}/{request_obj.token}')
-            op_req = requests.get(f'{ALLOWEDOP_URL}/{request_obj.token}')
+                f'Perform request {ALLOWEDEXP_URL}/{request_obj.token}')
+            exp_req = requests.get(f'{ALLOWEDEXP_URL}/{request_obj.token}')
 
-            if op_req.status_code == 200:
-                logger.debug(f'Request result: {op_req.json()}')
-                op_results = op_req.json()
-                # print(f'op_result: {op_results}')
+            if exp_req.status_code == 200:
+                logger.debug(f'Request result: {exp_req.json()}')
+                exp_results = exp_req.json()
+                # print(f'op_result: {exp_results}')
 
-                # Read and deserialise operations contained in the request
-                logger.debug(f'Start deserialize operations')
+                # Read and deserialise experiments contained in the request
+                logger.debug(f'Start deserialize experiments')
 
-                mySerializedOperations.unserialize(request_obj.operations)
+                mySerializedExperiments.unserialize(request_obj.experiments)
                 logger.debug(
-                    f'Deserialize operations: {request_obj.operations}')
+                    f'Deserialize experiments: {request_obj.experiments}')
 
-                for op_result in op_results:
+                for op_result in exp_results:
                     # print(f"key: {op_result['key']}")
-                    mySerializedOperations.select_option_key(
+                    mySerializedExperiments.select_option_key(
                         op_result['key'], op_result['chosen_option'])
 
-                request_obj.operations = mySerializedOperations.serialize()
-                logger.debug(f'Serialize operations: {request_obj.operations}')
+                request_obj.experiments = mySerializedExperiments.serialize()
+                logger.debug(f'Serialize experiments: {request_obj.experiments}')
             else:
                 logger.error(
-                    f'Call {ALLOWEDOP_URL}/{request_obj.token} gave {op_req.status_code} with {op_req.text}')
+                    f'Call {ALLOWEDEXP_URL}/{request_obj.token} gave {exp_req.status_code} with {exp_req.text}')
     else:
         logger.error(
             f'Call {ISSIGNED_URL}/{request_obj.token} gave {cons_req.status_code} with {json.dumps(cons_req.text)}')
@@ -83,33 +83,33 @@ def _update_request(request_obj):
 
 
 def _gen_desc_op(id):
-    operation_view = {}
-    operation_view['key'] = id
-    operation_view['text'] = myConfig.get_operation_obj(id).text
-    operation_view['description'] = myConfig.get_operation_obj(id).description
-    return operation_view
+    experiment_view = {}
+    experiment_view['key'] = id
+    experiment_view['name'] = myConfig.get_experiment_obj(id).name
+    experiment_view['description'] = myConfig.get_experiment_obj(id).description
+    return experiment_view
 
 
-def _gen_operations(operations):
-    # mySerializedOperations.reset()
-    mySerializedOperations.unserialize(operations)
-    operations_view = []
-    for operation in mySerializedOperations.operations:
-        operation_view = _gen_desc_op(operation['key'])
-        operation_view['chosen_option'] = operation['chosen_option']
-        operation_view['reply'] = operation['reply']
-        opt_obj = myConfig.get_option_obj(operation['chosen_option'])
+def _gen_experiments(experiments):
+    # mySerializedExperiments.reset()
+    mySerializedExperiments.unserialize(experiments)
+    experiments_view = []
+    for experiment in mySerializedExperiments.experiments:
+        experiment_view = _gen_desc_op(experiment['key'])
+        experiment_view['chosen_option'] = experiment['chosen_option']
+        experiment_view['reply'] = experiment['reply']
+        opt_obj = myConfig.get_option_obj(experiment['chosen_option'])
         if not opt_obj == None:
-            operation_view['chosen_option_text'] = opt_obj.text
+            experiment_view['chosen_option_name'] = opt_obj.name
 
-        operations_view.append(operation_view)
-    return operations_view
+        experiments_view.append(experiment_view)
+    return experiments_view
 
 
 def _gen_queryset(pk):
     """
         Return the requests, checking whether 
-        they have been signed and what operations
+        they have been signed and what experiments
         are allowed
     """
     request_set = None
@@ -126,17 +126,17 @@ def _gen_queryset(pk):
         request_view = {}
         request_view['id'] = request_obj.id
         request_view['token'] = request_obj.token
-        request_view['text'] = request_obj.text
+        request_view['name'] = request_obj.name
         request_view['description'] = request_obj.description
         # request_view['user_id'] = request_obj.user_id
         request_view['status'] = request_obj.status
         request_view['signature'] = request_obj.signature
 
-        operations_view = _gen_operations(request_obj.operations)
+        experiments_view = _gen_experiments(request_obj.experiments)
 
-        request_view['operations'] = operations_view
-        logger.debug(f'Operations added: {json.dumps(operations_view)}')
-        # print(f"view operations {json.dumps(request_view['operations'])}")
+        request_view['experiments'] = experiments_view
+        logger.debug(f'Experiments added: {json.dumps(experiments_view)}')
+        # print(f"view experiments {json.dumps(request_view['experiments'])}")
 
         requests_view.append(request_view)
         logger.debug(f'Request added: {json.dumps(request_view)}')
@@ -146,18 +146,18 @@ def _gen_queryset(pk):
         logger.debug(f'Return request: {json.dumps(requests_view[0])}')
         return requests_view[0]
 
-    operations_view = []
-    for op_key in myConfig.operations.keys():
-        operation_view = {}
-        op_obj = myConfig.get_operation_obj(op_key)
-        operation_view['key'] = op_obj.key
-        operation_view['text'] = op_obj.text
-        operations_view.append(operation_view)
-        logger.debug(f'Operation added: {json.dumps(operation_view)}')
+    experiments_view = []
+    for op_key in myConfig.experiments.keys():
+        experiment_view = {}
+        op_obj = myConfig.get_experiment_obj(op_key)
+        experiment_view['key'] = op_obj.key
+        experiment_view['name'] = op_obj.name
+        experiments_view.append(experiment_view)
+        logger.debug(f'Experiment added: {json.dumps(experiment_view)}')
 
     my_set = {}
     my_set['requests'] = requests_view
-    my_set['operations'] = operations_view
+    my_set['experiments'] = experiments_view
     logger.debug(f'Return queryset: {json.dumps(my_set)}')
     return my_set
 
@@ -234,25 +234,25 @@ def request_view(request, pk):
 
 
 @login_required(login_url='researcher_req:login')
-def operation_view(request, key):
-    logger.debug(f'Operation view request')
-    template_name = 'researcher_req/operation.html'
-    ope_obj = myConfig.get_operation_obj(key)
+def experiment_view(request, key):
+    logger.debug(f'Experiment view request')
+    template_name = 'researcher_req/experiment.html'
+    ope_obj = myConfig.get_experiment_obj(key)
     opts_view = []
     for ope_key in ope_obj.options:
         opt_view = {}
         opt_obj = myConfig.get_option_obj(ope_key)
         opt_view['key'] = opt_obj.key
-        opt_view['text'] = opt_obj.text
+        opt_view['name'] = opt_obj.name
         opts_view.append(opt_view)
 
-    ope_view = {}
-    ope_view['options'] = opts_view
-    ope_view['text'] = ope_obj.text
-    ope_view['description'] = ope_obj.description
+    exp_view = {}
+    exp_view['options'] = opts_view
+    exp_view['name'] = ope_obj.name
+    exp_view['description'] = ope_obj.description
 
-    context = {'operation': ope_view}
-    logger.debug(f'Operation view rendering: {json.dumps(context)}')
+    context = {'experiment': exp_view}
+    logger.debug(f'Experiment view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
 
@@ -308,22 +308,22 @@ def sign_request(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
         web_data = request.POST
-        if 'name' in web_data and 'description' in web_data and 'operations' in web_data and 'nr_users' in web_data:
+        if 'name' in web_data and 'description' in web_data and 'experiments' in web_data and 'nr_users' in web_data:
             # print(f'request {web_data}')
-            operations_ids = web_data.getlist('operations')
+            experiments_ids = web_data.getlist('experiments')
 
-            operations = [_gen_desc_op(id) for id in operations_ids]
+            experiments = [_gen_desc_op(id) for id in experiments_ids]
 
             nr_users = int(web_data.get('nr_users'))
 
             tokens = [labut.gen_token(web_data.get('name'), web_data.get(
-                'description'), operations_ids) for _ in range(nr_users)]
+                'description'), experiments_ids) for _ in range(nr_users)]
 
             new_request = {
                 "name": web_data.get('name'),
                 "description": web_data.get('description'),
                 "nr_users": nr_users,
-                "operations": operations,
+                "experiments": experiments,
                 "tokens": tokens
             }
             template_name = 'researcher_req/sign_request.html'
@@ -342,24 +342,24 @@ def store_request(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
         web_data = request.POST
-        if 'name' in web_data and 'description' in web_data and 'operations' in web_data and 'token' in web_data:
+        if 'name' in web_data and 'description' in web_data and 'experiments' in web_data and 'token' in web_data:
             
             researcher = Researcher.objects.get(user=request.user)
             
             tokens = web_data.getlist('token')
             for token in tokens:
-                new_request = Request(text=web_data.get('name'), description=web_data.get(
+                new_request = Request(name=web_data.get('name'), description=web_data.get(
                     'description'), researcher=researcher)
 
-                # Add operations to request
-                operations_ids = web_data.getlist('operations')
+                # Add experiments to request
+                experiments_ids = web_data.getlist('experiments')
 
-                mySerializedOperations.reset()
-                for id in operations_ids:
-                    mySerializedOperations.add_operation_key(id)
-                    # print(f'operation key: {ope_obj.key}')
+                mySerializedExperiments.reset()
+                for id in experiments_ids:
+                    mySerializedExperiments.add_experiment_key(id)
+                    # print(f'experiment key: {ope_obj.key}')
 
-                new_request.operations = mySerializedOperations.serialize()
+                new_request.experiments = mySerializedExperiments.serialize()
 
                 new_request.token = token
                 new_request.signature = web_data.get(f'signature-{token}')
@@ -376,25 +376,25 @@ def store_request(request):
 def perform_action(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'Token' in request.POST and 'operationKey' in request.POST:
+        if 'Token' in request.POST and 'experimentKey' in request.POST:
             token = request.POST.get('Token')
-            operationKey = request.POST.get('operationKey')
+            experimentKey = request.POST.get('experimentKey')
             # cons_req = requests.get(f'{ISSIGNED_URL}/{request_obj.token}')
             requestInst = get_object_or_404(Request, token=token)
 
             url = f'{LOGOP_URL}'
             data = {
                 'token': token,
-                'ope_key': operationKey
+                'ope_key': experimentKey
             }
             logger.debug(f'Perform request: {url}')
             log_post = requests.post(url, data=data)
 
             if log_post.status_code == 200:
                 logger.info(f'Request returned: {log_post.text}')
-                mySerializedOperations.unserialize(requestInst.operations)
-                mySerializedOperations.set_reply(operationKey, log_post.text)
-                requestInst.operations = mySerializedOperations.serialize()
+                mySerializedExperiments.unserialize(requestInst.experiments)
+                mySerializedExperiments.set_reply(experimentKey, log_post.text)
+                requestInst.experiments = mySerializedExperiments.serialize()
                 requestInst.save()
             else:
                 logger.error(
@@ -411,7 +411,7 @@ def download_request(request, id):
     requestInst = get_object_or_404(
         Request, id=id)
     # print(f'request {request.POST}')
-    # print(f'operation {operation for operation in requestInst.operations.all()}')
+    # print(f'experiment {experiment for experiment in requestInst.experiments.all()}')
 
     # payload = requestInst.make_contract()
     payload = requestInst.token

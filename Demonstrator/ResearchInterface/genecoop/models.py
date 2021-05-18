@@ -4,16 +4,16 @@ import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
-from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, OPERATIONS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNATURE_LENGTH, PUBLICKEY_LENGTH
+from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNATURE_LENGTH, PUBLICKEY_LENGTH
 
 import labspace.utils as labut
 
 
 class Consent(models.Model):
-    text = models.CharField(max_length=TITLE_LENGTH)
+    name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
     user_id = models.CharField(max_length=PUBLICKEY_LENGTH, default="")
-    operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
+    experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     token = models.CharField(
         primary_key=True, max_length=TOKEN_LENGTH, unique=True)
     signature = models.CharField(max_length=SIGNATURE_LENGTH)
@@ -44,11 +44,11 @@ class Consent(models.Model):
         self.signature = signature
         self.user_id = public_key
 
-    def init(self, operations):
+    def init(self, experiments):
         self.consent_created = timezone.now()
         self.status = self.RequestStatus.NOTDONE
         self.user_id = "not assigned yet"
-        self.operations = operations
+        self.experiments = experiments
 
     def unsign(self):
         self.consent_signed = timezone.make_aware(datetime(1900, 1, 1))
@@ -59,7 +59,7 @@ class ConsentLogger(models.Model):
     consent = models.ForeignKey(Consent, on_delete=models.CASCADE)
     message = models.CharField(max_length=LOGMESSAGE_LENGTH)
     # user_id = models.CharField(max_length=USERID_LENGTH, default="")
-    # operations = models.CharField(max_length=OPERATIONS_LENGTH, default="")
+    # experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     # token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
     # is_signed = models.BooleanField(default=False)
     request_received = models.DateTimeField(
@@ -68,11 +68,11 @@ class ConsentLogger(models.Model):
     class LogTypes(models.TextChoices):
         IS_SIGNED = 'IS SIGNED?', _(
             'Request to check whether consent is signed')
-        ALLOWED_OPERATIONS = 'ALLOWED OPERATIONS', _(
-            'Request to check what operations are allowed')
-        LOG_OPERATION = 'LOG OPERATION', _('Request to log operation')
-        LOG_NOTSIGNEDOPERATION = 'LOG NOT SIGNED OPERATION', _(
-            'Request to log operation which is not signed')
+        ALLOWED_EXPERIMENTS = 'ALLOWED EXPERIMENTS', _(
+            'Request to check what experiments are allowed')
+        LOG_EXPERIMENT = 'LOG EXPERIMENT', _('Request to log experiment')
+        LOG_NOTSIGNEDEXPERIMENT = 'LOG NOT SIGNED EXPERIMENT', _(
+            'Request to log experiment which is not signed')
 
     type = models.CharField(
         max_length=TYPE_LENGTH,
@@ -91,7 +91,7 @@ class ConsentLogger(models.Model):
         return consent
         # self.token = token
         # self.user_id = consent.user_id
-        # self.operations = consent.operations
+        # self.experiments = consent.experiments
         # self.is_signed = consent.is_signed()
 
     def log_is_signed(self, token):
@@ -99,19 +99,19 @@ class ConsentLogger(models.Model):
         self.type = self.LogTypes.IS_SIGNED
         self.message = f"Request received to check whether consent is signed for token: {token}, answer is: {consent.is_signed()}"
 
-    def log_allowed_operations(self, token, op_results):
+    def log_allowed_experiments(self, token, exp_results):
         self.__handle_token__(token)
-        self.type = self.LogTypes.ALLOWED_OPERATIONS
+        self.type = self.LogTypes.ALLOWED_EXPERIMENTS
         msg = [
-            f"(operation: {op['key']}, option: {op['chosen_option']})" for op in op_results]
-        self.message = f"Request received to check what operations are allowed, results is {msg}"
+            f"(experiment: {exp['key']}, option: {exp['chosen_option']})" for exp in exp_results]
+        self.message = f"Request received to check what experiments are allowed, results is {msg}"
 
-    def log_operation(self, token, ope_key, is_allowed):
+    def log_experiment(self, token, exp_key, is_allowed):
         self.__handle_token__(token)
-        self.type = self.LogTypes.LOG_OPERATION
-        self.message = f'Log operation {ope_key}, which is {"" if is_allowed else "NOT"} allowed'
+        self.type = self.LogTypes.LOG_EXPERIMENT
+        self.message = f'Log experiment {exp_key}, which is {"" if is_allowed else "NOT"} allowed'
 
-    def log_not_signed_operation(self, token, ope_key):
+    def log_not_signed_experiment(self, token, exp_key):
         self.__handle_token__(token)
-        self.type = self.LogTypes.LOG_NOTSIGNEDOPERATION
-        self.message = f'Request to log operation {ope_key}, which is not signed'
+        self.type = self.LogTypes.LOG_NOTSIGNEDEXPERIMENT
+        self.message = f'Request to log experiment {exp_key}, which is not signed'

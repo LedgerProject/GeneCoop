@@ -14,17 +14,17 @@
             <li class="table-header">
                 <div class="col col-14">Name of Request</div>
                 <div class="col col-24">Request Description</div>
-                <div class="col col-34">Operations</div>
+                <div class="col col-34">Experiments</div>
                 <div class="col col-44">Users</div>
             </li>
             <li class="table-row">
                 <div class="col col-14" data-label="Name"><input type="text" name="name" value="" required></div>
                 <div class="col col-24" data-label="Description"><textarea cols="40" rows="5" name="description" value="" required></textarea></div>
-                <div class="col col-34" data-label="Operations">
-                    {% for operation in my_set.operations %}
-                    <input type="checkbox" name="operations" id="operation{{ forloop.counter }}"
-                        value="{{ operation.key }}">
-                    <label for="operation{{ forloop.counter }}">{{ operation.text }}</label><br>
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in my_set.experiments %}
+                    <input type="checkbox" name="experiments" id="experiment{{ forloop.counter }}"
+                        value="{{ experiment.key }}">
+                    <label for="experiment{{ forloop.counter }}">{{ experiment.name }}</label><br>
                     {% endfor %}
                 </div>
                 <div class="col col-44" data-label="Users">

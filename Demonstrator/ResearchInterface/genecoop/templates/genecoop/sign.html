@@ -23,12 +23,12 @@
                 <p>Description: {{ my_consent.description }}</p>
                 <p>I agree to give my consent to <i>{{my_referent.first_name }} {{ my_referent.last_name }}</i> 
                 (in the following <b>Genecoop Principal Investigator</b>) from <i>{{ my_referent.institute }}</i> 
-                (in the following <b>Research Center</b>) for the following permissions:
+                (in the following <b>Research Center</b>) for the following procedures:
                 </p>
 
-                {% for operation in my_ops.operations %}
-                {% for permission in operation.permissions %}
-                - {{ permission|org|pd|tech|safe}}. <br />
+                {% for experiment in my_exps.experiments %}
+                {% for procedure in experiment.procedures %}
+                - {{ procedure}} <br />
                 {% endfor %}
                 {% endfor %}
                 Date: {{ my_consent.consent_created }}

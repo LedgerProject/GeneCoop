@@ -1,4 +1,4 @@
-//on agreement-change toggle the selected permissions, 
+//on agreement-change toggle the selected procedures, 
 //and enable submit button when allowed by optionality 
 function onAgreementChange(e)
 {
@@ -22,13 +22,13 @@ function checkOptionality()
     button.disabled = !allowed;
 }
 
-//toggle visibility of li in permissions, based on agreements
+//toggle visibility of li in procedures, based on agreements
 function togglePermissions(e)
 {
     var selected = e.target.value.endsWith('_000');//yes value
     var selector = '.op_' + e.target.id;
-    var permissions = document.getElementById('permissions').querySelectorAll(selector);
-    permissions.forEach(function(permission){
+    var procedures = document.getElementById('procedures').querySelectorAll(selector);
+    procedures.forEach(function(permission){
         permission.style.display = selected ? 'block' : 'none'; 
     });
 }

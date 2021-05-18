@@ -13,27 +13,27 @@
         <li class="table-header">
             <div class="col col-14">Name of Consent</div>
             <div class="col col-24">Description</div>
-            <div class="col col-34">Operations</div>
+            <div class="col col-34">Experiments</div>
             <div class="col col-44">Token</div>
         </li>
         {% for consent in my_set %}
         <li class="table-row">
-            <div class="col col-14" data-label="Name"><a href="{% url 'genecoop:consent' consent.token %}">{{consent.text}}</a></div>
+            <div class="col col-14" data-label="Name"><a href="{% url 'genecoop:consent' consent.token %}">{{consent.name}}</a></div>
             <div class="col col-24" data-label="Description">{{consent.description}}</div>
 
-            <div class="col col-34" data-label="Operations">
+            <div class="col col-34" data-label="Experiments">
                 <ul class="responsive-table">
-                    {% for operation in consent.operations %}
+                    {% for experiment in consent.experiments %}
                     <li class="table-row">
-                        <div class="col col-14" data-label="Name">{{ operation.text}}</div>
-                        <!-- <div class="col col-24" data-label="Description">{{ operation.description}}</div> -->
+                        <div class="col col-14" data-label="Name">{{ experiment.name}}</div>
+                        <!-- <div class="col col-24" data-label="Description">{{ experiment.description}}</div> -->
                         <div class="col col-24" data-label="Options">
                             <ul>
-                                {% for option in operation.options %}
-                                {% if option.key == operation.chosen_option %}
-                                <li id="minim"><b>{{ option.text }}</b></li>
+                                {% for option in experiment.options %}
+                                {% if option.key == experiment.chosen_option %}
+                                <li id="minim"><b>{{ option.name }}</b></li>
                                 {% else %}
-                                <li id="minim">{{ option.text }}</li>
+                                <li id="minim">{{ option.name }}</li>
                                 {% endif %}
                                 {% endfor %}
                             </ul>

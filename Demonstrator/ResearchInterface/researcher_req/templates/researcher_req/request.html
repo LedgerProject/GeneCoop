@@ -19,7 +19,7 @@
 
         </li>
         <li class="table-row">
-            <div class="col col-14" data-label="name">{{ request.text }}</div>
+            <div class="col col-14" data-label="name">{{ request.name }}</div>
             <div class="col col-24" data-label="description">{{ request.description }}</div>
             <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
             <div class="col col-34" data-label="token">{{ request.token }}</div>
@@ -27,37 +27,37 @@
         </li>
     </ul>
     
-    <h2>Operations</h2>
+    <h2>Experiments</h2>
     <ul class="responsive-table">
         <li class="table-header">
-            <div class="col col-15">Name of Operation</div>
-            <div class="col col-25">Operation Description</div>
+            <div class="col col-15">Name of Experiment</div>
+            <div class="col col-25">Experiment Description</div>
             <div class="col col-35">Consent</div>
             <div class="col col-45">Reply</div>
             <div class="col col-55">Action</div>
         </li>
-        {% for operation in request.operations %}
+        {% for experiment in request.experiments %}
         <li class="table-row">
-            <div class="col col-15" data-label="Name">{{operation.text }}</div>
-            <div class="col col-25" data-label="Description">{{ operation.description }}</div>
+            <div class="col col-15" data-label="Name">{{experiment.name }}</div>
+            <div class="col col-25" data-label="Description">{{ experiment.description }}</div>
             <div class="col col-35" data-label="Consent">
-                {% if operation.chosen_option != -1 %}
-                {{operation.chosen_option_text}}
+                {% if experiment.chosen_option != -1 %}
+                {{experiment.chosen_option_name}}
                 {% else %}
                 No reply
                 {% endif %}
             </div>
-            <div class="col col-45" data-label="Reply">{{ operation.reply }}</div>
+            <div class="col col-45" data-label="Reply">{{ experiment.reply }}</div>
             <div class="col col-55" data-label="Submit">
                 {% if request.status == "REPLIED" %}
                 <form action="{% url 'researcher_req:perform_action' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" id="Token" name="Token" value={{request.token}}>
-                    <input type="hidden" id="operationKey" name="operationKey" value={{operation.key}}>
+                    <input type="hidden" id="experimentKey" name="experimentKey" value={{experiment.key}}>
                     <input type="submit" value="Run Analysis">
                 </form>
                 {% else %}
-                No operation possible
+                No experiment possible
                 {% endif %}
             </div>
         </li>

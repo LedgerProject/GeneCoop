@@ -15,7 +15,7 @@
                 <div class="col col-1">Name of Request</div>
                 <div class="col col-2">Request Description</div>
                 <!-- <div class="col col-3">User id</div> -->
-                <div class="col col-3">Operations</div>
+                <div class="col col-3">Experiments</div>
                 <div class="col col-4">Token(s)</div>
 
             </li>
@@ -24,10 +24,10 @@
                 <div class="col col-2" data-label="description">{{ request.description }}</div>
                 <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
 
-                <div class="col col-3" data-label="operations">
+                <div class="col col-3" data-label="experiments">
                     <ul>
-                        {% for operation in request.operations %}
-                        <li id="minim">{{ operation.text }}</li>
+                        {% for experiment in request.experiments %}
+                        <li id="minim">{{ experiment.name }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -46,8 +46,8 @@
                 {% endfor %}
                 <input type="hidden" name="name" value="{{ request.name }}">
                 <input type="hidden" name="description" value="{{ request.description }}">
-                {% for operation in request.operations %}
-                <input type="hidden" name="operations" value="{{ operation.key }}">
+                {% for experiment in request.experiments %}
+                <input type="hidden" name="experiments" value="{{ experiment.key }}">
                 {% endfor %}
                 <div id="action-required-genecoop-plugin">
                     Please 'Sign' this request with your GeneCoop add-on.

@@ -6,7 +6,7 @@
 TITLE_LENGTH = 200
 DESCR_LENGTH = 1000
 TOKEN_LENGTH = 50
-OPERATIONS_LENGTH = 1000
+EXPERIMENTS_LENGTH = 1000
 # USERID_LENGTH = 200
 TYPE_LENGTH = 30
 LOGMESSAGE_LENGTH = 500
@@ -17,7 +17,7 @@ PUBLICKEY_LENGTH = 500
 # Urls
 GENECOOP_URL = 'http://localhost:8000'
 ISSIGNED_URL = f"{GENECOOP_URL}/consent/api/is_signed"
-ALLOWEDOP_URL = f"{GENECOOP_URL}/consent/api/allowed_operations"
+ALLOWEDEXP_URL = f"{GENECOOP_URL}/consent/api/allowed_experiments"
 LOGOP_URL = f"{GENECOOP_URL}/consent/api/log_operation/"
 
 APIROOM_URL = 'http://localhost:3000'

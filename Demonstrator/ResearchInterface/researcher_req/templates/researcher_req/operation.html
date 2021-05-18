@@ -1,15 +1,15 @@
 {% extends 'base_res.html' %}
 
-{% block title %}Operation{% endblock %}
+{% block title %}Experiment{% endblock %}
 
 
 {% block content %}
-<h1>{{ operation.text }}</h1>
-<div>Description: {{ operation.description }}</div>
+<h1>{{ experiment.name }}</h1>
+<div>Description: {{ experiment.description }}</div>
 <div>Possible answers:</div>
 <ul>
-    {% for option in operation.options %}
-    <li>{{ option.text }}
+    {% for option in experiment.options %}
+    <li>{{ option.name }}
     </li>
     {% endfor %}
 </ul>

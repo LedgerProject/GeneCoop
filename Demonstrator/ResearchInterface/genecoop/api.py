@@ -31,7 +31,7 @@ import labspace.utils as labut
 
 myConfig = labut.ConsentConfig('user')
 myConfig.read_conf()
-mySerializedOperations = labut.SerializeOperations(myConfig)
+mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
 @api_view((['GET']))
 def ping(request):
@@ -54,7 +54,7 @@ def is_signed(request, token):
     return Response({f'error': f'You need to provide a token'})
         
 @api_view((['GET']))
-def allowed_operations(request, token):
+def allowed_experiments(request, token):
     # print(f'token {token}')
     if token is not None:
         try:
@@ -65,52 +65,52 @@ def allowed_operations(request, token):
             consent_logger = consent.consentlogger_set.create()
             op_results = []
             
-            mySerializedOperations.unserialize(consent.operations)
-            for operation in mySerializedOperations.operations:
+            mySerializedExperiments.unserialize(consent.experiments)
+            for experiment in mySerializedExperiments.experiments:
                 op_result = {}
-                op_result['key'] = operation['key']
-                op_result['chosen_option'] = operation['chosen_option']
+                op_result['key'] = experiment['key']
+                op_result['chosen_option'] = experiment['chosen_option']
                 op_results.append(op_result)
             # print(op_results)
-            consent_logger.log_allowed_operations(token, op_results)
+            consent_logger.log_allowed_experiments(token, op_results)
             consent_logger.save()
             return Response(op_results)
     return Response({f'error': f'You need to provide a token'})
         
 @api_view((['POST']))
-def log_operation(request):
+def log_experiment(request):
 
-    if not ('token' in request.POST and 'ope_key' in request.POST):
-        return Response({f'error': f'Need to provide both token and operation'})
+    if not ('token' in request.POST and 'exp_key' in request.POST):
+        return Response({f'error': f'Need to provide both token and experiment'})
     
     token = request.POST.get('token')
-    ope_key = request.POST.get('ope_key')
+    exp_key = request.POST.get('exp_key')
     if token is not None:
         try:
             consent = Consent.objects.get(token=token)
         except Consent.DoesNotExist as e:
             return Response({f'error': f'consent {token} does not exist'})
         
-        if ope_key is not None:  
-            mySerializedOperations.unserialize(consent.operations)
-            for ope_json in mySerializedOperations.operations:
-                if ope_json['key'] == ope_key:
+        if exp_key is not None:  
+            mySerializedExperiments.unserialize(consent.experiments)
+            for ope_json in mySerializedExperiments.experiments:
+                if ope_json['key'] == exp_key:
                     consent_logger = consent.consentlogger_set.create()
                     if ope_json['chosen_option'] != 1:
                         is_allowed = myConfig.is_op_allowed(ope_json['key'], ope_json['chosen_option'])
-                        consent_logger.log_operation(token, ope_key, is_allowed)
+                        consent_logger.log_experiment(token, exp_key, is_allowed)
                         consent_logger.save()
                         if not is_allowed:
-                            return Response({f'error': f'Operation {ope_key} is not allowed, consent {token}'})
+                            return Response({f'error': f'Experiment {exp_key} is not allowed, consent {token}'})
                         else:
-                            return Response({f'text': f'Operation {ope_key} was allowed and has been logged, consent {token}'})
+                            return Response({f'text': f'Experiment {exp_key} was allowed and has been logged, consent {token}'})
                     else:
-                        consent_logger.log_not_signed_operation(token, ope_key)
+                        consent_logger.log_not_signed_experiment(token, exp_key)
                         consent_logger.save()
-                        return Response({f'error': f'User has not replied to operation {ope_key}, consent {token}'})
-            return Response({f'error': f'ope_key {ope_key} is not found in consent {token} with operations {mySerializedOperations.operations}'})
+                        return Response({f'error': f'User has not replied to experiment {exp_key}, consent {token}'})
+            return Response({f'error': f'exp_key {exp_key} is not found in consent {token} with experiments {mySerializedExperiments.experiments}'})
         else:
-            return Response({f'error': f'Need to provide an operation'})    
+            return Response({f'error': f'Need to provide an experiment'})    
     else:
         return Response({f'error': f'Need to provide a token'})
         
