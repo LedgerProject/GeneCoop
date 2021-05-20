@@ -18,7 +18,7 @@ PUBLICKEY_LENGTH = 500
 GENECOOP_URL = 'http://localhost:8000'
 ISSIGNED_URL = f"{GENECOOP_URL}/consent/api/is_signed"
 ALLOWEDEXP_URL = f"{GENECOOP_URL}/consent/api/allowed_experiments"
-LOGOP_URL = f"{GENECOOP_URL}/consent/api/log_operation/"
+LOGEXP_URL = f"{GENECOOP_URL}/consent/api/log_experiment/"
 
 APIROOM_URL = 'http://localhost:3000'
 

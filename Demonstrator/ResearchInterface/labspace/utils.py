@@ -31,16 +31,18 @@ def format_request(prepped, encoding=None):
 {body}"""
 
 
-def gen_token(name, description, experiments):
+def gen_token(name, description, experiments, token_time=None):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     opconcat = "".join([f"{experiment}".zfill(OPCODE_LEN)
                         for experiment in experiments])
-    prelude = f'{time.time()}{TOKEN_SEP}{name}{TOKEN_SEP}{description}{TOKEN_SEP}{opconcat}'.encode()
+    if token_time == None:
+        token_time = time.time()
+    prelude = f'{token_time}{TOKEN_SEP}{name}{TOKEN_SEP}{description}{TOKEN_SEP}{opconcat}'.encode()
 
     hash_object = hashlib.blake2b(prelude, digest_size=5)
     token = hash_object.hexdigest()
 
-    return token
+    return token, token_time
 
 # def decode_token(token):
 #     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
@@ -243,13 +245,13 @@ class ConsentConfig:
             return self.options[key]
         return None
 
-    def is_op_allowed(self, exp_key, allowed_opt_key):
+    def is_exp_allowed(self, exp_key, allowed_opt_key):
         exp_obj = self.get_experiment_obj(exp_key)
         if not exp_obj == None:
             for opt_key in exp_obj.get_option_keys():
                 if allowed_opt_key == opt_key:
                     opt_obj = self.get_option_obj(opt_key)
-                    if opt_obj.name == "yes":
+                    if opt_obj.name == "Yes":
                         return True
         return False
 
@@ -263,7 +265,7 @@ class ConsentConfig:
             logger.info(f"Consent label: {consent['rdf:label']}")
             assert(consent['@type'] == 'genecoop:Consent')
 
-            for experiment in consent['genecoop:is_about']:
+            for experiment in consent['genecoop:has_experiments']:
                 anExperiment = Experiment(name=experiment['rdf:label'],
                                         description=experiment[f'genecoop:{descrpt_field}'],
                                         procedures=[procedure[f'genecoop:{descrpt_field}'] for procedure in experiment['genecoop:has_procedures']],

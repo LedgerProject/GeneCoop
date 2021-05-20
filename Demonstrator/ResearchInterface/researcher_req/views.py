@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Request, Researcher
 
 import labspace.utils as labut
-from labspace.constants import ISSIGNED_URL, ALLOWEDEXP_URL, LOGOP_URL
+from labspace.constants import ISSIGNED_URL, ALLOWEDEXP_URL, LOGEXP_URL
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -237,19 +237,19 @@ def request_view(request, pk):
 def experiment_view(request, key):
     logger.debug(f'Experiment view request')
     template_name = 'researcher_req/experiment.html'
-    ope_obj = myConfig.get_experiment_obj(key)
+    exp_obj = myConfig.get_experiment_obj(key)
     opts_view = []
-    for ope_key in ope_obj.options:
+    for exp_key in exp_obj.options:
         opt_view = {}
-        opt_obj = myConfig.get_option_obj(ope_key)
+        opt_obj = myConfig.get_option_obj(exp_key)
         opt_view['key'] = opt_obj.key
         opt_view['name'] = opt_obj.name
         opts_view.append(opt_view)
 
     exp_view = {}
     exp_view['options'] = opts_view
-    exp_view['name'] = ope_obj.name
-    exp_view['description'] = ope_obj.description
+    exp_view['name'] = exp_obj.name
+    exp_view['description'] = exp_obj.description
 
     context = {'experiment': exp_view}
     logger.debug(f'Experiment view rendering: {json.dumps(context)}')
@@ -316,15 +316,22 @@ def sign_request(request):
 
             nr_users = int(web_data.get('nr_users'))
 
-            tokens = [labut.gen_token(web_data.get('name'), web_data.get(
-                'description'), experiments_ids) for _ in range(nr_users)]
+            tokens, token_times = zip(*[labut.gen_token(web_data.get('name'), web_data.get(
+                'description'), experiments_ids) for _ in range(nr_users)])
+            token_data = []
+            # create the structure to pass tokens and times
+            for i in range(len(tokens)):
+                token_data.append({
+                    "token": tokens[i],
+                    "token_time": token_times[i]
+                })
 
             new_request = {
                 "name": web_data.get('name'),
                 "description": web_data.get('description'),
                 "nr_users": nr_users,
                 "experiments": experiments,
-                "tokens": tokens
+                "token_data": token_data
             }
             template_name = 'researcher_req/sign_request.html'
             context = {'request': new_request}
@@ -357,12 +364,13 @@ def store_request(request):
                 mySerializedExperiments.reset()
                 for id in experiments_ids:
                     mySerializedExperiments.add_experiment_key(id)
-                    # print(f'experiment key: {ope_obj.key}')
+                    # print(f'experiment key: {exp_obj.key}')
 
                 new_request.experiments = mySerializedExperiments.serialize()
 
                 new_request.token = token
                 new_request.signature = web_data.get(f'signature-{token}')
+                new_request.token_time = web_data.get(f'token_time-{token}')
                 
                 new_request.save()
 
@@ -382,10 +390,10 @@ def perform_action(request):
             # cons_req = requests.get(f'{ISSIGNED_URL}/{request_obj.token}')
             requestInst = get_object_or_404(Request, token=token)
 
-            url = f'{LOGOP_URL}'
+            url = f'{LOGEXP_URL}'
             data = {
                 'token': token,
-                'ope_key': experimentKey
+                'exp_key': experimentKey
             }
             logger.debug(f'Perform request: {url}')
             log_post = requests.post(url, data=data)

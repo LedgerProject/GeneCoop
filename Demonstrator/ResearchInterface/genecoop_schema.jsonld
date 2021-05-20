@@ -1,5 +1,4 @@
 { "@context": {
-    "@version": 1.0,
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -14,6 +13,7 @@
   },
   "@id": "genecoop:",
   "@type": "owl:Ontology",
+  "@version": 1.0,
   "defines": [
     { "@id": "genecoop:Consent",
       "@type": "owl:Class",
@@ -65,9 +65,9 @@
       },
       { "@id": "genecoop:Researcher",
         "@type": "owl:Class",
-        "rdfs:subClassOf": {"@id": "schema:Person"},
+        "rdfs:subClassOf": {"@id": "obo:OBI_0000103"},
         "rdfs:label": "Researcher",
-        "rdfs:comment": "This is a generic researcher, might be derived in the future from a more specific ontology than schema.org"
+        "rdfs:comment": "This is the researcher asking for consent, derived from OBI:principal investigator role"
       },
       { "@id": "genecoop:DNADonor",
         "@type": "owl:Class",
@@ -78,7 +78,7 @@
       
       
 
-      { "@id": "genecoop:is_about",
+      { "@id": "genecoop:has_experiments",
         "@type": "owl:ObjectProperty",
         "@container": "@list",
         "rdfs:label": "is about",
@@ -86,6 +86,37 @@
         "rdfs:domain": {"@id": "genecoop:Consent"},
         "rdfs:range": {"@id": "genecoop:Experiment"}
       },
+      { "@id": "genecoop:is_givenby",
+        "@type": "owl:ObjectProperty",
+        "rdfs:label": "is given by",
+        "rdfs:comment": "describe who is giving the consent",
+        "rdfs:domain": {"@id": "genecoop:Consent"},
+        "rdfs:range": {"@id": "genecoop:DNADonor"}
+      },
+      { "@id": "genecoop:has_principalinvestigator",
+        "@type": "owl:ObjectProperty",
+        "rdfs:label": "has Principal Investigator",
+        "rdfs:comment": "describe who the principal investigator is for the experiments specified in the consent",
+        "rdfs:domain": {"@id": "genecoop:Consent"},
+        "rdfs:range": {"@id": "genecoop:Researcher"}
+      },
+      { "@id": "genecoop:has_procedures",
+        "@type": "owl:ObjectProperty",
+        "@container": "@list",
+        "rdfs:label": "has procedure",
+        "rdfs:comment": "Used to list the procedures for each experiment",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "genecoop:ProcedureDescription"}
+      },
+      { "@id": "genecoop:has_options",
+        "@type": "owl:ObjectProperty",
+        "@container": "@list",
+        "rdfs:label": "has options",
+        "rdfs:comment": "Used to list the options for each experiment",
+        "rdfs:domain": {"@id": "genecoop:Experiment"},
+        "rdfs:range": {"@id": "genecoop:ConsentOption"}
+      },
+      
       { "@id": "genecoop:has_key",
         "@type": "owl:DataProperty",
         "rdfs:label": "has key",
@@ -104,22 +135,6 @@
         "rdfs:comment": "Has the user consented to the experiment",
         "rdfs:domain": {"@id": "genecoop:Experiment"},
         "rdfs:range": {"@id": "xsd:boolean"}
-      },
-      { "@id": "genecoop:has_procedures",
-        "@type": "owl:ObjectProperty",
-        "@container": "@list",
-        "rdfs:label": "has procedure",
-        "rdfs:comment": "Used to list the procedures for each experiment",
-        "rdfs:domain": {"@id": "genecoop:Experiment"},
-        "rdfs:range": {"@id": "genecoop:ProcedureDescription"}
-      },
-      { "@id": "genecoop:has_options",
-        "@type": "owl:ObjectProperty",
-        "@container": "@list",
-        "rdfs:label": "has options",
-        "rdfs:comment": "Used to list the options for each experiment",
-        "rdfs:domain": {"@id": "genecoop:Experiment"},
-        "rdfs:range": {"@id": "genecoop:ConsentOption"}
       },
       { "@id": "genecoop:researcher_description",
         "@type": "owl:DataProperty",

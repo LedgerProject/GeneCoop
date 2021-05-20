@@ -9,7 +9,7 @@
     "@id": "genecoop:eye_melanoma_consent",
     "rdf:label": "Consent for Eye Melanoma research",
     "@type": "genecoop:Consent",
-    "genecoop:is_about": [
+    "genecoop:has_experiments": [
         {
             "rdf:label": "Array SNP request + Analysis and interpretation",
             "genecoop:has_key": "0",
@@ -139,16 +139,16 @@
             "genecoop:donor_description": "This allows other researchers to learn as much as possible from my dna data in the future. I will always be asked for informed consent before access is granted.",
             "genecoop:has_procedures": [
                 {
-                    "genecoop:donor_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe.",
-                    "genecoop:researcher_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe."
-                },
-                {
                     "genecoop:donor_description": "My phenotypical data will be indexed in a catalogue and be searchable by other researchers.",
                     "genecoop:researcher_description": "My phenotypical data will be indexed in a catalogue and be searchable by other researchers."
                 },
                 {
-                    "genecoop:donor_description": "The catalog will need some personal data, and it will be stored in a database managed by GenCoop Cooperation.",
-                    "genecoop:researcher_description": "The catalog will need some personal data, and it will be stored in a database managed by GenCoop Cooperation."
+                    "genecoop:donor_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe.",
+                    "genecoop:researcher_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe."
+                },
+                {
+                    "genecoop:donor_description": "The catalog will be stored in a database managed by GenCoop Cooperation.",
+                    "genecoop:researcher_description": "The catalog will be stored in a database managed by GenCoop Cooperation."
                 },
                 {
                     "genecoop:donor_description": "Researchers might ask for consent in the future to participate in new research through GeneCoop.",

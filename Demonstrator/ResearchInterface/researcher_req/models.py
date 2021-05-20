@@ -30,6 +30,7 @@ class Request(models.Model):
     description = models.CharField(max_length=DESCR_LENGTH)
     experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
+    token_time = models.FloatField(default=0)
     signature = models.CharField(max_length=SIGNATURE_LENGTH, default="")
     request_sent = models.DateTimeField(
         'date sent', default=timezone.make_aware(datetime(1900, 1, 1)))

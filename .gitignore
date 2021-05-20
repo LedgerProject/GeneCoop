@@ -18,3 +18,4 @@ node_modules/
 web-ext-artifacts/
 Demonstrator/Tests
 *.log
+signed_vc.data

@@ -21,7 +21,7 @@
         "key": 0,
         "options": [
             {
-                "text": "yes",
+                "text": "Yes",
                 "key": 0,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -31,7 +31,7 @@
                 }
             },
             {
-                "text": "no",
+                "text": "No",
                 "key": 1,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -65,7 +65,7 @@
         "required": true,
         "options": [
             {
-                "text": "yes",
+                "text": "Yes",
                 "key": 0,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -75,7 +75,7 @@
                 }
             },
             {
-                "text": "no",
+                "text": "No",
                 "key": 1,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -111,7 +111,7 @@
         "key": 2,
         "options": [
             {
-                "text": "yes",
+                "text": "Yes",
                 "key": 0,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -121,7 +121,7 @@
                 }
             },
             {
-                "text": "no",
+                "text": "No",
                 "key": 1,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -154,7 +154,7 @@
         "required": false,
         "options": [
             {
-                "text": "yes",
+                "text": "Yes",
                 "key": 0,
                 "researcher": {
                     "description": "Researcher description of option"
@@ -164,7 +164,7 @@
                 }
             },
             {
-                "text": "no",
+                "text": "No",
                 "key": 1,
                 "researcher": {
                     "description": "Researcher description of option"

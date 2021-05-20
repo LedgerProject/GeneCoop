@@ -1,0 +1,18 @@
+Rule check version 1.0.0
+
+# We'll need bowth the 'ecdh' and the 'w3c' scenarios loaded
+Scenario 'w3c' : verify w3c vc signature
+Scenario 'ecdh' : verify
+
+# The public key is extracted from the 'verification method'
+Given I have a 'public key' from 'Issuer'
+
+# The vc is passed as a parameter
+Given I have a 'verifiable credential' named 'my-vc'
+
+
+# This statements checks that the vc's signature and the public key from issuer match
+When I verify the verifiable credential named 'my-vc'
+
+# this is printed if the verification succeeds, else the script stops
+Then print the string 'YES, the signature matches the public key'

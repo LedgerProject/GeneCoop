@@ -93,11 +93,11 @@ def log_experiment(request):
         
         if exp_key is not None:  
             mySerializedExperiments.unserialize(consent.experiments)
-            for ope_json in mySerializedExperiments.experiments:
-                if ope_json['key'] == exp_key:
+            for exp_json in mySerializedExperiments.experiments:
+                if exp_json['key'] == exp_key:
                     consent_logger = consent.consentlogger_set.create()
-                    if ope_json['chosen_option'] != 1:
-                        is_allowed = myConfig.is_op_allowed(ope_json['key'], ope_json['chosen_option'])
+                    if exp_json['chosen_option'] != 1:
+                        is_allowed = myConfig.is_exp_allowed(exp_json['key'], exp_json['chosen_option'])
                         consent_logger.log_experiment(token, exp_key, is_allowed)
                         consent_logger.save()
                         if not is_allowed:

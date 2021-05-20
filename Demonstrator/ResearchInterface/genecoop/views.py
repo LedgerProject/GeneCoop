@@ -27,9 +27,46 @@ myConfig = labut.ConsentConfig('user')
 myConfig.read_conf()
 mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
+VC = {
+    "@context": {
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "schema": "https://schema.org/",
+        "genecoop": "http://genecoop.waag.org/schema/"
+    },
+    "@id": "genecoop:dfsdfds",
+    "rdf:label": "Consent for Eye Melanoma research",
+    "@type": "genecoop:Consent",
+    "genecoop:has_experiments": [
+        {
+            "rdf:label": "Array SNP request + Analysis and interpretation",
+            "genecoop:has_key": "0",
+            "genecoop:is_consented" : True
+        },
+        {
+            "rdf:label": "Copy Number Variation",
+            "genecoop:has_key": "1",
+            "genecoop:is_consented" : True
+        },
+        {
+            "rdf:label": "SNP Variant detection (Biomarker or Pathogenic)",
+            "genecoop:has_key": "2",
+            "genecoop:is_consented" : True
+        },
+        {
+            "rdf:label": "Population study. DNA data available for secondary use",
+            "genecoop:has_key": "3",
+            "genecoop:is_consented" : False
+        }
+    ],
+    "genecoop:has_principalinvestigator":{"@id" : "genecoop:ResearcherA"},
+    "genecoop:is_givenby":{"@id" : "genecoop:gattoSilvestro"}
+}
 
 def _gen_experimentset(experiment_str):
-
+    # Generate a full description of the experiments
+    # from the experiment string contained in the db 
     mySerializedExperiments.unserialize(experiment_str)
     experiment_entries = []
     for experiment in mySerializedExperiments.experiments:
@@ -131,8 +168,9 @@ def sign_view(request, token):
 
     my_consent = get_object_or_404(Consent, token=token)
     my_exps = {'experiments': _gen_experimentset(my_consent.experiments)}
+    my_vc = {'vc' : json.dumps(VC)}
     context = {'my_exps': my_exps, 'my_consent': my_consent,
-               'my_referent': my_referent}
+               'my_referent': my_referent, 'my_vc': my_vc}
     return render(request, template_name, context)
 
 
@@ -176,14 +214,25 @@ def check_token(request):
         if 'token' in request.POST:
             token = request.POST.get('token')
             consent_req = get_object_or_404(Request, token=token)
-            public_key = consent_req.researcher.publickey
-            signature = consent_req.signature
-            if labut.verify_signature(public_key, token, signature):
-                logger.debug("Verification passed")
+            mySerializedExperiments.unserialize(consent_req.experiments)
+            experiment_ids = [experiment['key'] for experiment in mySerializedExperiments.experiments]
+            
+            # Recreate the token to see that it matches
+            match_token, _ = labut.gen_token(consent_req.name, consent_req.description,
+                experiment_ids, consent_req.token_time)
+            
+            if not token == match_token:
+                # token does not match, request is tampered
+                logger.warning(f'token match failed for token {token}')
+            else:    
+                public_key = consent_req.researcher.publickey
+                signature = consent_req.signature
+                if labut.verify_signature(public_key, token, signature):
+                    logger.debug("Verification passed")
 
-                return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
-            else:
-                logger.warning(f'verification failed for token {token}')
+                    return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
+                else:
+                    logger.warning(f'verification failed for token {token}')
         else:
             logger.warning(f'Call missing some parameters')
 
@@ -240,7 +289,7 @@ def sign_consent(request):
             signature = request.POST.get('signature')
             public_key = request.POST.get('public_key')
             hash = request.POST.get('hash')
-
+            
             if labut.verify_signature(public_key, hash, signature):
                 logger.debug("Verification passed")
                 myconsent.sign(signature, public_key)

@@ -127,6 +127,50 @@ function zen_sign(public_key, private_key, tosign) {
 
 }
 
+function zen_vc_sign(public_key, private_key, vc_text) {
+    const sign_vc_script = `
+    rule check version 1.0.0
+    Scenario 'w3c' : sign
+    Scenario 'ecdh' : keypair
+    Given that I am 'Issuer'
+    Given I have my 'keypair'
+    Given I have a 'verifiable credential' named 'my-vc'
+    Given I have a 'string' named 'PublicKeyUrl' inside 'Issuer'
+    When I sign the verifiable credential named 'my-vc'
+    When I set the verification method in 'my-vc' to 'PublicKeyUrl'
+    Then print 'my-vc' as 'string'`;
+
+
+    const data = {
+        "my-vc": vc_text
+    };
+    const keys ={
+        "Issuer": {
+            "keypair": {
+                "private_key": private_key,
+                "public_key": public_key
+            },
+            "PublicKeyUrl": "https://apiroom.net/api/dyneorg/w3c-public-key"
+        }
+    };
+    console.log("Data: ", JSON.stringify(data));
+    console.log("Keys: ", JSON.stringify(keys));
+    return new Promise(function (resolve, reject) {
+
+        zencode_exec(sign_vc_script, { data: JSON.stringify(data), keys: JSON.stringify(keys), conf: `color=0, debug=0` })
+            .then((result) => {
+                console.log(result);
+                const msg_sign = JSON.parse(result.result)["message.signature"];
+                console.log("Msg signature: ", msg_sign);
+                resolve(msg_sign);
+            }).catch((error) => {
+                console.error("Error in zenroom sign function: ", error);
+                reject(error);
+            });
+    });
+
+}
+
 (function () {
 
     /**
@@ -149,14 +193,14 @@ function zen_sign(public_key, private_key, tosign) {
         // var span = document.createElement('span');
         // span.innerHTML = s;
         // return span.textContent || span.innerText;
-        return s.textContent;
+        return JSON.parse(s.textContent);
     };
 
-    function processContent(contract) {
-        contract = contract.replace(/\n+/g, ' ')
-        contract = contract.replace(/\t+/g, ' ')
-        contract = contract.replace(/\s+/g, ' ')
-        return contract;
+    function processContent(s) {
+        s = s.replace(/\n+/g, ' ')
+        s = s.replace(/\t+/g, ' ')
+        s = s.replace(/\s+/g, ' ')
+        return s;
     }
     function hash_contract(contract) {
         // no hashing for the moment
@@ -247,29 +291,25 @@ function zen_sign(public_key, private_key, tosign) {
                 });
 
         } else if (action == 'sign') {
-            const contract = document.querySelector("[id='contract']");
 
-            console.log("Contract: ", contract);
+            const vc = document.querySelector("[id='vc']");
 
-            contract_text = extractContent(contract);
-            contract_text = processContent(contract_text);
+            vc_text = extractContent(vc);
+            // vc_text = processContent(vc_text);
 
-            const hash = hash_contract(contract_text);
+            console.log("Textual VC: ", vc_text);
 
-            console.log("Textual Contract: ", hash);
 
-            zen_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, hash)
-                .then((msg_sign) => {
-                    console.log("Signature: ", msg_sign);
 
-                    var html = document.querySelector("[id='signature']");
-                    html.value = JSON.stringify(msg_sign);
+            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_text)
+                .then((vc_signed) => {
+                    console.log("Signature: ", vc_signed);
+
+                    var html = document.querySelector("[id='signed_vc']");
+                    html.value = JSON.stringify(vc_signed);
 
                     html = document.querySelector("[id='public_key']");
                     html.value = storedSettings.authCredentials.public_key;
-
-                    html = document.querySelector("[id='hash']");
-                    html.value = hash;
 
                     toggle_instructions();
 

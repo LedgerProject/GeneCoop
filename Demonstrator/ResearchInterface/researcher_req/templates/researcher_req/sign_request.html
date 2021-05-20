@@ -33,16 +33,17 @@
                 </div>
                 <div class="col col-4">
                     <ul>
-                        {% for token in request.tokens %}
-                        <li id="minim" data-label="token">{{ token }}</li>
+                        {% for token_datum in request.token_data %}
+                        <li id="minim" data-label="token">{{ token_datum.token }}</li>
                         {% endfor %}
                     </ul>
                 </div>
             </li>
             <li class="table-row">
-                {% for token in request.tokens %}
-                <input type="hidden" id="signature-{{ token }}" name="signature-{{ token }}" value="">
-                <input type="hidden" id="token" name="token" value="{{ token }}">
+                {% for token_datum in request.token_data %}
+                <input type="hidden" id="signature-{{ token_datum.token }}" name="signature-{{ token_datum.token }}" value="">
+                <input type="hidden" id="token" name="token" value="{{ token_datum.token }}">
+                <input type="hidden" id="token_time-{{ token_datum.token }}" name="token_time-{{ token_datum.token }}" value="{{ token_datum.token_time }}">
                 {% endfor %}
                 <input type="hidden" name="name" value="{{ request.name }}">
                 <input type="hidden" name="description" value="{{ request.description }}">

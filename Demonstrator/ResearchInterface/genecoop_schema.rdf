@@ -1,150 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
-   xmlns:genecoop="http://genecoop.waag.org/schema/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 >
-  <rdf:Description rdf:nodeID="Nd719800079cb49ac935a437fda9d4e0b">
-    <genecoop:is_required rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</genecoop:is_required>
-    <genecoop:has_options rdf:nodeID="N3550a8f3e4d14faa9bf8e5af725538d9"/>
-    <genecoop:donor_description>This allows other researchers to learn as much as possible from my dna data in the future. I will always be asked for informed consent before access is granted.</genecoop:donor_description>
-    <rdf:label>Population study. DNA data available for secondary use</rdf:label>
-    <genecoop:researcher_description>Description not directly linked to researcher to protect study.</genecoop:researcher_description>
-    <genecoop:has_procedures rdf:nodeID="Nb3bed10420d54606b7f5448894126cc0"/>
-    <genecoop:has_procedures rdf:nodeID="N232617184cac4768ba40a38e6d95f135"/>
-    <genecoop:has_procedures rdf:nodeID="Nc29d84f5a2e94c04ad421f43f80bb3f7"/>
-    <genecoop:has_key>3</genecoop:has_key>
-    <genecoop:has_procedures rdf:nodeID="Nc26c1748f0894c63ae46dee78321e51f"/>
-    <genecoop:has_options rdf:nodeID="N69b64dcc5c7645a4b0af0910d63cf76f"/>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Consent">
+    <rdfs:label>Consent</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/ICO_0000061"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subclassof rdf:resource="https://schema.org/DigitalDocument"/>
+    <rdfs:comment>This is a consent document derived from (rdfs:subClassOf) ICO:informed consent form for genetic study</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N0d4d352701034f3186e0e18207ef7179">
-    <genecoop:has_key>1</genecoop:has_key>
-    <rdf:label>No</rdf:label>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/is_consented">
+    <rdfs:label>is consented</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DataProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>Has the user consented to the experiment</rdfs:comment>
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Experiment"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="Na1f7105f57604eb592a3ab39d42b95cb">
-    <genecoop:has_key>0</genecoop:has_key>
-    <genecoop:donor_description>An array test is needed to sequence your DNA from your Saliva, and to produce a digital version of your DNA, which is needed for tumor classification in this research.</genecoop:donor_description>
-    <genecoop:has_procedures rdf:nodeID="Nfb9c4969e8af4e3a9c14884a4c940095"/>
-    <genecoop:has_procedures rdf:nodeID="N280b7d75ebc54c639fe5b0eafe20c96c"/>
-    <genecoop:researcher_description>Tier 1 essay Needed for tumor classification</genecoop:researcher_description>
-    <genecoop:has_options rdf:nodeID="N2164af8ea3ed48c697f9c9eb40a354d2"/>
-    <genecoop:has_options rdf:nodeID="N3bd82fbdb8d44b3f9c6f71edec8f9c37"/>
-    <genecoop:is_required rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</genecoop:is_required>
-    <rdf:label>Array SNP request + Analysis and interpretation</rdf:label>
-    <genecoop:has_procedures rdf:nodeID="N8372fd9da96d4fa9a92beb560f72e65b"/>
-    <genecoop:has_procedures rdf:nodeID="N57c154e4bbd440dd9323aef6b1aa1975"/>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/donor_description">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DataProperty"/>
+    <rdfs:comment>The description from the point of view of the DNA donor</rdfs:comment>
+    <rdfs:label>Donor Description</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://schema.org/description"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N0af2d48c321e4edc8adc94c6733374f7">
-    <genecoop:has_procedures rdf:nodeID="Ncdc5432e09834884aa825695143a029f"/>
-    <genecoop:donor_description>DBM discovery is needed to improve personalized drug treatment in the future, for you and for others. Biomarkers discovered in this analysis can be used for predictive, diagnostic or prognostic purposes.</genecoop:donor_description>
-    <genecoop:has_options rdf:nodeID="N0d4d352701034f3186e0e18207ef7179"/>
-    <genecoop:has_options rdf:nodeID="N12bb1de12d01433bb9f365bdf3dd9ed7"/>
-    <genecoop:has_procedures rdf:nodeID="N0cb067155b394340abd405400a85f37c"/>
-    <genecoop:has_key>2</genecoop:has_key>
-    <genecoop:is_required rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</genecoop:is_required>
-    <genecoop:has_procedures rdf:nodeID="N62befa2806f743a9bb4d2dbcca042746"/>
-    <genecoop:has_procedures rdf:nodeID="Nd102fa5c15e24927a08b30ea1f9b68cf"/>
-    <rdf:label>SNP Variant detection (Biomarker or Pathogenic)</rdf:label>
-    <genecoop:has_procedures rdf:nodeID="N31c710310c224de08eadcad600aaee85"/>
-    <genecoop:researcher_description>Optimize personalized drug treatment.</genecoop:researcher_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/is_givenby">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:range rdf:resource="http://genecoop.waag.org/schema/DNADonor"/>
+    <rdfs:label>is given by</rdfs:label>
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Consent"/>
+    <rdfs:comment>describe who is giving the consent</rdfs:comment>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N3bd82fbdb8d44b3f9c6f71edec8f9c37">
-    <genecoop:has_key>1</genecoop:has_key>
-    <rdf:label>No</rdf:label>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N280b7d75ebc54c639fe5b0eafe20c96c">
-    <genecoop:donor_description>Donor will send a sample of Saliva for sequencing directly to the Research Center.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/CollectedInformation">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>CollectedInformation</rdfs:label>
+    <rdfs:comment>This is a description of collected information derived from (rdfs:subClassOf) ICO:description of collected information</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/ICO_0000277"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="Nb3bed10420d54606b7f5448894126cc0">
-    <genecoop:donor_description>The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/DNADonor">
+    <rdfs:label>DNADonor</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>This is a generic DNA donor, might be derived in the future from a more specific ontology than schema.org</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="https://schema.org/Person"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N00533ee2871647c8b04d398373d8b561">
-    <genecoop:has_options rdf:nodeID="N48369827116b48e1a5f729f1422e9504"/>
-    <genecoop:donor_description>Copy Number Variation is needed in this research for better insight in cancer treatment and prediction.</genecoop:donor_description>
-    <genecoop:has_procedures rdf:nodeID="N983814223a08484aa6fd28e09c0f9e45"/>
-    <genecoop:is_required rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</genecoop:is_required>
-    <genecoop:has_procedures rdf:nodeID="N312af990393a40c3ada98224057f9c9c"/>
-    <genecoop:has_key>1</genecoop:has_key>
-    <genecoop:has_procedures rdf:nodeID="Nd721791d533644f78fa86169a15f1540"/>
-    <genecoop:has_options rdf:nodeID="N4ef633e973dd4440b3f1d4db71402233"/>
-    <genecoop:researcher_description>Needed for tumor classification and personalized advise.</genecoop:researcher_description>
-    <rdf:label>Copy Number Variation</rdf:label>
-    <genecoop:has_procedures rdf:nodeID="Nb30fb7845d56454d908b686248f74d6f"/>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/ProcedureDescription">
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/ICO_0000303"/>
+    <rdfs:label>ProcedureDescription</rdfs:label>
+    <rdfs:comment>This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of research procedure</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="Ncdc5432e09834884aa825695143a029f">
-    <genecoop:donor_description>The result of the DBM will be described in a Biomarker Analysis Report. This report will be stored on SURF LabSafe.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/has_procedures">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:range rdf:resource="http://genecoop.waag.org/schema/ProcedureDescription"/>
+    <rdfs:comment>Used to list the procedures for each experiment</rdfs:comment>
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Experiment"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>has procedure</rdfs:label>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N4ef633e973dd4440b3f1d4db71402233">
-    <rdf:label>No</rdf:label>
-    <genecoop:has_key>1</genecoop:has_key>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Experiment">
+    <rdfs:label>Experiment</rdfs:label>
+    <rdfs:subclassof rdf:resource="http://semanticscience.org/resource/SIO_000994"/>
+    <rdfs:comment>This is an experiment to carry out on the DNA data, derived from (rdfs:subClassOf) SIO:experiment</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N48369827116b48e1a5f729f1422e9504">
-    <genecoop:has_key>0</genecoop:has_key>
-    <rdf:label>Yes</rdf:label>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/has_options">
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Experiment"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>has options</rdfs:label>
+    <rdfs:comment>Used to list the options for each experiment</rdfs:comment>
+    <rdfs:range rdf:resource="http://genecoop.waag.org/schema/ConsentOption"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="Nfb9c4969e8af4e3a9c14884a4c940095">
-    <genecoop:donor_description>After the array test the sample will be destroyed.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/ConsentOption">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:comment>The consent options available for the consent to an experiment</rdfs:comment>
+    <rdfs:label>ConsentOption</rdfs:label>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N3550a8f3e4d14faa9bf8e5af725538d9">
-    <genecoop:has_key>1</genecoop:has_key>
-    <rdf:label>No</rdf:label>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/researcher_description">
+    <rdfs:comment>The description from the point of view of the researcher</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="https://schema.org/description"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:label>Researcher Description</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DataProperty"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="Nc26c1748f0894c63ae46dee78321e51f">
-    <genecoop:donor_description>Researchers might ask for consent in the future to participate in new research through GeneCoop.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/has_experiments">
+    <rdfs:label>is about</rdfs:label>
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Consent"/>
+    <rdfs:comment>Used to list the experiments the consent is about</rdfs:comment>
+    <rdfs:range rdf:resource="http://genecoop.waag.org/schema/Experiment"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N12bb1de12d01433bb9f365bdf3dd9ed7">
-    <rdf:label>Yes</rdf:label>
-    <genecoop:has_key>0</genecoop:has_key>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/is_required">
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>Is the experiment required</rdfs:comment>
+    <rdfs:label>is required</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DataProperty"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Experiment"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://genecoop.waag.org/schema/eye_melanoma_consent">
-    <genecoop:is_about rdf:nodeID="N0af2d48c321e4edc8adc94c6733374f7"/>
-    <genecoop:is_about rdf:nodeID="N00533ee2871647c8b04d398373d8b561"/>
-    <rdf:type rdf:resource="http://genecoop.waag.org/schema/Consent"/>
-    <rdf:label>Consent for Eye Melanoma research</rdf:label>
-    <genecoop:is_about rdf:nodeID="Nd719800079cb49ac935a437fda9d4e0b"/>
-    <genecoop:is_about rdf:nodeID="Na1f7105f57604eb592a3ab39d42b95cb"/>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/PartecipationRisk">
+    <rdfs:comment>This is a description of research procedure derived from (rdfs:subClassOf) ICO:description of participation risk</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/ICO_0000008"/>
+    <rdfs:label>PartecipationRisk</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N57c154e4bbd440dd9323aef6b1aa1975">
-    <genecoop:donor_description>The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Sample">
+    <rdfs:comment>This is a sample derived from (rdfs:subClassOf) OBI:DNA extract</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/OBI_0001051"/>
+    <rdfs:label>Sample</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N983814223a08484aa6fd28e09c0f9e45">
-    <genecoop:donor_description>The analysis will be operated on the Raw DNA Data File stored on SURF LabSafe, which managed by Genecoop Cooperation.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/Researcher">
+    <rdfs:label>Researcher</rdfs:label>
+    <rdfs:comment>This is the researcher asking for consent, derived from OBI:principal investigator role</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/OBI_0000103"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N69b64dcc5c7645a4b0af0910d63cf76f">
-    <genecoop:has_key>0</genecoop:has_key>
-    <rdf:label>Yes</rdf:label>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/has_principalinvestigator">
+    <rdfs:domain rdf:resource="http://genecoop.waag.org/schema/Consent"/>
+    <rdfs:label>has Principal Investigator</rdfs:label>
+    <rdfs:range rdf:resource="http://genecoop.waag.org/schema/Researcher"/>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
+    <rdfs:comment>describe who the principal investigator is for the experiments specified in the consent</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N62befa2806f743a9bb4d2dbcca042746">
-    <genecoop:donor_description>This analysis will be performed by Genecoop Principal Investigator using the Svastia technology on Amazon Web Services.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/has_key">
+    <rdfs:comment>the key of the experiment or option</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DataProperty"/>
+    <rdfs:label>has key</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
-  <rdf:Description rdf:nodeID="N312af990393a40c3ada98224057f9c9c">
-    <genecoop:donor_description>The analysis will result in a CNV Analysis Report, which will be stored on SURF LabSafe and will be managed and protected by Genecoop Cooperation.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="Nd102fa5c15e24927a08b30ea1f9b68cf">
-    <genecoop:donor_description>This analysis will access the Raw DNA Data File stored on SURF LabSafe and managed by Genecoop Cooperation.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="Nb30fb7845d56454d908b686248f74d6f">
-    <genecoop:donor_description>The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="Nd721791d533644f78fa86169a15f1540">
-    <genecoop:donor_description>Genecoop Principal Investigator will perform the analysis using the Omnigen-GCP technology.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="N2164af8ea3ed48c697f9c9eb40a354d2">
-    <genecoop:has_key>0</genecoop:has_key>
-    <rdf:label>Yes</rdf:label>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="N31c710310c224de08eadcad600aaee85">
-    <genecoop:donor_description>Anonymised data from the Biomarker Analysis Report will be collected and made available for request through the GeneCoop Data Catalogue.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="Nc29d84f5a2e94c04ad421f43f80bb3f7">
-    <genecoop:donor_description>My phenotypical data will be indexed in a catalogue and be searchable by other researchers.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="N232617184cac4768ba40a38e6d95f135">
-    <genecoop:donor_description>The catalog will need some personal data, and it will be stored in a database managed by GenCoop Cooperation.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="N8372fd9da96d4fa9a92beb560f72e65b">
-    <genecoop:donor_description>The array test will be performed by the Research Center. The sample will be stored at the Research Center during the array test.</genecoop:donor_description>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="N0cb067155b394340abd405400a85f37c">
-    <genecoop:donor_description>A copy of the Raw DNA Data File will be stored on Amazon Web Services during the analysis.</genecoop:donor_description>
+  <rdf:Description rdf:about="http://genecoop.waag.org/schema/CollectedBiospecimens">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>CollectedBiospecimens</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://purl.obolibrary.org/obo/ICO_0000276"/>
+    <rdfs:comment>This is a description of collected biospecimens derived from (rdfs:subClassOf) ICO:description of collected biospecimens</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://genecoop.waag.org/schema/"/>
   </rdf:Description>
 </rdf:RDF>
