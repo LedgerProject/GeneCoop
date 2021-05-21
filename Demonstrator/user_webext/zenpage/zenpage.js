@@ -159,12 +159,12 @@ function zen_vc_sign(public_key, private_key, vc_text) {
 
         zencode_exec(sign_vc_script, { data: JSON.stringify(data), keys: JSON.stringify(keys), conf: `color=0, debug=0` })
             .then((result) => {
-                console.log(result);
-                const msg_sign = JSON.parse(result.result)["message.signature"];
-                console.log("Msg signature: ", msg_sign);
-                resolve(msg_sign);
+                console.log("Result", JSON.stringify(result));
+                const signed_vc_str = JSON.stringify(JSON.parse(result.result)['my-vc']);
+                console.log("Signed vc: ", signed_vc_str);
+                resolve(signed_vc_str);
             }).catch((error) => {
-                console.error("Error in zenroom sign function: ", error);
+                console.error("Error in zenroom sign function: ", JSON.stringify(error));
                 reject(error);
             });
     });
@@ -297,16 +297,15 @@ function zen_vc_sign(public_key, private_key, vc_text) {
             vc_text = extractContent(vc);
             // vc_text = processContent(vc_text);
 
-            console.log("Textual VC: ", vc_text);
+            console.log("Textual VC: ", JSON.stringify(vc_text));
 
 
 
             zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_text)
-                .then((vc_signed) => {
-                    console.log("Signature: ", vc_signed);
+                .then((signed_vc_str) => {
 
                     var html = document.querySelector("[id='signed_vc']");
-                    html.value = JSON.stringify(vc_signed);
+                    html.value = signed_vc_str;
 
                     html = document.querySelector("[id='public_key']");
                     html.value = storedSettings.authCredentials.public_key;

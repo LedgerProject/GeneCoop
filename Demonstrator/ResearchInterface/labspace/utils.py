@@ -159,6 +159,53 @@ def verify_signature(public_key, message, signature):
     logger.debug(f'Verification NOT passed')
     return False
 
+def verify_signed_vc(public_key, signed_vc):
+    """
+        This function calls zenroom to verify
+        a signed verifiable credential
+    """
+
+    contract = """
+    Rule check version 1.0.0
+    Scenario 'w3c' : verify w3c vc signature
+    Scenario 'ecdh' : verify
+    Given I have a 'public key' from 'Issuer'
+    Given I have a 'verifiable credential' named 'my-vc'
+    When I verify the verifiable credential named 'my-vc'
+    Then print 'verification passed' as 'string'
+    """
+
+    data = f'{{"my-vc": {signed_vc}}}'
+    
+
+    keys = f'{{"Issuer": {{"public_key": "{public_key}" }} }}'
+    
+    logger.debug(f'verification data: {data}, keys: {keys}')
+    # breakpoint()
+    try:
+        # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
+        # breakpoint()
+        result = zenroom.zencode_exec(
+            contract, keys=keys, data=data, conf='debug=0')
+    except Exception as e:
+        logger.error(f'Exception in zenroom call: {e}')
+        # print(f'Exception in zenroom call: {e}')
+        return False
+
+    # result = zenroom.zencode_exec(contract, data=json.dumps(data))
+
+    logger.debug(f'result: {result}')
+    
+    if not result.output == '':
+        res_json = json.loads(result.output)
+
+        if res_json['output'] == 'verification_passed':
+            logger.debug(f'Verification passed')
+            return True
+
+    logger.debug(f'Verification NOT passed')
+    return False
+
 
 ######################################################
 # Classes for the settings read from conf file

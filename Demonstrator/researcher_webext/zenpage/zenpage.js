@@ -73,7 +73,7 @@ const { zencode_exec } = require("zenroom");
 
                 })
                 .catch((error) => {
-                    console.error("Error in zenroom sign function: ", error);
+                    console.error("Error in perform_action with login: ", JSON.stringify(error));
                     throw new Error(error);
                 });
 
@@ -104,7 +104,7 @@ const { zencode_exec } = require("zenroom");
                             resolve("OK");
                         })
                         .catch((error) => {
-                            console.error("Error in zenroom sign function: ", error);
+                            console.error("Error in perform_action with sign: ", JSON.stringify(error));
                             reject(error);
                         });
                 }));
@@ -152,7 +152,7 @@ const { zencode_exec } = require("zenroom");
                     console.log("Msg signature: ", msg_sign);
                     resolve(msg_sign);
                 }).catch((error) => {
-                    console.error("Error in zenroom sign function: ", error);
+                    console.error("Error in zen_sign function: ", JSON.stringify(error));
                     reject(error);
                 });
         });

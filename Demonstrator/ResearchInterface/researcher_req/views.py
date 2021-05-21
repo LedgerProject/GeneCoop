@@ -130,7 +130,6 @@ def _gen_queryset(pk):
         request_view['description'] = request_obj.description
         # request_view['user_id'] = request_obj.user_id
         request_view['status'] = request_obj.status
-        request_view['signature'] = request_obj.signature
 
         experiments_view = _gen_experiments(request_obj.experiments)
 
@@ -369,7 +368,7 @@ def store_request(request):
                 new_request.experiments = mySerializedExperiments.serialize()
 
                 new_request.token = token
-                new_request.signature = web_data.get(f'signature-{token}')
+                new_request.token_signature = web_data.get(f'signature-{token}')
                 new_request.token_time = web_data.get(f'token_time-{token}')
                 
                 new_request.save()

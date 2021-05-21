@@ -42,22 +42,22 @@ VC = {
         {
             "rdf:label": "Array SNP request + Analysis and interpretation",
             "genecoop:has_key": "0",
-            "genecoop:is_consented" : True
+            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
         },
         {
             "rdf:label": "Copy Number Variation",
             "genecoop:has_key": "1",
-            "genecoop:is_consented" : True
+            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
         },
         {
             "rdf:label": "SNP Variant detection (Biomarker or Pathogenic)",
             "genecoop:has_key": "2",
-            "genecoop:is_consented" : True
+            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
         },
         {
             "rdf:label": "Population study. DNA data available for secondary use",
             "genecoop:has_key": "3",
-            "genecoop:is_consented" : False
+            "genecoop:is_consented" : {"@value": "false", "@type": "xsd:boolean"}
         }
     ],
     "genecoop:has_principalinvestigator":{"@id" : "genecoop:ResearcherA"},
@@ -222,12 +222,12 @@ def check_token(request):
                 experiment_ids, consent_req.token_time)
             
             if not token == match_token:
-                # token does not match, request is tampered
+                # token does not match, request is tampered with
                 logger.warning(f'token match failed for token {token}')
             else:    
                 public_key = consent_req.researcher.publickey
-                signature = consent_req.signature
-                if labut.verify_signature(public_key, token, signature):
+                token_signature = consent_req.token_signature
+                if labut.verify_signature(public_key, token, token_signature):
                     logger.debug("Verification passed")
 
                     return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
@@ -286,17 +286,16 @@ def sign_consent(request):
                 user = User(username=request.POST.get('public_key'))
                 user.save()
             
-            signature = request.POST.get('signature')
+            signed_vc = request.POST.get('signed_vc')
             public_key = request.POST.get('public_key')
-            hash = request.POST.get('hash')
             
-            if labut.verify_signature(public_key, hash, signature):
-                logger.debug("Verification passed")
-                myconsent.sign(signature, public_key)
+            if labut.verify_signed_vc(public_key, signed_vc):
+                logger.info("Signed VC Verification passed")
+                myconsent.sign(signed_vc, public_key)
                 myconsent.save()
                 return HttpResponseRedirect(reverse('genecoop:index'))
             else:
-                logger.error(f"Verification NOT passed, public_key {public_key}, hash {hash} and signature {signature}")
+                logger.error(f"Verification NOT passed, public_key {public_key}, token {token} and signed vc {signed_vc}")
     
     logger.warning(
         f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')

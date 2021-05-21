@@ -4,7 +4,7 @@ import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
-from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNATURE_LENGTH, PUBLICKEY_LENGTH
+from labspace.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH
 
 import labspace.utils as labut
 
@@ -16,7 +16,7 @@ class Consent(models.Model):
     experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     token = models.CharField(
         primary_key=True, max_length=TOKEN_LENGTH, unique=True)
-    signature = models.CharField(max_length=SIGNATURE_LENGTH)
+    signed_vc = models.CharField(max_length=SIGNEDVC_LENGTH)
     consent_created = models.DateTimeField(
         'date created', default=timezone.make_aware(datetime(1900, 1, 1)))
     consent_signed = models.DateTimeField(
@@ -38,10 +38,10 @@ class Consent(models.Model):
     def is_signed(self):
         return self.status == self.RequestStatus.DONE
 
-    def sign(self, signature, public_key):
+    def sign(self, signed_vc, public_key):
         self.consent_signed = timezone.now()
         self.status = self.RequestStatus.DONE
-        self.signature = signature
+        self.signed_vc = signed_vc
         self.user_id = public_key
 
     def init(self, experiments):
