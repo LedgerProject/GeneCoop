@@ -23,7 +23,7 @@
                 <div class="col col-34" data-label="Experiments">
                     {% for experiment in my_set.experiments %}
                     <input type="checkbox" name="experiments" id="experiment{{ forloop.counter }}"
-                        value="{{ experiment.key }}">
+                        value="{{ experiment.id }}">
                     <label for="experiment{{ forloop.counter }}">{{ experiment.name }}</label><br>
                     {% endfor %}
                 </div>

@@ -19,3 +19,4 @@ web-ext-artifacts/
 Demonstrator/Tests
 *.log
 signed_vc.data
+credentials.json

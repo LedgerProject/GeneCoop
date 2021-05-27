@@ -103,7 +103,7 @@ class ConsentLogger(models.Model):
         self.__handle_token__(token)
         self.type = self.LogTypes.ALLOWED_EXPERIMENTS
         msg = [
-            f"(experiment: {exp['key']}, option: {exp['chosen_option']})" for exp in exp_results]
+            f"(experiment: {exp['id']}, option: {exp['chosen_option']})" for exp in exp_results]
         self.message = f"Request received to check what experiments are allowed, results is {msg}"
 
     def log_experiment(self, token, exp_key, is_allowed):

@@ -48,7 +48,7 @@
                 <input type="hidden" name="name" value="{{ request.name }}">
                 <input type="hidden" name="description" value="{{ request.description }}">
                 {% for experiment in request.experiments %}
-                <input type="hidden" name="experiments" value="{{ experiment.key }}">
+                <input type="hidden" name="experiments" value="{{ experiment.id }}">
                 {% endfor %}
                 <div id="action-required-genecoop-plugin">
                     Please 'Sign' this request with your GeneCoop add-on.

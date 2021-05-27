@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from .models import Consent
-from researcher_req.models import User, Researcher, Request
+from researcher_req.models import User, Request
 
 # from labspace.constants import VERIFY_URL, DO_ENCODING
 
@@ -23,46 +23,9 @@ import labspace.utils as labut
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-myConfig = labut.ConsentConfig('user')
-myConfig.read_conf()
+myConfig = labut.read_conf('user')
 mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
-VC = {
-    "@context": {
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "schema": "https://schema.org/",
-        "genecoop": "http://genecoop.waag.org/schema/"
-    },
-    "@id": "genecoop:dfsdfds",
-    "rdf:label": "Consent for Eye Melanoma research",
-    "@type": "genecoop:Consent",
-    "genecoop:has_experiments": [
-        {
-            "rdf:label": "Array SNP request + Analysis and interpretation",
-            "genecoop:has_key": "0",
-            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
-        },
-        {
-            "rdf:label": "Copy Number Variation",
-            "genecoop:has_key": "1",
-            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
-        },
-        {
-            "rdf:label": "SNP Variant detection (Biomarker or Pathogenic)",
-            "genecoop:has_key": "2",
-            "genecoop:is_consented" : {"@value": "true", "@type": "xsd:boolean"}
-        },
-        {
-            "rdf:label": "Population study. DNA data available for secondary use",
-            "genecoop:has_key": "3",
-            "genecoop:is_consented" : {"@value": "false", "@type": "xsd:boolean"}
-        }
-    ],
-    "genecoop:has_principalinvestigator":{"@id" : "genecoop:ResearcherA"},
-    "genecoop:is_givenby":{"@id" : "genecoop:gattoSilvestro"}
-}
 
 def _gen_experimentset(experiment_str):
     # Generate a full description of the experiments
@@ -70,18 +33,18 @@ def _gen_experimentset(experiment_str):
     mySerializedExperiments.unserialize(experiment_str)
     experiment_entries = []
     for experiment in mySerializedExperiments.experiments:
-        exp_obj = myConfig.get_experiment_obj(experiment['key'])
+        exp_obj = myConfig.get_experiment_obj(experiment['id'])
         option_entries = []
-        for opt_key in exp_obj.options:
-            opt_obj = myConfig.get_option_obj(opt_key)
+        for opt_id in myConfig.options:
+            opt_obj = myConfig.get_option_obj(opt_id)
             opt_entry = {
-                'key': opt_obj.key,
+                'id': opt_obj.id,
                 'name': opt_obj.name,
             }
             option_entries.append(opt_entry)
         exp_entry = {
             'name': exp_obj.name,
-            'key': exp_obj.key,
+            'id': exp_obj.id,
             'description': exp_obj.description,
             'procedures': exp_obj.procedures,
             'required': exp_obj.required,
@@ -168,7 +131,8 @@ def sign_view(request, token):
 
     my_consent = get_object_or_404(Consent, token=token)
     my_exps = {'experiments': _gen_experimentset(my_consent.experiments)}
-    my_vc = {'vc' : json.dumps(VC)}
+    vc = labut.prepare_vc(token, my_request.researcher.user.username, my_consent.experiments)
+    my_vc = {'vc' : vc}
     context = {'my_exps': my_exps, 'my_consent': my_consent,
                'my_referent': my_referent, 'my_vc': my_vc}
     return render(request, template_name, context)
@@ -215,7 +179,7 @@ def check_token(request):
             token = request.POST.get('token')
             consent_req = get_object_or_404(Request, token=token)
             mySerializedExperiments.unserialize(consent_req.experiments)
-            experiment_ids = [experiment['key'] for experiment in mySerializedExperiments.experiments]
+            experiment_ids = [experiment['id'] for experiment in mySerializedExperiments.experiments]
             
             # Recreate the token to see that it matches
             match_token, _ = labut.gen_token(consent_req.name, consent_req.description,
@@ -251,13 +215,13 @@ def gen_consent(request):
             mySerializedExperiments.unserialize(consent_req.experiments)
 
             for experiment in mySerializedExperiments.experiments:
-                form_entry = f"option-{experiment['key']}"
+                form_entry = f"option-{experiment['id']}"
                 
                 if form_entry in request.POST:
-                    mySerializedExperiments.select_option_key(experiment['key'],
+                    mySerializedExperiments.select_option_id(experiment['id'],
                                                              request.POST.get(form_entry))
                 else:
-                    mySerializedExperiments.reset_option_key(experiment['key'])
+                    mySerializedExperiments.reset_option_id(experiment['id'])
 
             new_consent = Consent(token=token,
                                     name=f'{consent_req.name}',
@@ -321,88 +285,3 @@ def check_login(request):
                 return HttpResponseRedirect(reverse('genecoop:index'))
     logger.debug(f'Login failed')
     return HttpResponseRedirect(reverse('genecoop:login'))
-
-
-# def verify_consent(request):
-#     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-#     if request.method == 'POST':
-#         if 'token' in request.POST and 'public_key' in request.POST:
-#             token = request.POST.get('token')
-#             public_key = request.POST.get('public_key')
-
-#             requestInst = get_object_or_404(Request, token=token)
-
-#             requestData = requestInst.token
-#             signature = labut.get_signature(requestInst)
-
-#             if DO_ENCODING:
-#                 # Standard Base64 Encoding
-#                 encodedBytes = base64.b64encode(requestData.encode("utf-8"))
-#                 encodedStr = str(encodedBytes, "utf-8")
-#             else:
-#                 encodedStr = requestData
-
-#             data = {
-#                 "message": encodedStr,
-#                 "message.signature": {
-#                     "r": signature['r'],
-#                     "s": signature['s'],
-#                 },
-#                 "Researcher": {
-#                     "public_key": public_key
-#                 }
-#             }
-
-#             # Verify signature
-#             session = requests.Session()
-#             verify_response = session.post(
-#                 VERIFY_URL, json={"data": data})
-
-#             logger.debug(
-#                 f"Verification request: {labut.format_request(verify_response.request, 'utf8')}")
-
-#             if verify_response.status_code == 200:
-#                 logger.debug(f"Verification response: {verify_response.text}")
-#                 zenroom_response = json.loads(verify_response.text)
-
-#                 if 'output' in zenroom_response and zenroom_response['output'] == 'verification_passed':
-#                     # verification is passed, create or retrieve consent
-#                     logger.debug("Verification passed")
-
-#                     user_id = requestInst.user_id
-
-#                     try:
-#                         new_consent = Consent.objects.get(token=token)
-#                         logger.debug(
-#                             f'Consent with token {token} already exists')
-#                         return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
-#                     except Consent.DoesNotExist as error:
-#                         # This is not an error, the consent does not yet exist
-#                         pass
-
-#                     new_consent = Consent(token=token,
-#                                           text=f'{datetime.now()}',
-#                                           description=f'Generated from token {token}',
-#                                           user_id=user_id)
-
-#                     mySerializedExperiments.unserialize(requestInst.experiments)
-#                     new_consent.experiments = mySerializedExperiments.serialize()
-#                     new_consent.save()
-#                     logger.debug("New consent created")
-
-#                     return HttpResponseRedirect(reverse('genecoop:choose', args=(token,)))
-#                 else:
-#                     logger.warning(
-#                         f'verification failed, zenroom response: {zenroom_response}')
-#             else:
-#                 logger.error(
-#                     f'Error from {VERIFY_URL}: {verify_response.status_code}')
-#                 logger.error("Request that was sent:")
-#                 logger.error(labut.format_request(
-#                     verify_response.request, 'utf8'))
-#         else:
-#             logger.warning(f'Call missing some parameters')
-
-#     logger.warning(
-#         f'Default return from {inspect.currentframe().f_code.co_name}, something went wrong')
-#     return HttpResponseRedirect(reverse('genecoop:index'))

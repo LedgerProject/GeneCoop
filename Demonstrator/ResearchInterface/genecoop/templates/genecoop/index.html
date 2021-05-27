@@ -30,7 +30,7 @@
                         <div class="col col-24" data-label="Options">
                             <ul>
                                 {% for option in experiment.options %}
-                                {% if option.key == experiment.chosen_option %}
+                                {% if option.id == experiment.chosen_option %}
                                 <li id="minim"><b>{{ option.name }}</b></li>
                                 {% else %}
                                 <li id="minim">{{ option.name }}</li>

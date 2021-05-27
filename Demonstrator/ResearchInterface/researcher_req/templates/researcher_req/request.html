@@ -53,7 +53,7 @@
                 <form action="{% url 'researcher_req:perform_action' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" id="Token" name="Token" value={{request.token}}>
-                    <input type="hidden" id="experimentKey" name="experimentKey" value={{experiment.key}}>
+                    <input type="hidden" id="experimentId" name="experimentId" value={{experiment.id}}>
                     <input type="submit" value="Run Analysis">
                 </form>
                 {% else %}

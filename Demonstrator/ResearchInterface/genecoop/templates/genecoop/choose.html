@@ -35,7 +35,7 @@
                 <h4 class="consent_request_section_title">What procedures will take place with my personal data?</h4>
                 <ul>
                     {% for procedure in experiment.procedures %}
-                    <li>{{ procedure}}</li>
+                    <li>{{ procedure.description}}</li>
                     {% endfor %}
                 </ul>
                 <br />
@@ -43,9 +43,9 @@
                     <div data-label="Options" {%if experiment.required %} class="mandatory" {% endif %}>
                         I agree to this:&nbsp;
                         {% for option in experiment.options %}
-                        <label for="{{ experiment.key }}">{{ option.name }}</label>
-                        <input type="radio" name="option-{{ experiment.key }}" id="{{ experiment.key }}"
-                            value="{{ option.key }}" onchange="return onAgreementChange(event);">
+                        <label for="{{ experiment.id }}">{{ option.name }}</label>
+                        <input type="radio" name="option-{{ experiment.id }}" id="{{ experiment.id }}"
+                            value="{{ option.id }}" onchange="return onAgreementChange(event);">
                         {% endfor %}
                     </div>
                 </strong>
@@ -61,7 +61,7 @@
                 <ul id="procedures">
                     {% for experiment in my_exps.experiments %}
                     {% for procedure in experiment.procedures %}
-                    <li style="display:none" class="op_{{experiment.key}}">{{ procedure }}</li>
+                    <li style="display:none" class="{{experiment.id}}">{{ procedure.description }}</li>
                     {% endfor %}
                     {% endfor %}
                 </ul>

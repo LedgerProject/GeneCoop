@@ -29,8 +29,7 @@ import labspace.utils as labut
 
 
 
-myConfig = labut.ConsentConfig('user')
-myConfig.read_conf()
+myConfig = labut.read_conf('user')
 mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
 @api_view((['GET']))

@@ -117,11 +117,6 @@
         "rdfs:range": {"@id": "genecoop:ConsentOption"}
       },
       
-      { "@id": "genecoop:has_key",
-        "@type": "owl:DataProperty",
-        "rdfs:label": "has key",
-        "rdfs:comment": "the key of the experiment or option"
-      },
       { "@id": "genecoop:is_required",
         "@type": "owl:DataProperty",
         "rdfs:label": "is required",

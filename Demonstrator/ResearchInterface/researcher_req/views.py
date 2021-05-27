@@ -21,8 +21,7 @@ from labspace.constants import ISSIGNED_URL, ALLOWEDEXP_URL, LOGEXP_URL
 logger = logging.getLogger(__name__)
 # print(f'Logger {__name__}')
 
-myConfig = labut.ConsentConfig('researcher')
-myConfig.read_conf()
+myConfig = labut.read_conf('researcher')
 mySerializedExperiments = labut.SerializeExperiments(myConfig)
 
 
@@ -66,9 +65,9 @@ def _update_request(request_obj):
                     f'Deserialize experiments: {request_obj.experiments}')
 
                 for op_result in exp_results:
-                    # print(f"key: {op_result['key']}")
-                    mySerializedExperiments.select_option_key(
-                        op_result['key'], op_result['chosen_option'])
+                    # print(f"id: {op_result['id']}")
+                    mySerializedExperiments.select_option_id(
+                        op_result['id'], op_result['chosen_option'])
 
                 request_obj.experiments = mySerializedExperiments.serialize()
                 logger.debug(f'Serialize experiments: {request_obj.experiments}')
@@ -84,7 +83,7 @@ def _update_request(request_obj):
 
 def _gen_desc_op(id):
     experiment_view = {}
-    experiment_view['key'] = id
+    experiment_view['id'] = id
     experiment_view['name'] = myConfig.get_experiment_obj(id).name
     experiment_view['description'] = myConfig.get_experiment_obj(id).description
     return experiment_view
@@ -95,7 +94,7 @@ def _gen_experiments(experiments):
     mySerializedExperiments.unserialize(experiments)
     experiments_view = []
     for experiment in mySerializedExperiments.experiments:
-        experiment_view = _gen_desc_op(experiment['key'])
+        experiment_view = _gen_desc_op(experiment['id'])
         experiment_view['chosen_option'] = experiment['chosen_option']
         experiment_view['reply'] = experiment['reply']
         opt_obj = myConfig.get_option_obj(experiment['chosen_option'])
@@ -146,10 +145,10 @@ def _gen_queryset(pk):
         return requests_view[0]
 
     experiments_view = []
-    for op_key in myConfig.experiments.keys():
+    for op_id in myConfig.experiments.keys():
         experiment_view = {}
-        op_obj = myConfig.get_experiment_obj(op_key)
-        experiment_view['key'] = op_obj.key
+        op_obj = myConfig.get_experiment_obj(op_id)
+        experiment_view['id'] = op_obj.id
         experiment_view['name'] = op_obj.name
         experiments_view.append(experiment_view)
         logger.debug(f'Experiment added: {json.dumps(experiment_view)}')
@@ -233,15 +232,15 @@ def request_view(request, pk):
 
 
 @login_required(login_url='researcher_req:login')
-def experiment_view(request, key):
+def experiment_view(request, id):
     logger.debug(f'Experiment view request')
     template_name = 'researcher_req/experiment.html'
-    exp_obj = myConfig.get_experiment_obj(key)
+    exp_obj = myConfig.get_experiment_obj(id)
     opts_view = []
-    for exp_key in exp_obj.options:
+    for exp_id in exp_obj.options:
         opt_view = {}
-        opt_obj = myConfig.get_option_obj(exp_key)
-        opt_view['key'] = opt_obj.key
+        opt_obj = myConfig.get_option_obj(exp_id)
+        opt_view['id'] = opt_obj.id
         opt_view['name'] = opt_obj.name
         opts_view.append(opt_view)
 
@@ -362,8 +361,8 @@ def store_request(request):
 
                 mySerializedExperiments.reset()
                 for id in experiments_ids:
-                    mySerializedExperiments.add_experiment_key(id)
-                    # print(f'experiment key: {exp_obj.key}')
+                    mySerializedExperiments.add_experiment_id(id)
+                    # print(f'experiment id: {exp_obj.id}')
 
                 new_request.experiments = mySerializedExperiments.serialize()
 
@@ -392,7 +391,7 @@ def perform_action(request):
             url = f'{LOGEXP_URL}'
             data = {
                 'token': token,
-                'exp_key': experimentKey
+                'exp_id': experimentKey
             }
             logger.debug(f'Perform request: {url}')
             log_post = requests.post(url, data=data)

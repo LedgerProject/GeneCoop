@@ -61,7 +61,7 @@ def gen_token(name, description, experiments, token_time=None):
 #     obj['experiments'] = []
 #     exp_json = json.loads(request.experiments)
 #     for experiment in exp_json:
-#         obj['experiments'].append(experiment['key'])
+#         obj['experiments'].append(experiment['id'])
 #     return json.dumps(obj)
 
 
@@ -129,10 +129,9 @@ def verify_signature(public_key, message, signature):
     # }
 
     data = f'{{"message": {json.dumps(message)}, "message.signature": {signature} }}'
-    
 
     keys = f'{{"Signer": {{"public_key": "{public_key}" }} }}'
-    
+
     logger.debug(f'verification data: {data}, keys: {keys}')
     # breakpoint()
     try:
@@ -158,6 +157,7 @@ def verify_signature(public_key, message, signature):
 
     logger.debug(f'Verification NOT passed')
     return False
+
 
 def verify_signed_vc(public_key, signed_vc):
     """
@@ -176,10 +176,9 @@ def verify_signed_vc(public_key, signed_vc):
     """
 
     data = f'{{"my-vc": {signed_vc}}}'
-    
 
     keys = f'{{"Issuer": {{"public_key": "{public_key}" }} }}'
-    
+
     logger.debug(f'verification data: {data}, keys: {keys}')
     # breakpoint()
     try:
@@ -195,7 +194,7 @@ def verify_signed_vc(public_key, signed_vc):
     # result = zenroom.zencode_exec(contract, data=json.dumps(data))
 
     logger.debug(f'result: {result}')
-    
+
     if not result.output == '':
         res_json = json.loads(result.output)
 
@@ -212,124 +211,121 @@ def verify_signed_vc(public_key, signed_vc):
 ######################################################
 
 class baseEntity:
-    def __init__(self, name, description, key):
+    def __init__(self, name, description, id):
         self.name = name
         self.description = description
-        self.key = key
+        self.id = id
 
     def __str__(self):
         return self.name
 
 
-class Experiment(baseEntity):
-    def __init__(self, name, description, key, procedures, required):
-        super(Experiment, self).__init__(name, description, key)
-        self.procedures = procedures
-        self.required = required
-        self.options = []
-
-    def add_option_key(self, option_key):
-        self.options.append(option_key)
-
-    def get_option_keys(self):
-        return self.options
-
+class Procedure(baseEntity):
+    def __init__(self, name, description, id):
+        super(Procedure, self).__init__(name, description, id)
 
 class Option(baseEntity):
-    def __init__(self, name, description, key):
-        super(Option, self).__init__(name, description, key)
-        self.experiment = -1
-
-    def set_exp_key(self, experiment_key):
-        self.experiment = experiment_key
+    def __init__(self, name, description, id):
+        super(Option, self).__init__(name, description, id)
 
 
-class ConsentConfig:
+class Experiment(baseEntity):
+    def __init__(self, name, description, id, procedures, required):
+        super(Experiment, self).__init__(name, description, id)
+        self.procedures = procedures
+        self.required = required
+
+
+
+class Consent(baseEntity):
     """
         This class represent the shared configuration between GeneCoop
         and any party that wants to use GeneCoop consent.
         The configuration file is in JSON-LD format and based on a project ontology
     """
 
-    def __init__(self, role):
+    def __init__(self, name, description, id, role):
+        super(Consent, self).__init__(name, description, id)
         self.experiments = {}
         self.options = {}
-        BASE_DIR = Path(__file__).resolve().parent.parent
-        self.file_path = f'{BASE_DIR}/resreq.jsonld'
         self.role = role
 
     def __str__(self):
         exp_text = []
-        for exp_key in self.experiments.keys():
-            experiment = self.experiments[exp_key]
-            opt_text = []
-            for opt_key in experiment.get_option_keys():
-                opt_text.append({
-                    'key': opt_key
-                })
-
-            ', '.join([str(x) for x in opt_text])
+        for exp_id in self.experiments.keys():
+            experiment = self.experiments[exp_id]
             exp_text.append({
-                'key': exp_key,
-                'name': experiment.name,
-                'options': opt_text
+                'id': exp_id,
+                'name': experiment.name
             })
-        return ', '.join([str(x) for x in exp_text])
+        opt_text = []
+        for opt_id in self.options.keys():
+            option = self.options[opt_id]
+            opt_text.append({
+                'id': opt_id,
+                'name': option.name
+            })
+
+        return f"Experiments: {', '.join([str(x) for x in exp_text])}, Options: {', '.join([str(x) for x in opt_text])}"
 
     def add_experiment_obj(self, experiment):
-        self.experiments[experiment.key] = experiment
+        self.experiments[experiment.id] = experiment
 
     def add_option_obj(self, option):
-        self.options[option.key] = option
+        self.options[option.id] = option
 
-    def get_experiment_obj(self, key):
-        if key in self.experiments:
-            return self.experiments[key]
+    def get_experiment_obj(self, id):
+        if id in self.experiments:
+            return self.experiments[id]
         return None
 
-    def get_option_obj(self, key):
-        if key in self.options:
-            return self.options[key]
+    def get_option_obj(self, id):
+        if id in self.options:
+            return self.options[id]
         return None
 
-    def is_exp_allowed(self, exp_key, allowed_opt_key):
-        exp_obj = self.get_experiment_obj(exp_key)
+    def is_exp_allowed(self, exp_id, chosen_opt_id):
+        exp_obj = self.get_experiment_obj(exp_id)
         if not exp_obj == None:
-            for opt_key in exp_obj.get_option_keys():
-                if allowed_opt_key == opt_key:
-                    opt_obj = self.get_option_obj(opt_key)
-                    if opt_obj.name == "Yes":
+            for opt_id in self.options.keys():
+                if chosen_opt_id == opt_id:
+                    opt_obj = self.get_option_obj(opt_id)
+                    if opt_obj.id == "genecoop:Yes":
                         return True
         return False
 
-    def read_conf(self):
+def read_conf(role):
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    file_path = f'{BASE_DIR}/schema/resreq.jsonld'
 
-        logger.info(f'Reading conf file {self.file_path} for role {self.role}')
-        descrpt_field = 'researcher_description' if self.role == 'researcher' else 'donor_description'
+    logger.info(f'Reading conf file {file_path} for role {role}')
+    descrpt_field = 'researcher_description' if role == 'researcher' else 'donor_description'
 
-        with open(self.file_path, "r") as fp:
-            consent = json.loads(fp.read())
-            logger.info(f"Consent label: {consent['rdf:label']}")
-            assert(consent['@type'] == 'genecoop:Consent')
+    with open(file_path, "r") as fp:
+        consent = json.loads(fp.read())
+        logger.info(f"Consent label: {consent['rdf:label']}")
+        assert(consent['@type'] == 'genecoop:Consent')
+        aConsent = Consent(name=consent['rdf:label'], description=consent[f'genecoop:{descrpt_field}'], id=consent['@id'], role=role)
 
-            for experiment in consent['genecoop:has_experiments']:
-                anExperiment = Experiment(name=experiment['rdf:label'],
+        for experiment in consent['genecoop:has_experiments']:
+            procedures = []
+            for procedure in experiment["genecoop:has_procedures"]:
+                aProcedure = Procedure(name=procedure['rdf:label'],description=procedure[f'genecoop:{descrpt_field}'], id=procedure['@id'])
+                procedures.append(aProcedure)
+
+            anExperiment = Experiment(name=experiment['rdf:label'],
                                         description=experiment[f'genecoop:{descrpt_field}'],
-                                        procedures=[procedure[f'genecoop:{descrpt_field}'] for procedure in experiment['genecoop:has_procedures']],
-                                        required=(experiment["genecoop:is_required"]),
-                                        key=f"{experiment['genecoop:has_key']}".zfill(OPCODE_LEN))
+                                        procedures=procedures,
+                                        required=experiment["genecoop:is_required"],
+                                        id=experiment['@id'])
 
-                for option in experiment['genecoop:has_options']:
-                    tmp_key = f"{option['genecoop:has_key']}".zfill(OPCODE_LEN)
-                    option_key = f"{anExperiment.key}{KEY_SEP}{tmp_key}"
-                    anOption = Option(
-                        name=option['rdf:label'], description=f'genecoop:{descrpt_field}', key=option_key)
-                    anOption.set_exp_key(anExperiment.key)
-                    anExperiment.add_option_key(anOption.key)
-                    self.add_option_obj(anOption)
-
-                self.add_experiment_obj(anExperiment)
-
+            aConsent.add_experiment_obj(anExperiment)
+        
+        for option in consent['genecoop:has_options']:
+            anOption = Option(name=option['rdf:label'], description=f'genecoop:{descrpt_field}', id=option['@id'])
+            aConsent.add_option_obj(anOption)
+    
+    return aConsent      
 
 class SerializeExperiments:
     """
@@ -338,93 +334,58 @@ class SerializeExperiments:
         have been authorized.
     """
     NO_OPT = -1
-    
+
     def __init__(self, conf):
         # logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
-        
 
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         self.experiments = []
         self.entry = {
-            'key': -1,
+            'id': -1,
             'chosen_option': self.NO_OPT,
-            'options': [
-                # {
-                #     'key' : -1
-                # }
-            ],
             'reply': ""
         }
         self.conf = conf
 
-    def add_experiment_key(self, key):
+    def add_experiment_id(self, id):
         # logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         for experiment in self.experiments:
-            if key == experiment['key']:
+            if id == experiment['id']:
                 return
         new_entry = copy.deepcopy(self.entry)
-        new_entry['key'] = key
+        new_entry['id'] = id
         self.experiments.append(new_entry)
 
-        # Process options
-        experiment = self.conf.get_experiment_obj(key)
-        for opt_key in experiment.get_option_keys():
-            self.__add_option_key__(key, opt_key)
-
-    def __add_option_key__(self, exp_key, opt_key):
-        # logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
+    def select_option_id(self, exp_id, opt_id):
+        """
+        Only set the option if experiment exists
+        """
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         for exp_entry in self.experiments:
-            if exp_key == exp_entry['key']:
-                for opt_entry in exp_entry['options']:
-                    if opt_key == opt_entry['key']:
-                        logger.debug(
-                            f"Experiment {exp_key} has already option {opt_key}")
-                        return
-                exp_entry['options'].append({
-                    'key': opt_key
-                })
-                logger.debug(
-                    f"Adding to experiment: {exp_key} option {opt_key}")
-                logger.debug(
-                    f"Options for experiment: {exp_key} are: {json.dumps(exp_entry['options'])}")
+            if exp_id == exp_entry['id']:
+                exp_entry['chosen_option'] = opt_id
                 return
-        logger.debug(
-            f"Return with no action for experiment {exp_key}, option {opt_key}")
 
-    def select_option_key(self, exp_key, opt_key):
-        """
-        Only set the option if experiment and option exist
-        """
-        logger.debug(
-            f'Called from {inspect.currentframe().f_back.f_code.co_name}')
-        for exp_entry in self.experiments:
-            if exp_key == exp_entry['key']:
-                for opt_entry in exp_entry['options']:
-                    if opt_key == opt_entry['key']:
-                        exp_entry['chosen_option'] = opt_key
-                        return
-    
-    def reset_option_key(self, exp_key):
+    def reset_option_id(self, exp_id):
         """
         Only reset the option if experiment exists
         """
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         for exp_entry in self.experiments:
-            if exp_key == exp_entry['key']:
+            if exp_id == exp_entry['id']:
                 exp_entry['chosen_option'] = self.NO_OPT
                 return
 
-    def set_reply(self, exp_key, reply):
+    def set_reply(self, exp_id, reply):
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
         for experiment in self.experiments:
-            if exp_key == experiment['key']:
+            if exp_id == experiment['id']:
                 experiment['reply'] = reply
                 return
         logger.debug(
@@ -433,9 +394,11 @@ class SerializeExperiments:
     def reset(self):
         logger.debug(
             f'Called from {inspect.currentframe().f_back.f_code.co_name}')
-        logger.debug(f'Experiments to reset are: {json.dumps(self.experiments)}')
+        logger.debug(
+            f'Experiments to reset are: {json.dumps(self.experiments)}')
         self.experiments = []
-        logger.debug(f'Experiments resetted are: {json.dumps(self.experiments)}')
+        logger.debug(
+            f'Experiments resetted are: {json.dumps(self.experiments)}')
 
     def serialize(self):
         logger.debug(
@@ -454,7 +417,91 @@ class SerializeExperiments:
         exp_json = json.loads(experiments)
         logger.debug(f'Loaded experiments: {json.dumps(exp_json)}')
         for experiment in exp_json:
-            self.add_experiment_key(experiment['key'])
-            self.select_option_key(
-                experiment['key'], experiment['chosen_option'])
-            self.set_reply(experiment['key'], experiment['reply'])
+            self.add_experiment_id(experiment['id'])
+            self.select_option_id(
+                experiment['id'], experiment['chosen_option'])
+            self.set_reply(experiment['id'], experiment['reply'])
+
+######################################################
+# Verifiable Credentials functionality
+######################################################
+
+
+VC = {
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "http://genecoop.waag.org/credentials/v1",
+        {
+            "gc_id": "http://genecoop.waag.org/ids/",
+            "gc_cons": "http://genecoop.waag.org/consents/",
+            "gc_schema": "http://genecoop.waag.org/schema/v1/",
+            "gc_cred": "http://genecoop.waag.org/credentials/v1/"
+        }
+    ],
+    # this URL allows to retrieve the document
+    "id": "gc_cons:__TOKEN__",
+
+    # Name of the Consent
+    "name": "Consent for Eye Melanoma research",
+
+    # Here we add the genecoop consent type
+    "type": ["VerifiableCredential", "VerifiableConsent"],
+
+    # The issuer is GeneCoop, but it might not have any signature on this credentials
+    "issuer": {
+        "id": "gc_id:GeneCoop",
+        "name": "GeneCoop Consent Service"
+    },
+
+    # the verifier needs to see this date is in the past, this is a validity date
+    "issuanceDate": "_DATE_",
+
+    # Is this needed? It can be use for schema-validation in JSON, how does it influence the semantic definition?
+    # "credentialSchema": {
+    # "id": "https://example.org/examples/degree.json",
+    # "type": "JsonSchemaValidator2018"
+    # },
+
+    "credentialSubject": {
+        "id": "__DNA_DONOR_ID__",
+        "gc_cred:consents_to": [],
+        "gc_cred:prohibits": [],
+        #     {
+        #         "name": "Array SNP request + Analysis and interpretation",
+        #         "id": "gc_schema:exp_000"
+        #     }
+    },
+
+    "given_to": {"id": "gc_id:__RESEARCHER_ID__"},
+
+    # We do not use the status as the last consent needs to be retrieved
+    # # Use this mechanism for status?
+    # "credentialStatus": {
+    # "id": "https://example.edu/status/24",
+    # "type": "CredentialStatusList2017"
+    # },
+
+    # This could be used to enforce some operation for the verifier
+    "termsOfUse": [
+        {
+            "type": "gc_cred:IssuerPolicy",
+            "gc_cred:obligation": [
+                {
+                    "gc_cred:assigner": {"id": "gc_id:GeneCoop"},
+                    "gc_cred:assignee": {"id": "gc_cred:AllVerifiers"},
+                    "gc_cred:target": {"id": "gc_cons:__TOKEN__"},
+                    "gc_cred:action": [{"id": "gc_cred:FetchLatestConsent"}]
+                }
+            ]
+        }
+    ]
+}
+
+def prepare_vc(token, researcher_id, experiments):
+    breakpoint()
+    vc_str = json.dumps(VC)
+    vc_str = vc_str.replace('_TOKEN_', token)
+    # vc_str = vc_str.replace('__DNA_DONOR_ID__', donor_id)
+    vc_str = vc_str.replace('__RESEARCHER_ID__', researcher_id)
+    vc_json = json.loads(vc_str)
+    breakpoint()
