@@ -290,7 +290,7 @@ class Consent(baseEntity):
             for opt_id in self.options.keys():
                 if chosen_opt_id == opt_id:
                     opt_obj = self.get_option_obj(opt_id)
-                    if opt_obj.id == "genecoop:Yes":
+                    if opt_obj.id == "gc_schema:Yes":
                         return True
         return False
 
@@ -304,27 +304,27 @@ def read_conf(role):
     with open(file_path, "r") as fp:
         consent = json.loads(fp.read())
         logger.info(f"Consent label: {consent['rdf:label']}")
-        assert(consent['@type'] == 'genecoop:Consent')
-        aConsent = Consent(name=consent['rdf:label'], description=consent[f'genecoop:{descrpt_field}'], id=consent['@id'], role=role)
+        assert(consent['@type'] == 'gc_schema:Consent')
+        aConsent = Consent(name=consent['rdf:label'], description=consent[f'gc_schema:{descrpt_field}'], id=consent['@id'], role=role)
 
-        for experiment in consent['genecoop:has_experiments']:
+        for experiment in consent['gc_schema:has_experiments']:
             procedures = []
-            for procedure in experiment["genecoop:has_procedures"]:
-                aProcedure = Procedure(name=procedure['rdf:label'],description=procedure[f'genecoop:{descrpt_field}'], id=procedure['@id'])
+            for procedure in experiment["gc_schema:has_procedures"]:
+                aProcedure = Procedure(name=procedure['rdf:label'],description=procedure[f'gc_schema:{descrpt_field}'], id=procedure['@id'])
                 procedures.append(aProcedure)
 
             anExperiment = Experiment(name=experiment['rdf:label'],
-                                        description=experiment[f'genecoop:{descrpt_field}'],
+                                        description=experiment[f'gc_schema:{descrpt_field}'],
                                         procedures=procedures,
-                                        required=experiment["genecoop:is_required"],
+                                        required=experiment["gc_schema:is_required"],
                                         id=experiment['@id'])
 
             aConsent.add_experiment_obj(anExperiment)
         
-        for option in consent['genecoop:has_options']:
-            anOption = Option(name=option['rdf:label'], description=f'genecoop:{descrpt_field}', id=option['@id'])
+        for option in consent['gc_schema:has_options']:
+            anOption = Option(name=option['rdf:label'], description=f'gc_schema:{descrpt_field}', id=option['@id'])
             aConsent.add_option_obj(anOption)
-    
+
     return aConsent      
 
 class SerializeExperiments:
@@ -454,7 +454,7 @@ VC = {
     },
 
     # the verifier needs to see this date is in the past, this is a validity date
-    "issuanceDate": "_DATE_",
+    "issuanceDate": "__DATE__",
 
     # Is this needed? It can be use for schema-validation in JSON, how does it influence the semantic definition?
     # "credentialSchema": {
@@ -472,7 +472,7 @@ VC = {
         #     }
     },
 
-    "given_to": {"id": "gc_id:__RESEARCHER_ID__"},
+    "given_to": {"id": "__RESEARCHER_ID__"},
 
     # We do not use the status as the last consent needs to be retrieved
     # # Use this mechanism for status?
@@ -498,10 +498,23 @@ VC = {
 }
 
 def prepare_vc(token, researcher_id, experiments):
-    breakpoint()
+    # Replace the placeholders with real values
+    # and add the experiments to the VC
     vc_str = json.dumps(VC)
-    vc_str = vc_str.replace('_TOKEN_', token)
+    vc_str = vc_str.replace('__TOKEN__', token)
     # vc_str = vc_str.replace('__DNA_DONOR_ID__', donor_id)
     vc_str = vc_str.replace('__RESEARCHER_ID__', researcher_id)
     vc_json = json.loads(vc_str)
+
+    for exp in experiments:
+        entry = {
+            'name' : exp['name'],
+            'id' : exp['id']
+        }
+        if exp['chosen_option'] == 'gc_schema:Yes':
+            vc_json['credentialSubject']['gc_cred:consents_to'].append(entry)
+        else:
+            vc_json['credentialSubject']['gc_cred:prohibits'].append(entry)
+
     breakpoint()
+    return vc_json

@@ -35,7 +35,7 @@
                 <h4 class="consent_request_section_title">What procedures will take place with my personal data?</h4>
                 <ul>
                     {% for procedure in experiment.procedures %}
-                    <li>{{ procedure.description}}</li>
+                    <li>{{ procedure}}</li>
                     {% endfor %}
                 </ul>
                 <br />
@@ -61,7 +61,7 @@
                 <ul id="procedures">
                     {% for experiment in my_exps.experiments %}
                     {% for procedure in experiment.procedures %}
-                    <li style="display:none" class="{{experiment.id}}">{{ procedure.description }}</li>
+                    <li style="display:none" class="{{experiment.id}}">{{ procedure }}</li>
                     {% endfor %}
                     {% endfor %}
                 </ul>

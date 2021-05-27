@@ -46,7 +46,7 @@ def _gen_experimentset(experiment_str):
             'name': exp_obj.name,
             'id': exp_obj.id,
             'description': exp_obj.description,
-            'procedures': exp_obj.procedures,
+            'procedures': [proc.description for proc in exp_obj.procedures],
             'required': exp_obj.required,
             'chosen_option': experiment['chosen_option'],
             'options': option_entries
@@ -131,7 +131,7 @@ def sign_view(request, token):
 
     my_consent = get_object_or_404(Consent, token=token)
     my_exps = {'experiments': _gen_experimentset(my_consent.experiments)}
-    vc = labut.prepare_vc(token, my_request.researcher.user.username, my_consent.experiments)
+    vc = labut.prepare_vc(token, my_request.researcher.user.username, my_exps['experiments'])
     my_vc = {'vc' : vc}
     context = {'my_exps': my_exps, 'my_consent': my_consent,
                'my_referent': my_referent, 'my_vc': my_vc}
