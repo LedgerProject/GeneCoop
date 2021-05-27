@@ -127,7 +127,7 @@ function zen_sign(public_key, private_key, tosign) {
 
 }
 
-function zen_vc_sign(public_key, private_key, vc_text) {
+function zen_vc_sign(public_key, private_key, vc_text, user_id) {
     const sign_vc_script = `
     rule check version 1.0.0
     Scenario 'w3c' : sign
@@ -150,7 +150,7 @@ function zen_vc_sign(public_key, private_key, vc_text) {
                 "private_key": private_key,
                 "public_key": public_key
             },
-            "PublicKeyUrl": "https://apiroom.net/api/dyneorg/w3c-public-key"
+            "PublicKeyUrl": user_id
         }
     };
     console.log("Data: ", JSON.stringify(data));
@@ -294,14 +294,18 @@ function zen_vc_sign(public_key, private_key, vc_text) {
 
             const vc = document.querySelector("[id='vc']");
 
-            vc_text = extractContent(vc);
-            // vc_text = processContent(vc_text);
+            vc_text = vc.textContent;
 
-            console.log("Textual VC: ", JSON.stringify(vc_text));
+            vc_text = vc_text.replaceAll('__DATE__', new Date().toISOString());
+            vc_text = vc_text.replaceAll('__DNA_DONOR_ID__', storedSettings.authCredentials.public_key);
+            
+            console.log("Textual VC: ", vc_text);
+            
+            vc_text = JSON.parse(vc_text);
 
+            console.log("Parsed VC: ", JSON.stringify(vc_text));
 
-
-            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_text)
+            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_text, storedSettings.authCredentials.public_key)
                 .then((signed_vc_str) => {
 
                     var html = document.querySelector("[id='signed_vc']");

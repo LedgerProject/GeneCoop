@@ -1,0 +1,9 @@
+<div class="menu-top">
+    <ul>
+        <li><a href="{% url 'researcher_app:profile' %}">Hello, {{ request.user }} !</a></li>
+        <li><a href="{% url 'researcher_app:index' %}">Index</a></li>
+        <li><a href="{% url 'researcher_app:prepare_request' %}">Create Request</a></li>
+        <li><a href="{% url 'researcher_app:logout' %}">Logout</a></li>
+        <li><a href="https://waag.org/en/project/gene-coop" target="_blank">About</a></li>
+    </ul>
+</div>

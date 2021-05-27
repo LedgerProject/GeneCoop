@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GeneCoop</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/login.css' %}">
+</head>
+
+<body>
+
+
+    {% if request.user.is_authenticated %}
+
+    {% include "header.html" %}
+
+    {% else %}
+
+    <!-- Credit https://codepen.io/danzawadzki/pen/EgqKRr  -->
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <h2 class="active">Welcome</h2>
+            <p class="instruction">If you have a token please click <a href="{% url 'donor_app:token' %}">here</a>.</p>
+            <div id="no-genecoop-plugin">
+                <p class="instruction">You need GeneCoop add-on to login.<br />
+                    Click <a href="/static/donor_app/genecoop_consent.xpi">here</a> to install it.</p>
+            </div>
+            <div id="yes-genecoop-plugin" style="display: none;visibility: hidden;">
+                <p id="instruction" class="instruction">Please 'Login' from your GeneCoop add-on.<br /></p>
+                <!-- Login Form -->
+                <form action="{% url 'donor_app:check_login' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="challenge" name="challenge" value={{ challenge }}>
+                    <input type="hidden" id="response" class="fadeIn third" name="response" value="">
+                    <input type="hidden" id="user_id" class="fadeIn third" name="user_id" value="">
+                    <input id="proceedButton" type="submit" class="fadeIn fourth" style="visibility:hidden;"
+                        value="Proceed">
+                </form>
+            </div>
+            <div class="fadeIn first">
+                <img src="{% static 'donor_app/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+            </div>
+            <br />
+        </div>
+    </div>
+
+    {% endif %}

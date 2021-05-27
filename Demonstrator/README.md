@@ -24,7 +24,7 @@ Performing system checks...
 
 System check identified no issues (0 silenced).
 March 17, 2021 - 18:08:11
-Django version 3.1.5, using settings 'labspace.settingsD'
+Django version 3.1.5, using settings 'consent_server.settingsD'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```

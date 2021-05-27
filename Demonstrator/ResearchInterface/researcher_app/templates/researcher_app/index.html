@@ -1,0 +1,89 @@
+{% extends 'base_res.html' %}
+
+{% block title %}Request{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>Pending Requests</h2>
+
+
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-14">Request Name</div>
+            <div class="col col-24">Request Description</div>
+            <div class="col col-34">Experiments</div>
+            <div class="col col-44">Token</div>
+            <!-- <div class="col col-5">Status</div> -->
+        </li>
+        {% if my_set.requests %}
+        {% for request in my_set.requests %}
+            {% if request.status != 'REPLIED' %}
+            <li class="table-row">
+                <div class="col col-14" data-label="Name"><a
+                        href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a></div>
+                <div class="col col-24" data-label="Description">{{ request.description }}</div>
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in request.experiments %}
+                    <ul>
+                        {% if experiment.chosen_option != -1 %}
+                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
+                        {% else %}
+                        <li id="minim">{{ experiment.name }}</li>
+                        {% endif %}
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div class="col col-44" data-label="Token">{{ request.token }}</div>
+                <!-- <div class="col col-5" data-label="Status">{{ request.status }}</div> -->
+            </li>
+            {% endif %}
+        {% endfor %}
+        {% else %}
+        <li class="table-row">No requests are available.</li>
+        {% endif %}
+    </ul>
+</div>
+<div class="container">
+    <h2>Answered Requests</h2>
+
+
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-14">Request Name</div>
+            <div class="col col-24">Request Description</div>
+            <div class="col col-34">Experiments</div>
+            <div class="col col-44">Token</div>
+            <!-- <div class="col col-5">Status</div> -->
+        </li>
+        {% if my_set.requests %}
+        {% for request in my_set.requests %}
+        {% if request.status == 'REPLIED' %}
+            <li class="table-row">
+                <div class="col col-14" data-label="Name"><a
+                        href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a></div>
+                <div class="col col-24" data-label="Description">{{ request.description }}</div>
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in request.experiments %}
+                    <ul>
+                        {% if experiment.chosen_option != -1 %}
+                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
+                        {% else %}
+                        <li id="minim">{{ experiment.name }}</li>
+                        {% endif %}
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div class="col col-44" data-label="Token">{{ request.token }}</div>
+                <!-- <div class="col col-5" data-label="Status">{{ request.status }}</div> -->
+            </li>
+            {% endif %}
+        {% endfor %}
+        {% else %}
+        <li class="table-row">No requests are available.</li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

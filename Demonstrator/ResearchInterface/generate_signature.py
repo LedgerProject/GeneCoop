@@ -1,9 +1,9 @@
 import base64
 import json
 import requests
-from labspace.constants import SIGN_URL, DO_ENCODING
+from consent_server.constants import SIGN_URL, DO_ENCODING
 
-import labspace.utils as labut
+import consent_server.utils as labut
 
 def main(request_path, credentials_path):
 

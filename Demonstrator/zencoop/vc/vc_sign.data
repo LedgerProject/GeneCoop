@@ -1,1 +1,74 @@
-{"my-vc":{"@context":{"rdf":"http://www.w3.org/1999/02/22-rdf-syntax-ns#","rdfs":"http://www.w3.org/2000/01/rdf-schema#","xsd":"http://www.w3.org/2001/XMLSchema#","schema":"https://schema.org/","genecoop":"http://genecoop.waag.org/schema/"},"@id":"genecoop:dfsdfds","rdf:label":"Consent for Eye Melanoma research","@type":"genecoop:Consent","genecoop:has_experiments":[{"rdf:label":"Array SNP request + Analysis and interpretation","genecoop:has_key":"0","genecoop:is_consented":{"@value":"true","@type":"xsd:boolean"}},{"rdf:label":"Copy Number Variation","genecoop:has_key":"1","genecoop:is_consented":{"@value":"true","@type":"xsd:boolean"}},{"rdf:label":"SNP Variant detection (Biomarker or Pathogenic)","genecoop:has_key":"2","genecoop:is_consented":{"@value":"true","@type":"xsd:boolean"}},{"rdf:label":"Population study. DNA data available for secondary use","genecoop:has_key":"3","genecoop:is_consented":{"@value":"false","@type":"xsd:boolean"}}],"genecoop:has_principalinvestigator":{"@id":"genecoop:ResearcherA"},"genecoop:is_givenby":{"@id":"genecoop:gattoSilvestro"}}}
+{
+    "my-vc": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "http://genecoop.waag.org/credentials/v1",
+            {
+                "gc_id": "http://genecoop.waag.org/ids/",
+                "gc_cons": "http://genecoop.waag.org/consents/",
+                "gc_schema": "http://genecoop.waag.org/schema/v1/",
+                "gc_cred": "http://genecoop.waag.org/credentials/v1/"
+            }
+        ],
+        "id": "gc_cons:6d8fa6f875",
+        "name": "Consent for Eye Melanoma research",
+        "type": [
+            "VerifiableCredential",
+            "VerifiableConsent"
+        ],
+        "issuer": {
+            "id": "gc_id:GeneCoop",
+            "name": "GeneCoop Consent Service"
+        },
+        "issuanceDate": "__DATE__",
+        "credentialSubject": {
+            "id": "__DNA_DONOR_ID__",
+            "gc_cred:consents_to": [
+                {
+                    "name": "Array SNP request + Analysis and interpretation",
+                    "id": "gc_schema:exp_000"
+                },
+                {
+                    "name": "Copy Number Variation",
+                    "id": "gc_schema:exp_001"
+                },
+                {
+                    "name": "Population study. DNA data available for secondary use",
+                    "id": "gc_schema:exp_003"
+                }
+            ],
+            "gc_cred:prohibits": [
+                {
+                    "name": "SNP Variant detection (Biomarker or Pathogenic)",
+                    "id": "gc_schema:exp_002"
+                }
+            ]
+        },
+        "given_to": {
+            "id": "researcherA"
+        },
+        "termsOfUse": [
+            {
+                "type": "gc_cred:IssuerPolicy",
+                "gc_cred:obligation": [
+                    {
+                        "gc_cred:assigner": {
+                            "id": "gc_id:GeneCoop"
+                        },
+                        "gc_cred:assignee": {
+                            "id": "gc_cred:AllVerifiers"
+                        },
+                        "gc_cred:target": {
+                            "id": "gc_cons:6d8fa6f875"
+                        },
+                        "gc_cred:action": [
+                            {
+                                "id": "gc_cred:FetchLatestConsent"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

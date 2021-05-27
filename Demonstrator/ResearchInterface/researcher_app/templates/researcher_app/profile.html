@@ -1,0 +1,36 @@
+{% extends 'base_res.html' %}
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>Profile</h2>
+
+    <form action="{% url 'researcher_app:fill_profile' %}" method="post">
+        {% csrf_token %}
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-1">Name</div>
+                <div class="col col-2">Email</div>
+                <div class="col col-3">Public Key</div>
+                <div class="col col-4">Institute</div>
+                <div class="col col-5">Institute Public Key</div>
+
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="Name">{{researcher.name }}</div>
+                <div class="col col-2" data-label="Email">{{ researcher.email }}</div>
+                <div class="col col-3" data-label="PublicKey"><input type="text" id="publickey" name="publickey" value="{{ researcher.publickey }}"></div>
+                <div class="col col-4" data-label="Institute"><input type="text" id="institute" name="institute" value="{{ researcher.institute }}"></div>
+                <div class="col col-5" data-label="InstitutePublicKey"><input type="text" id="institute_publickey" name="institute_publickey" value="{{ researcher.institute_publickey }}"></div>
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="Submit"><input type="submit" value="Submit"></div>
+            </li>
+        </ul>
+    </form>
+</div>
+
+{% endblock %}

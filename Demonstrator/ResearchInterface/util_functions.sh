@@ -42,7 +42,7 @@ create_researcher_cmd() {
 
 
     local templ="from django.contrib.auth import get_user_model; \n\
-from researcher_req.models import Researcher; \n\
+from researcher_app.models import Researcher; \n\
 User = get_user_model(); \n\
 if User.objects.filter(username=${username}).exists(): \n\
 \tuser=User.objects.filter(username=${username})[0]; \n\
@@ -62,7 +62,7 @@ if User.objects.filter(username=${username}).exists(): \n\
 }
 
 check_restroom() {
-    local apiroom_url=$(grep ^APIROOM_URL labspace/constants.py | tr -d ' ' | cut -d'=' -f2 | sed "s/'//g")
+    local apiroom_url=$(grep ^APIROOM_URL consent_server/constants.py | tr -d ' ' | cut -d'=' -f2 | sed "s/'//g")
 
     local response=$(curl -X POST "${apiroom_url}/api/zencoop/keypair" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"data\":{},\"keys\":{}}" 2>/dev/null)
 

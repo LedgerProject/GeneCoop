@@ -1,1 +1,9 @@
-{"Issuer":{"keypair":{"private_key":"PDMVpOqPjRRt5PzKK8zbrTmJj4WIuwDqCERZgBe2WCw=","public_key":"BJrTIwGbEDifgkPOE9aP8BvIbINOyRYhV6sVsEFiX+1etvvo7dEfLZ9i7vkJYI5zNRTUlDgebZoiZJ9y5o6cGZc="},"PublicKeyUrl":"https://apiroom.net/api/dyneorg/w3c-public-key"}}
+{
+    "Issuer": {
+        "keypair": {
+            "private_key": "E/wNK1bZ+6PIsou8HdDohzq6JtDT50uQ+06rhdJWqps=",
+            "public_key": "BGEj0GmDQn6bQBbrrE+8sABxJQ/EQyuFhSiEPdXxErhxCKSfuRwlVrRckeVw56hLdbJ2CVQYvlHH7+1ScAnp1Zs="
+        },
+        "PublicKeyUrl": "https://apiroom.net/api/dyneorg/w3c-public-key"
+    }
+}

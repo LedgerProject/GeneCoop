@@ -1,0 +1,51 @@
+{% extends 'base_user.html' %}
+
+{% block title %}GeneCoop Consent Overview{% endblock %}
+
+{% block content %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<div class="container">
+    <h2>Existing Consents</h2>
+
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-14">Name of Consent</div>
+            <div class="col col-24">Description</div>
+            <div class="col col-34">Experiments</div>
+            <div class="col col-44">Token</div>
+        </li>
+        {% for consent in my_set %}
+        <li class="table-row">
+            <div class="col col-14" data-label="Name"><a href="{% url 'donor_app:consent' consent.token %}">{{consent.name}}</a></div>
+            <div class="col col-24" data-label="Description">{{consent.description}}</div>
+
+            <div class="col col-34" data-label="Experiments">
+                <ul class="responsive-table">
+                    {% for experiment in consent.experiments %}
+                    <li class="table-row">
+                        <div class="col col-14" data-label="Name">{{ experiment.name}}</div>
+                        <!-- <div class="col col-24" data-label="Description">{{ experiment.description}}</div> -->
+                        <div class="col col-24" data-label="Options">
+                            <ul>
+                                {% for option in experiment.options %}
+                                {% if option.id == experiment.chosen_option %}
+                                <li id="minim"><b>{{ option.name }}</b></li>
+                                {% else %}
+                                <li id="minim">{{ option.name }}</li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col col-44" data-label="Token">{{consent.token}}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

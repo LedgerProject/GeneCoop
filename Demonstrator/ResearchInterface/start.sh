@@ -4,10 +4,10 @@ env_type=${1}
 
 if [ "${env_type} " == "PROD " ]
 then
-    settings=labspace.settingsP
+    settings=consent_server.settingsP
 elif [ "${env_type} " == "DEV " ]
 then
-    settings=labspace.settingsD
+    settings=consent_server.settingsD
 else
     echo -e "Environment unknown: {1}"
     exit 1

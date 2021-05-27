@@ -1,0 +1,48 @@
+{% extends 'base_res.html' %}
+
+{% block title %}Request{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>New Request</h2>
+
+    <form action="{% url 'researcher_app:sign_request' %}" method="post">
+        {% csrf_token %}
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-14">Name of Request</div>
+                <div class="col col-24">Request Description</div>
+                <div class="col col-34">Experiments</div>
+                <div class="col col-44">Users</div>
+            </li>
+            <li class="table-row">
+                <div class="col col-14" data-label="Name"><input type="text" name="name" value="" required></div>
+                <div class="col col-24" data-label="Description"><textarea cols="40" rows="5" name="description" value="" required></textarea></div>
+                <div class="col col-34" data-label="Experiments">
+                    {% for experiment in my_set.experiments %}
+                    <input type="checkbox" name="experiments" id="experiment{{ forloop.counter }}"
+                        value="{{ experiment.id }}">
+                    <label for="experiment{{ forloop.counter }}">{{ experiment.name }}</label><br>
+                    {% endfor %}
+                </div>
+                <div class="col col-44" data-label="Users">
+                    <select name="nr_users" id="nr_users">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="Submit"><input type="submit" value="Request"></div>
+            </li>
+        </ul>
+    </form>
+</div>
+
+
+{% endblock %}

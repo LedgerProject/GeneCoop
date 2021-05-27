@@ -1,0 +1,57 @@
+{% load static %}
+{% load genecoop_contract %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GeneCoop Request for Consent</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/user.css' %}">
+    <link rel="stylesheet" href="{% static 'donor_app/font-awesome.min.css' %}">
+</head>
+
+<body>
+    <main class="consent_page">
+        <div><a href="{% url 'donor_app:index' %}">Home</a></div>
+        <h1 class="consent_request_label">GeneCoop Agreement</h1>
+        <form class="consent_request" action="{% url 'donor_app:sign_consent' %}" method="post">
+            {% csrf_token %}
+            <div id="contract">
+                <h2>Consent agreement for the research entitled "<i>{{ my_consent.name }}</i>"
+                </h2>
+                <p>Description: {{ my_consent.description }}</p>
+                <p>I agree to give my consent to <i>{{my_referent.first_name }} {{ my_referent.last_name }}</i> 
+                (in the following <b>Genecoop Principal Investigator</b>) from <i>{{ my_referent.institute }}</i> 
+                (in the following <b>Research Center</b>) for the following procedures:
+                </p>
+
+                {% for experiment in my_exps.experiments %}
+                {% for procedure in experiment.procedures %}
+                - {{ procedure}} <br />
+                {% endfor %}
+                {% endfor %}
+                Date: {{ my_consent.consent_created }}
+
+            </div>
+            <div id='action-required-genecoop-plugin'><b>Please sign the consent by clicking on "Sign" in GeneCoop's add-on</b></div>
+            <!-- <div id='action-done-genecoop-plugin' style="display: none;visibility: hidden;"><b>Consent signed, click on 'Store agreement' to proceed</b></div> -->
+            <div id="vc" style="display: none;visibility: hidden;">{{my_vc.vc}}</div>
+            <footer class="consent_sign_footer">
+                
+                <input type="hidden" id="signed_vc" name="signed_vc" value="">
+                <input type="hidden" id="public_key" name="public_key" value="">
+                <input type="hidden" id="token" name="token" value={{my_consent.token}}>
+                <div id='action-done-genecoop-plugin' style="display: none;visibility: hidden;">
+                    <p>The agreement has been signed. Please proceed to store it.<br/>
+                        You will then be redirected to the login page.</p>
+                    <input id="submitButton" type="submit" data-label="Submit" class="button" value="Store agreement"
+                    disabled />
+                </div>
+                
+            </footer>
+        </form>
+    </main>
+</body>
+
+</html>

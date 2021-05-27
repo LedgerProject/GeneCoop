@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GeneCoop</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/login.css' %}">
+</head>
+
+<body>
+
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="active"> Enter token </h2>
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="{% static 'donor_app/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
+        </div>
+        
+        <!-- Login Form -->
+        <form action="{% url 'donor_app:check_token' %}" method="post">
+            {% csrf_token %}
+            <input type="text" id="token" class="fadeIn second" name="token" placeholder="Insert your token">
+            <input type="submit" class="fadeIn fourth" value="Submit">
+        </form>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 #!/bin/bash
 env_name=Demonstrator
-settings=labspace.settingsP
+settings=consent_server.settingsP
 
 if [ ! -f ./manage.py ]
     then

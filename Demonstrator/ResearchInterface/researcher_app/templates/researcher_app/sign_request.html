@@ -1,0 +1,67 @@
+{% extends 'base_res.html' %}
+
+{% block title %}Request signature{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>Request signature</h2>
+
+    <form action="{% url 'researcher_app:store_request' %}" method="post">
+        {% csrf_token %}
+        <ul class="responsive-table">
+            <li class="table-header">
+                <div class="col col-1">Name of Request</div>
+                <div class="col col-2">Request Description</div>
+                <!-- <div class="col col-3">User id</div> -->
+                <div class="col col-3">Experiments</div>
+                <div class="col col-4">Token(s)</div>
+
+            </li>
+            <li class="table-row">
+                <div class="col col-1" data-label="name">{{ request.name }}</div>
+                <div class="col col-2" data-label="description">{{ request.description }}</div>
+                <!-- <div class="col col-3" data-label="userid">{{ request.user_id }}</div> -->
+
+                <div class="col col-3" data-label="experiments">
+                    <ul>
+                        {% for experiment in request.experiments %}
+                        <li id="minim">{{ experiment.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col col-4">
+                    <ul>
+                        {% for token_datum in request.token_data %}
+                        <li id="minim" data-label="token">{{ token_datum.token }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            <li class="table-row">
+                {% for token_datum in request.token_data %}
+                <input type="hidden" id="signature-{{ token_datum.token }}" name="signature-{{ token_datum.token }}" value="">
+                <input type="hidden" id="token" name="token" value="{{ token_datum.token }}">
+                <input type="hidden" id="token_time-{{ token_datum.token }}" name="token_time-{{ token_datum.token }}" value="{{ token_datum.token_time }}">
+                {% endfor %}
+                <input type="hidden" name="name" value="{{ request.name }}">
+                <input type="hidden" name="description" value="{{ request.description }}">
+                {% for experiment in request.experiments %}
+                <input type="hidden" name="experiments" value="{{ experiment.id }}">
+                {% endfor %}
+                <div id="action-required-genecoop-plugin">
+                    Please 'Sign' this request with your GeneCoop add-on.
+                </div>
+                <div id="action-done-genecoop-plugin" style="display: none;visibility: hidden;">
+                    Click on 'Proceed' to continue.
+                </div>
+                
+                <input id="submit" type="submit" value="Proceed" disabled="true">
+            </li>
+        </ul>
+    </form>
+
+</div>
+
+{% endblock %}
