@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 
-from .models import User, Request, Researcher
+from .models import Request, Researcher
 
 
 # Define an inline admin descriptor for Researcher model
@@ -19,7 +18,6 @@ from .models import User, Request, Researcher
 
 # Re-register UserAdmin
 # admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
 admin.site.register(Request)
 admin.site.register(Researcher)
 

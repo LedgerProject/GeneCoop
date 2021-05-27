@@ -16,6 +16,7 @@ create_user_cmd() {
     local username=$(cat ${settings_file} | jq '.username')
     local firstname=$(cat ${settings_file} | jq '.firstname')
     local lastname=$(cat ${settings_file} | jq '.lastname')
+    local publickey=$(cat ${settings_file} | jq '.public_key')
     local email=$(cat ${settings_file} | jq '.email')
     local password=$(cat ${settings_file} | jq '.password')
 
@@ -25,6 +26,7 @@ if not User.objects.filter(username=${username}).exists():\n\
 \tuser=User.objects.${operation}(${username}, ${email}, ${password})\n\
 \tuser.first_name=${firstname};\n\
 \tuser.last_name=${lastname};\n\
+\tuser.publickey=${publickey}; \n\
 \tuser.save();\n\
 "
 
@@ -36,7 +38,6 @@ create_researcher_cmd() {
 
     local username=$(cat ${settings_file} | jq '.username')
     local description=$(cat ${settings_file} | jq '.description')
-    local publickey=$(cat ${settings_file} | jq '.public_key')
     local institute=$(cat ${settings_file} | jq '.institute')
     local institute_publickey=$(cat ${settings_file} | jq '.institute_publickey')
 
@@ -49,7 +50,6 @@ if User.objects.filter(username=${username}).exists(): \n\
 \tif not Researcher.objects.filter(user=user).exists(): \n\
 \t\tresearcher=Researcher(user=user); \n\
 \t\tresearcher.description=${description}; \n\
-\t\tresearcher.publickey=${publickey}; \n\
 \t\tresearcher.institute=${institute}; \n\
 \t\tresearcher.institute_publickey=${institute_publickey}; \n\
 \t\tresearcher.save(); \n\

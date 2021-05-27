@@ -167,7 +167,7 @@ def _gen_queryset(pk):
 def logout_view(request):
     logger.debug(f'Logout view request')
     template_name = 'researcher_app/logout.html'
-    # breakpoint()
+
     if request.user.is_authenticated:
         logout(request)
         return render(request, template_name)
@@ -196,9 +196,7 @@ def profile_view(request):
     researcher_obj = {
         "name": f'{researcher.user.first_name} {researcher.user.last_name}',
         "email": researcher.user.email,
-        "publickey": researcher.publickey,
-        "institute": researcher.institute,
-        "institute_publickey": researcher.institute_publickey
+        "institute": researcher.institute
     }
     context = {'researcher': researcher_obj}
     logger.debug(f'Profile view rendering: {json.dumps(context)}')
@@ -264,15 +262,15 @@ def check_login(request):
             username = request.POST['username']
             challenge = request.POST['challenge']
             response = request.POST['response']
-            user = authenticate(request, is_researcher=True, username=username, challenge=challenge, response=response)
+            user = authenticate(request, username=username, challenge=challenge, response=response)
             if user is not None:
-                login(request, user)
-
                 # Check researcher is associated to user
                 if not hasattr(user, 'researcher'):
                     logger.error(f'No associated researcher for user: {user}')
                     return HttpResponseRedirect(reverse('researcher_app:login'))
-                    
+        
+                # Login the user
+                login(request, user)
                 # Redirect to a success page.
                 return HttpResponseRedirect(reverse('researcher_app:index'))
     logger.debug(f'Login failed')
@@ -286,14 +284,19 @@ def fill_profile(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
 
     researcher = Researcher.objects.get(user=request.user)
+    to_save = False
     if request.method == 'POST':
-        if 'publickey' in request.POST:
-            researcher.publickey = request.POST['publickey']
-        if 'institute' in request.POST:
+        if 'name' in request.POST and not researcher.name == request.POST['name']:
+            researcher.name = request.POST['name']
+            to_save = True
+        if 'email' in request.POST and not researcher.email == request.POST['email']:
+            researcher.email = request.POST['email']
+            to_save = True
+        if 'institute' in request.POST and not researcher.institute == request.POST['institute']:
             researcher.institute = request.POST['institute']
-        if 'institute_publickey' in request.POST:
-            researcher.institute_publickey = request.POST['institute_publickey']
-        researcher.save()
+            to_save = True
+        if to_save:
+            researcher.save()
 
     return HttpResponseRedirect(reverse('researcher_app:index'))
 

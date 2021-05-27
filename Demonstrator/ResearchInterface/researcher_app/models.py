@@ -5,20 +5,14 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, KEY_LENGTH, SIGNATURE_LENGTH
-
-
-
-class User(AbstractUser):
-    pass
+from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, PUBLICKEY_LENGTH, SIGNATURE_LENGTH
+from donor_app.models import User
 
 class Researcher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=DESCR_LENGTH)
     institute = models.CharField(max_length=TITLE_LENGTH)
-    publickey = models.CharField(max_length=KEY_LENGTH)
-    # private_key = models.CharField(max_length=KEY_LENGTH)
-    institute_publickey = models.CharField(max_length=KEY_LENGTH)
+    institute_publickey = models.CharField(max_length=PUBLICKEY_LENGTH)
 
     def __str__(self):
         return self.user.username

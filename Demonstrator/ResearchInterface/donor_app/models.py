@@ -1,12 +1,16 @@
 from datetime import datetime
 from django.utils import timezone
-import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH
 
 import consent_server.utils as labut
+
+
+class User(AbstractUser):
+    publickey = models.CharField(max_length=PUBLICKEY_LENGTH)
 
 
 class Consent(models.Model):

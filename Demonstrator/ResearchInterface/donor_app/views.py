@@ -13,8 +13,9 @@ from django.core.exceptions import MiddlewareNotUsed
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from .models import Consent
-from researcher_app.models import User, Request
+from .models import User, Consent
+from researcher_app.models import Request
+
 
 # from consent_server.constants import VERIFY_URL, DO_ENCODING
 
@@ -188,8 +189,9 @@ def check_token(request):
             if not token == match_token:
                 # token does not match, request is tampered with
                 logger.warning(f'token match failed for token {token}')
-            else:    
-                public_key = consent_req.researcher.publickey
+            else:
+                # Retrieve the public key associated with the user of the researcher
+                public_key = consent_req.researcher.user.publickey
                 token_signature = consent_req.token_signature
                 if labut.verify_signature(public_key, token, token_signature):
                     logger.debug("Verification passed")
@@ -277,7 +279,7 @@ def check_login(request):
             challenge = request.POST['challenge']
             response = request.POST['response']
 
-            user = authenticate(request, is_researcher=False, username=public_key, challenge=challenge, response=response)
+            user = authenticate(request, username=public_key, challenge=challenge, response=response)
             
             if user is not None:
                 login(request, user)

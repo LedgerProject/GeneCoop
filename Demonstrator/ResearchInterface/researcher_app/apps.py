@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ResearcherReqConfig(AppConfig):
+class ResearcherAppConfig(AppConfig):
     name = 'researcher_app'

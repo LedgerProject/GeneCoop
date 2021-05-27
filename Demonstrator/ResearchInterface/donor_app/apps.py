@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class GenecoopConfig(AppConfig):
+class DonorAppConfig(AppConfig):
     name = 'donor_app'

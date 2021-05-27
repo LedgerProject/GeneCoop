@@ -19,8 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
-    'researcher_app.apps.ResearcherReqConfig',
-    'donor_app.apps.GenecoopConfig',
+    'researcher_app.apps.ResearcherAppConfig',
+    'donor_app.apps.DonorAppConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +42,7 @@ MIDDLEWARE = [
     # 'donor_app.views.ReadConfMiddleware',
 ]
 
-AUTH_USER_MODEL = 'researcher_app.User'
+AUTH_USER_MODEL = 'donor_app.User'
 
 AUTHENTICATION_BACKENDS = (
     # Custom auth with public key
