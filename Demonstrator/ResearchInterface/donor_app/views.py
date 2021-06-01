@@ -17,7 +17,7 @@ from .models import User, Consent
 from researcher_app.models import Request
 
 
-# from consent_server.constants import VERIFY_URL, DO_ENCODING
+from consent_server.constants import GENECOOP_URL
 
 import consent_server.utils as labut
 
@@ -244,20 +244,24 @@ def sign_consent(request):
     if request.method == 'POST':
         # print(f'request {request.POST}')
 
-        if 'token' in request.POST:
+        if 'token' in request.POST and 'username' in request.POST and 'public_key' in request.POST and 'signed_vc' in request.POST:
             token = request.POST.get('token')
             myconsent = get_object_or_404(Consent, token=token)
-
-            if not User.objects.filter(username=request.POST.get('public_key')).exists():
-                user = User(username=request.POST.get('public_key'))
-                user.save()
+            breakpoint()
+            username = request.POST.get('username')
+            if username.startswith(f"{GENECOOP_URL}/ids/"):
+                username = username[len(f"{GENECOOP_URL}/ids/"):]
+            
+            user = get_object_or_404(User, username=username)
+            public_key = request.POST.get('public_key')
+            user.publickey = public_key
+            user.save()
             
             signed_vc = request.POST.get('signed_vc')
-            public_key = request.POST.get('public_key')
-            
+    
             if labut.verify_signed_vc(public_key, signed_vc):
                 logger.info("Signed VC Verification passed")
-                myconsent.sign(signed_vc, public_key)
+                myconsent.sign(signed_vc, username)
                 myconsent.save()
                 return HttpResponseRedirect(reverse('donor_app:index'))
             else:
@@ -275,11 +279,13 @@ def check_login(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
         if 'user_id' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
-            public_key = request.POST['user_id']
+            user_id = request.POST['user_id']
+            if user_id.startswith(f"{GENECOOP_URL}/ids/"):
+                user_id = user_id[len(f"{GENECOOP_URL}/ids/"):]
             challenge = request.POST['challenge']
             response = request.POST['response']
 
-            user = authenticate(request, username=public_key, challenge=challenge, response=response)
+            user = authenticate(request, username=user_id, challenge=challenge, response=response)
             
             if user is not None:
                 login(request, user)

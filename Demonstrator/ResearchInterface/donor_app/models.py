@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH, QUESTION_LENGTH, ANSWER_LENGTH
+from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH, QUESTION_LENGTH, ANSWER_LENGTH, USERID_LENGTH
 
 import consent_server.utils as labut
 
@@ -46,7 +46,7 @@ class User(AbstractUser):
 class Consent(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
     description = models.CharField(max_length=DESCR_LENGTH)
-    user_id = models.CharField(max_length=PUBLICKEY_LENGTH, default="")
+    user_id = models.CharField(max_length=USERID_LENGTH, default="")
     experiments = models.CharField(max_length=EXPERIMENTS_LENGTH, default="")
     token = models.CharField(
         primary_key=True, max_length=TOKEN_LENGTH, unique=True)
@@ -72,11 +72,11 @@ class Consent(models.Model):
     def is_signed(self):
         return self.status == self.RequestStatus.DONE
 
-    def sign(self, signed_vc, public_key):
+    def sign(self, signed_vc, user_id):
         self.consent_signed = timezone.now()
         self.status = self.RequestStatus.DONE
         self.signed_vc = signed_vc
-        self.user_id = public_key
+        self.user_id = user_id
 
     def init(self, experiments):
         self.consent_created = timezone.now()

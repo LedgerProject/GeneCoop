@@ -343,7 +343,7 @@ function zen_vc_sign(public_key, private_key, vc_text, user_id) {
                     html.value = JSON.stringify(msg_sign);
 
                     html = document.querySelector("[id='user_id']");
-                    html.value = storedSettings.authCredentials.public_key;
+                    html.value = storedSettings.keypair_recovery.username;
 
                     toggle_instructions();
 
@@ -369,6 +369,9 @@ function zen_vc_sign(public_key, private_key, vc_text, user_id) {
 
                     html = document.querySelector("[id='public_key']");
                     html.value = storedSettings.authCredentials.public_key;
+
+                    html = document.querySelector("[id='username']");
+                    html.value = storedSettings.keypair_recovery.username;
 
                     toggle_instructions();
 
