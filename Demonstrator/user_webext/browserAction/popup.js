@@ -113,8 +113,8 @@ function reportExecuteScriptError(error) {
 * and add a click handler.
 * If we couldn't inject the script, handle the error.
 */
-console.log("popup start")
-// browser.tabs.executeScript({ file: "/zenpage/zenpage.js" })
-    browser.tabs.executeScript({ file: "/zenpage/zenpage.bundle.js" })
-    .then(listenForClicks)
-    .catch(reportExecuteScriptError);
+console.log("popup start");
+
+browser.tabs.executeScript({ file: "/zenpage/zenpage.bundle.js" })
+.then(listenForClicks)
+.catch(reportExecuteScriptError);

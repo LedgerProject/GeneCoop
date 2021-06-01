@@ -21,9 +21,9 @@ function createOptions(question_nr, option_nr=-1){
         opt.value = option_nr;
         opt.text = questionTexts[option_nr];
         questionSelect.options.add(opt);
-    }
-    
+    }    
 }
+
 function saveOptions(e) {
     e.preventDefault();
     var questions = [];
@@ -32,40 +32,43 @@ function saveOptions(e) {
     for (var question_nr = 1; question_nr <= nr_questions; question_nr++) {
         var questionSelect = document.querySelector("#question" + question_nr);
         var answerInput = document.querySelector("#answer" + question_nr);
-        questions[question_nr-1] = questionSelect.value;
-        answers[question_nr-1] = answerInput.value;
-        selectedQuestionTexts[question_nr-1] = questionTexts[questionSelect.value];
+        questions.push(questionSelect.value);
+        answers.push(answerInput.value);
+        selectedQuestionTexts.push(questionTexts[questionSelect.value]);
         console.log(questions[question_nr-1], " has answer ", answers[question_nr-1]);
     }
+    var username = document.querySelector("#username");
     browser.storage.local.set({
         keypair_recovery: {
+            username: username.value,
             questions: questions,
             answers: answers,
             selectedQuestionTexts
         }
-    }
-    );
+    })
 }
 
 function restoreOptions() {
 
-
     function setCurrentChoice(result) {
 
-        if (result.keypair_recovery === undefined) {
+        if (result === {} || result.keypair_recovery === undefined) {
             for (var question_nr = 1; question_nr <= nr_questions; question_nr++) {
                 createOptions(question_nr);
             }
 
         } else {
+            var username = document.querySelector("#username");
+            username.value = result.keypair_recovery.username;
+
             for (var question_nr = 1; question_nr <= nr_questions; question_nr++) {
                 createOptions(question_nr, result.keypair_recovery.questions[question_nr-1])
                 var answerInput = document.querySelector("#answer" + question_nr);
                 answerInput.value = result.keypair_recovery.answers[question_nr-1];
                 answerInput.disabled = true; 
             }
-            html = document.querySelector("[id='submitButton']");
-            html.disabled = true;
+            // html = document.querySelector("[id='submitButton']");
+            // html.disabled = true;
         }
     }
 

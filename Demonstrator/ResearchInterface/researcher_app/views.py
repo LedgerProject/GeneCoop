@@ -385,24 +385,24 @@ def store_request(request):
 def perform_action(request):
     logger.debug(f'Call to {inspect.currentframe().f_code.co_name}')
     if request.method == 'POST':
-        if 'Token' in request.POST and 'experimentKey' in request.POST:
+        if 'Token' in request.POST and 'experimentId' in request.POST:
             token = request.POST.get('Token')
-            experimentKey = request.POST.get('experimentKey')
+            experimentId = request.POST.get('experimentId')
             # cons_req = requests.get(f'{ISSIGNED_URL}/{request_obj.token}')
             requestInst = get_object_or_404(Request, token=token)
 
             url = f'{LOGEXP_URL}'
             data = {
                 'token': token,
-                'exp_id': experimentKey
+                'exp_id': experimentId
             }
             logger.debug(f'Perform request: {url}')
             log_post = requests.post(url, data=data)
-
+            
             if log_post.status_code == 200:
                 logger.info(f'Request returned: {log_post.text}')
                 mySerializedExperiments.unserialize(requestInst.experiments)
-                mySerializedExperiments.set_reply(experimentKey, log_post.text)
+                mySerializedExperiments.set_reply(experimentId, log_post.text)
                 requestInst.experiments = mySerializedExperiments.serialize()
                 requestInst.save()
             else:

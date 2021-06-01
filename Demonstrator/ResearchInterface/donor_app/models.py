@@ -4,14 +4,44 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH
+from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, TYPE_LENGTH, LOGMESSAGE_LENGTH, SIGNEDVC_LENGTH, PUBLICKEY_LENGTH, QUESTION_LENGTH, ANSWER_LENGTH
 
 import consent_server.utils as labut
 
 
 class User(AbstractUser):
+    question1 = models.CharField(max_length=QUESTION_LENGTH)
+    answer1 = models.CharField(max_length=ANSWER_LENGTH)
+    question2 = models.CharField(max_length=QUESTION_LENGTH)
+    answer2 = models.CharField(max_length=ANSWER_LENGTH)
+    question3 = models.CharField(max_length=QUESTION_LENGTH)
+    answer3 = models.CharField(max_length=ANSWER_LENGTH)
     publickey = models.CharField(max_length=PUBLICKEY_LENGTH)
 
+    def assign_qa(self, qas):
+        self.answer1 = qas['Answer1.hash']
+        self.answer2 = qas['Answer2.hash']
+        self.answer3 = qas['Answer3.hash']
+
+        self.question1 = qas['Question1.hash']
+        self.question2 = qas['Question2.hash']
+        self.question3 = qas['Question3.hash']
+
+    def check_qa(self, qas):
+        if not self.answer1 == qas['Answer1.hash']:
+            return False
+        if not self.answer2 == qas['Answer2.hash']:
+            return False
+        if not self.answer3 == qas['Answer3.hash']:
+            return False
+        if not self.question1 == qas['Question1.hash']:
+            return False
+        if not self.question2 == qas['Question2.hash']:
+            return False
+        if not self.question3 == qas['Question3.hash']:
+            return False
+        
+        return True
 
 class Consent(models.Model):
     name = models.CharField(max_length=TITLE_LENGTH)
@@ -88,7 +118,7 @@ class ConsentLogger(models.Model):
         return self.message
 
     def __handle_token__(self, token):
-        
+
         consent = Consent.objects.get(token=token)
         assert(consent != None)
         self.request_received = timezone.now()
@@ -110,12 +140,12 @@ class ConsentLogger(models.Model):
             f"(experiment: {exp['id']}, option: {exp['chosen_option']})" for exp in exp_results]
         self.message = f"Request received to check what experiments are allowed, results is {msg}"
 
-    def log_experiment(self, token, exp_key, is_allowed):
+    def log_experiment(self, token, exp_id, is_allowed):
         self.__handle_token__(token)
         self.type = self.LogTypes.LOG_EXPERIMENT
-        self.message = f'Log experiment {exp_key}, which is {"" if is_allowed else "NOT"} allowed'
+        self.message = f'Log experiment {exp_id}, which is {"" if is_allowed else "NOT"} allowed'
 
-    def log_not_signed_experiment(self, token, exp_key):
+    def log_not_signed_experiment(self, token, exp_id):
         self.__handle_token__(token)
         self.type = self.LogTypes.LOG_NOTSIGNEDEXPERIMENT
-        self.message = f'Request to log experiment {exp_key}, which is not signed'
+        self.message = f'Request to log experiment {exp_id}, which is not signed'

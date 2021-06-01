@@ -67,7 +67,7 @@ def allowed_experiments(request, token):
             mySerializedExperiments.unserialize(consent.experiments)
             for experiment in mySerializedExperiments.experiments:
                 op_result = {}
-                op_result['key'] = experiment['key']
+                op_result['id'] = experiment['id']
                 op_result['chosen_option'] = experiment['chosen_option']
                 op_results.append(op_result)
             # print(op_results)
@@ -78,36 +78,36 @@ def allowed_experiments(request, token):
         
 @api_view((['POST']))
 def log_experiment(request):
-
-    if not ('token' in request.POST and 'exp_key' in request.POST):
+    breakpoint()
+    if not ('token' in request.POST and 'exp_id' in request.POST):
         return Response({f'error': f'Need to provide both token and experiment'})
     
     token = request.POST.get('token')
-    exp_key = request.POST.get('exp_key')
+    exp_id = request.POST.get('exp_id')
     if token is not None:
         try:
             consent = Consent.objects.get(token=token)
         except Consent.DoesNotExist as e:
             return Response({f'error': f'consent {token} does not exist'})
         
-        if exp_key is not None:  
+        if exp_id is not None:  
             mySerializedExperiments.unserialize(consent.experiments)
             for exp_json in mySerializedExperiments.experiments:
-                if exp_json['key'] == exp_key:
+                if exp_json['id'] == exp_id:
                     consent_logger = consent.consentlogger_set.create()
                     if exp_json['chosen_option'] != 1:
-                        is_allowed = myConfig.is_exp_allowed(exp_json['key'], exp_json['chosen_option'])
-                        consent_logger.log_experiment(token, exp_key, is_allowed)
+                        is_allowed = myConfig.is_exp_allowed(exp_json['id'], exp_json['chosen_option'])
+                        consent_logger.log_experiment(token, exp_id, is_allowed)
                         consent_logger.save()
                         if not is_allowed:
-                            return Response({f'error': f'Experiment {exp_key} is not allowed, consent {token}'})
+                            return Response({f'error': f'Experiment {exp_id} is not allowed, consent {token}'})
                         else:
-                            return Response({f'text': f'Experiment {exp_key} was allowed and has been logged, consent {token}'})
+                            return Response({f'text': f'Experiment {exp_id} was allowed and has been logged, consent {token}'})
                     else:
-                        consent_logger.log_not_signed_experiment(token, exp_key)
+                        consent_logger.log_not_signed_experiment(token, exp_id)
                         consent_logger.save()
-                        return Response({f'error': f'User has not replied to experiment {exp_key}, consent {token}'})
-            return Response({f'error': f'exp_key {exp_key} is not found in consent {token} with experiments {mySerializedExperiments.experiments}'})
+                        return Response({f'error': f'User has not replied to experiment {exp_id}, consent {token}'})
+            return Response({f'error': f'exp_id {exp_id} is not found in consent {token} with experiments {mySerializedExperiments.experiments}'})
         else:
             return Response({f'error': f'Need to provide an experiment'})    
     else:

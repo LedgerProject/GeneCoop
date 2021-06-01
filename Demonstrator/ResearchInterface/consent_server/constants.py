@@ -1,6 +1,10 @@
 """
-    Shared constants for db config
+    Shared constants for db config and urls
 """
+from django.conf import settings
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # DataBase fields
 TITLE_LENGTH = 200
@@ -13,9 +17,15 @@ LOGMESSAGE_LENGTH = 500
 SIGNATURE_LENGTH = 500
 SIGNEDVC_LENGTH = 20000
 PUBLICKEY_LENGTH = 500
+QUESTION_LENGTH = 100
+ANSWER_LENGTH = 100
 
 # Urls
-GENECOOP_URL = 'http://localhost:8000'
+if settings.DEBUG == True:
+    GENECOOP_URL = 'http://localhost:8000'
+else:
+    GENECOOP_URL = 'https://genecoop.waag.org'
+
 ISSIGNED_URL = f"{GENECOOP_URL}/consent/api/is_signed"
 ALLOWEDEXP_URL = f"{GENECOOP_URL}/consent/api/allowed_experiments"
 LOGEXP_URL = f"{GENECOOP_URL}/consent/api/log_experiment/"

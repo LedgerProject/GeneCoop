@@ -2,7 +2,6 @@ import logging
 import inspect
 import requests
 import hashlib
-from pathlib import Path
 import json
 import copy
 import time
@@ -11,6 +10,7 @@ from zenroom import zenroom
 logger = logging.getLogger(__name__)
 # print(f'Logger {__name__}')
 
+from .constants import GENECOOP_URL, BASE_DIR
 
 KEY_SEP = '_'
 TOKEN_SEP = '_'
@@ -98,6 +98,53 @@ def generate_random_challenge():
     logger.debug(f"Generated challenge: {res_json['challenge']}")
 
     return res_json['challenge']
+
+def generate_seed(userData):
+    """
+        This function calls zenroom to generate
+        a seed for the creation of the user credentials
+    """
+    contract = """
+        rule check version 1.0.0
+        Scenario 'ecdh': create the seed for credentials
+        Given I have a 'keypair' from 'GeneCoop'
+        Given I have a 'string' named 'GeneCoopPassword'
+        Given I have a 'string dictionary' named 'userData'
+        When I create the key derivation of 'userData' with password 'GeneCoopPassword'
+        Then print the 'key_derivation'
+    """
+
+    file_path = f'{BASE_DIR}/.superuser.json'
+
+    with open(file_path, "r") as fp:
+        superuser = json.loads(fp.read())
+    
+    data = json.dumps({
+        'userData' : userData
+    })
+    keys = json.dumps({
+        "GeneCoop":{
+            "keypair": {
+            "private_key" : superuser['private_key'],
+            "public_key" : superuser['public_key']
+            }
+        },
+        "GeneCoopPassword" : superuser['password']
+    })
+    
+    logger.debug(f'seed data: {data}, keys: {keys}')
+
+    try:
+        result = zenroom.zencode_exec(contract, keys=keys, data=data, conf='debug=0')
+    except Exception as e:
+        logger.error(f'Exception in zenroom call: {e}')
+        return None
+
+    res_json = json.loads(result.output)
+
+    logger.debug(f"Generated seed: {res_json['key_derivation']}")
+
+    return res_json['key_derivation']
 
 
 def verify_signature(public_key, message, signature):
@@ -295,7 +342,6 @@ class Consent(baseEntity):
         return False
 
 def read_conf(role):
-    BASE_DIR = Path(__file__).resolve().parent.parent
     file_path = f'{BASE_DIR}/schema/resreq.jsonld'
 
     logger.info(f'Reading conf file {file_path} for role {role}')
@@ -432,8 +478,8 @@ VC = {
         "https://www.w3.org/2018/credentials/v1",
         "http://genecoop.waag.org/credentials/v1",
         {
-            "gc_id": "http://genecoop.waag.org/ids/",
-            "gc_docs": "http://genecoop.waag.org/docs/",
+            "gc_ids": f"{GENECOOP_URL}/ids/",
+            "gc_docs": f"{GENECOOP_URL}/docs/",
             "gc_schema": "http://genecoop.waag.org/schema/v1/",
             "gc_cred": "http://genecoop.waag.org/credentials/v1/"
         }
@@ -449,7 +495,7 @@ VC = {
 
     # The issuer is GeneCoop, but it might not have any signature on this credentials
     "issuer": {
-        "id": "gc_id:GeneCoop",
+        "id": "gc_ids:GeneCoop",
         "name": "GeneCoop Consent Service"
     },
 
@@ -487,7 +533,7 @@ VC = {
             "type": "gc_cred:IssuerPolicy",
             "gc_cred:obligation": [
                 {
-                    "gc_cred:assigner": {"id": "gc_id:GeneCoop"},
+                    "gc_cred:assigner": {"id": "gc_ids:GeneCoop"},
                     "gc_cred:assignee": {"id": "gc_cred:AllVerifiers"},
                     "gc_cred:target": {"id": "gc_docs:__TOKEN__"},
                     "gc_cred:action": [{"id": "gc_cred:FetchLatestConsent"}]
