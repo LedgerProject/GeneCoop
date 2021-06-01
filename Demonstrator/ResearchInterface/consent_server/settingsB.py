@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 INSTALLED_APPS = [
     'researcher_app.apps.ResearcherAppConfig',
     'donor_app.apps.DonorAppConfig',
+    'datasafe_app.apps.DatasafeAppConfig',
+    'id_app.apps.IdAppConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +44,7 @@ MIDDLEWARE = [
     # 'donor_app.views.ReadConfMiddleware',
 ]
 
-AUTH_USER_MODEL = 'donor_app.User'
+AUTH_USER_MODEL = 'id_app.User'
 
 AUTHENTICATION_BACKENDS = (
     # Custom auth with public key

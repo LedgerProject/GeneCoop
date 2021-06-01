@@ -1,12 +1,10 @@
 from datetime import datetime
 from django.utils import timezone
-import pytz
 from django.utils.translation import gettext_lazy as _
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 
 from consent_server.constants import TITLE_LENGTH, DESCR_LENGTH, EXPERIMENTS_LENGTH, TOKEN_LENGTH, PUBLICKEY_LENGTH, SIGNATURE_LENGTH
-from donor_app.models import User
+from id_app.models import User
 
 class Researcher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

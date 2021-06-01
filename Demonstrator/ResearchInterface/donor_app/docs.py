@@ -2,7 +2,7 @@ import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Consent
+from donor_app.models import Consent
 
 
 @api_view((['GET']))

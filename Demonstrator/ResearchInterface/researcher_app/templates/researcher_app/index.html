@@ -75,7 +75,7 @@
                     </ul>
                     {% endfor %}
                 </div>
-                <div class="col col-44" data-label="Token">{{ request.token }}</div>
+                <div class="col col-44" data-label="Token"><a href="../docs/{{ request.token }}">{{ request.token }}</a></div>
                 <!-- <div class="col col-5" data-label="Status">{{ request.status }}</div> -->
             </li>
             {% endif %}

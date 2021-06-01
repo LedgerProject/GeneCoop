@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 import consent_server.utils as labut
-from donor_app.models import User
+from .models import User
 
 
 @api_view((['GET']))

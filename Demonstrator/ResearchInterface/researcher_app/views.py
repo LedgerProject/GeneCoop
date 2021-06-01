@@ -179,8 +179,6 @@ def login_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('researcher_app:index'))
     template_name = 'researcher_app/login.html'
-    # context = {'my_set' : _gen_queryset(None)}
-    # logger.debug(f'Index view rendering: {json.dumps(context)}')
     context = {'challenge': labut.generate_random_challenge()}
     return render(request, template_name, context)
 
@@ -226,6 +224,19 @@ def request_view(request, pk):
     template_name = 'researcher_app/request.html'
     context = {'request': _gen_queryset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
+    return render(request, template_name, context)
+
+@login_required(login_url='researcher_app:login')
+def vc_view(request, token):
+    logger.debug(f'VC view request')
+    template_name = 'researcher_app/vc.html'
+    vc = labut.get_vc(token)
+    public_key = labut.get_publickey(vc['credentialSubject']['id'])
+    breakpoint()
+    if not labut.verify_signed_vc(public_key, vc):
+        pass
+    context = {'request': _gen_queryset(pk)}
+    logger.debug(f'VC view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
 

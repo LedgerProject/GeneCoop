@@ -13,7 +13,8 @@ from django.core.exceptions import MiddlewareNotUsed
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from .models import User, Consent
+from .models import Consent
+from id_app.models import User
 from researcher_app.models import Request
 
 
@@ -247,7 +248,7 @@ def sign_consent(request):
         if 'token' in request.POST and 'username' in request.POST and 'public_key' in request.POST and 'signed_vc' in request.POST:
             token = request.POST.get('token')
             myconsent = get_object_or_404(Consent, token=token)
-            breakpoint()
+            # breakpoint()
             username = request.POST.get('username')
             if username.startswith(f"{GENECOOP_URL}/ids/"):
                 username = username[len(f"{GENECOOP_URL}/ids/"):]

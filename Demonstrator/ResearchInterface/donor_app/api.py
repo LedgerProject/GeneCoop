@@ -78,7 +78,6 @@ def allowed_experiments(request, token):
         
 @api_view((['POST']))
 def log_experiment(request):
-    breakpoint()
     if not ('token' in request.POST and 'exp_id' in request.POST):
         return Response({f'error': f'Need to provide both token and experiment'})
     

@@ -564,3 +564,22 @@ def prepare_vc(token, researcher_id, experiments):
 
     vc_str = json.dumps(vc_json)
     return vc_str
+
+
+def get_vc(token):
+    url = f"{GENECOOP_URL}/docs/{token}"
+    payload={}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return json.loads(response.text)
+
+def get_publickey(id_url):
+
+    payload={}
+    headers = {}
+
+    response = requests.request("GET", id_url, headers=headers, data=payload)
+
+    return json.loads(response.text)['public_key']

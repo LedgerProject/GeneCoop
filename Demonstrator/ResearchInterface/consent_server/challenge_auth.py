@@ -1,6 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
 
-from donor_app.models import User
+from id_app.models import User
 
 from .utils import verify_signature
 
