@@ -1,0 +1,23 @@
+{% extends 'base_res.html' %}
+{% load static %}
+{% block title %}Data Safe{% endblock %}
+
+
+{% block content %}
+<h2>Data Safe</h2>
+<div class="container">
+    <!-- iCon by oNlineWebFonts.Com -->
+    
+    <form action="{% url 'datasafe_app:retrieve_vc' %}" method="post">
+        {% csrf_token %}
+        <input type="text" id="vc_url" name="vc_url">
+        <input id="retrieveButton" type="submit" value="Retrieve">
+    </form>
+    
+    <div>
+        <img src="{% static 'datasafe_app/images/closedlock.svg' %}" width="50" height="50" id="icon" alt="DataSafe" />
+        <small>Icon made from <a href="http://www.onlinewebfonts.com/icon">Icon Fonts</a> is licensed by CC BY 3.0</small>
+    </div>
+</div>
+
+{% endblock %}

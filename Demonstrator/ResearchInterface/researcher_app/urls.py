@@ -22,7 +22,6 @@ urlpatterns = [
     
     
     path('<int:pk>/', views.request_view, name='request'),
-    path('<str:token>/', views.vc_view, name='vc'),
     
     path('perform_action/', views.perform_action, name='perform_action'),
 

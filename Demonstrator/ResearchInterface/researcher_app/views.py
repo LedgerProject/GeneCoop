@@ -226,18 +226,6 @@ def request_view(request, pk):
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
-@login_required(login_url='researcher_app:login')
-def vc_view(request, token):
-    logger.debug(f'VC view request')
-    template_name = 'researcher_app/vc.html'
-    vc = labut.get_vc(token)
-    public_key = labut.get_publickey(vc['credentialSubject']['id'])
-    breakpoint()
-    if not labut.verify_signed_vc(public_key, vc):
-        pass
-    context = {'request': _gen_queryset(pk)}
-    logger.debug(f'VC view rendering: {json.dumps(context)}')
-    return render(request, template_name, context)
 
 
 @login_required(login_url='researcher_app:login')

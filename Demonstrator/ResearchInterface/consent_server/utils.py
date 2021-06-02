@@ -222,12 +222,12 @@ def verify_signed_vc(public_key, signed_vc):
     Then print 'verification passed' as 'string'
     """
 
-    data = f'{{"my-vc": {signed_vc}}}'
+    data = f'{{"my-vc": {json.dumps(signed_vc)}}}'
 
     keys = f'{{"Issuer": {{"public_key": "{public_key}" }} }}'
 
     logger.debug(f'verification data: {data}, keys: {keys}')
-    # breakpoint()
+    breakpoint()
     try:
         # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
         # breakpoint()
