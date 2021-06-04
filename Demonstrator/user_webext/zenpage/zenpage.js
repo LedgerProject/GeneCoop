@@ -356,7 +356,7 @@ function zen_vc_sign(public_key, private_key, vc_text, user_id) {
 
             const vc_json = prepare_vc(vc.textContent, storedSettings.keypair_recovery.username);
 
-            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_json, storedSettings.authCredentials.public_key)
+            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_json, storedSettings.keypair_recovery.username)
                 .then((signed_vc_str) => {
 
                     var html = document.querySelector("[id='signed_vc']");
