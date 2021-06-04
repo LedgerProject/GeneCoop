@@ -27,7 +27,10 @@
         "https://genecoop.waag.org/request/*",
         "http://localhost/request/*"
       ],
-      "js": ["content_script.js"]
+      "js": [
+        "content_script.js",
+        "zenpage/zenpage.bundle.js"
+    ]
     }
   ],
   "browser_action": {
