@@ -38,3 +38,7 @@ VERIFY_URL = f'{APIROOM_URL}/api/zencoop/verify'
 
 # Config param
 DO_ENCODING = False
+
+GC_SCHEMA = 'http://genecoop.waag.org/schema/v1#'
+GC_CRED = 'http://genecoop.waag.org/credentials/v1#'
+

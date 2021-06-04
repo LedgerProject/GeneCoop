@@ -105,7 +105,7 @@ def _gen_experiments(experiments):
     return experiments_view
 
 
-def _gen_queryset(pk):
+def _gen_pageset(pk):
     """
         Return the requests, checking whether 
         they have been signed and what experiments
@@ -205,7 +205,7 @@ def profile_view(request):
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_app/index.html'
-    context = {'my_set': _gen_queryset(None)}
+    context = {'my_set': _gen_pageset(None)}
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -214,7 +214,7 @@ def index_view(request):
 def prepare_request_view(request):
     logger.debug(f'New Request view request')
     template_name = 'researcher_app/prepare_request.html'
-    context = {'my_set': _gen_queryset(None)}
+    context = {'my_set': _gen_pageset(None)}
     return render(request, template_name, context)
 
 
@@ -222,7 +222,7 @@ def prepare_request_view(request):
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_app/request.html'
-    context = {'request': _gen_queryset(pk)}
+    context = {'request': _gen_pageset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -259,6 +259,7 @@ def check_login(request):
     if request.method == 'POST':
         if 'username' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
             username = request.POST['username']
+            username = labut.remove_genecoop_ns(username)
             challenge = request.POST['challenge']
             response = request.POST['response']
             user = authenticate(request, username=username, challenge=challenge, response=response)

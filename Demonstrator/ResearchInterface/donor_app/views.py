@@ -281,8 +281,7 @@ def check_login(request):
     if request.method == 'POST':
         if 'user_id' in request.POST and 'challenge' in request.POST and 'response' in request.POST:
             user_id = request.POST['user_id']
-            if user_id.startswith(f"{GENECOOP_URL}/ids/"):
-                user_id = user_id[len(f"{GENECOOP_URL}/ids/"):]
+            user_id = labut.remove_genecoop_ns(user_id)
             challenge = request.POST['challenge']
             response = request.POST['response']
 

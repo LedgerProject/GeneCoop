@@ -6,8 +6,8 @@
             {
                 "gc_id": "http://genecoop.waag.org/ids/",
                 "gc_cons": "http://genecoop.waag.org/consents/",
-                "gc_schema": "http://genecoop.waag.org/schema/v1/",
-                "gc_cred": "http://genecoop.waag.org/credentials/v1/"
+                "gc_schema": "http://genecoop.waag.org/schema/v1#",
+                "gc_cred": "http://genecoop.waag.org/credentials/v1#"
             }
         ],
         "id": "gc_cons:6d8fa6f875",

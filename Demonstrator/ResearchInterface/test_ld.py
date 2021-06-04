@@ -9,10 +9,10 @@ doc = {
         "https://www.w3.org/2018/credentials/v1",
         "http://genecoop.waag.org/credentials/v1",
         {
-            "gc_cred": "http://genecoop.waag.org/credentials/v1/",
+            "gc_cred": "http://genecoop.waag.org/credentials/v1#",
             "gc_docs": "http://localhost:8000/docs/",
             "gc_ids": "http://localhost:8000/ids/",
-            "gc_schema": "http://genecoop.waag.org/schema/v1/"
+            "gc_schema": "http://genecoop.waag.org/schema/v1#"
         }
     ],
     "credentialSubject": {
@@ -39,7 +39,7 @@ doc = {
         "id": "http://localhost:8000/ids/pippo"
     },
     "given_to": {
-        "id": "researcherA"
+        "id": "http://localhost:8000/ids/researcherA"
     },
     "id": "gc_docs:09e0178c3a",
     "issuanceDate": "2021-06-01T16:22:56.321Z",
@@ -79,7 +79,7 @@ doc = {
     ],
     "type": [
         "VerifiableCredential",
-        "VerifiableConsent"
+        "gc_cred:VerifiableConsent"
     ]
 }
 # compact a document according to a particular context
@@ -135,11 +135,28 @@ def do_normalize(doc):
     # that can be used for hashing, comparison, etc.
     
     # print("NORMALIZED")
-    # print(json.dumps(normalized, indent=2))
+    print(json.dumps(normalized, indent=2))
     return normalized
 
 
-# test = '<http://genecoop.waag.org/schema/v1/exp_000> <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Array SNP request + Analysis and interpretation" .'
+def do_query(query_body, msg):
+    query_prefix = """
+    PREFIX cred: <https://www.w3.org/2018/credentials#>
+    PREFIX gc_cred: <http://genecoop.waag.org/credentials/v1#>
+    PREFIX gc_docs: <http://localhost:8000/docs/>
+    PREFIX gc_ids: <http://localhost:8000/ids/>
+    PREFIX gc_schema: <http://genecoop.waag.org/schema/v1#>
+
+    """
+    query = query_prefix + query_body
+
+    print(f'{msg}')
+    for row in g.query(query):
+        for l in row.__dict__['labels']:
+            print(f'{l}: {row[l]}')
+
+
+# test = '<http://genecoop.waag.org/schema/v1#exp_000> <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Array SNP request + Analysis and interpretation" .'
 test = do_normalize(doc)
 
 g = rdflib.Graph()
@@ -147,14 +164,24 @@ g = rdflib.Graph()
 source = StringInputSource(test.encode("utf8"))
 g.load(source, format="nt")
 
-query_prefix = """
-PREFIX cred: <https://www.w3.org/2018/credentials#>
-PREFIX gc_cred: <http://genecoop.waag.org/credentials/v1/>
-PREFIX gc_docs: <http://localhost:8000/docs/>
-PREFIX gc_ids: <http://localhost:8000/ids/>
-PREFIX gc_schema: <http://genecoop.waag.org/schema/v1/>
+query_body = """
+    SELECT ?consent ?type ?name ?dna_donor ?researcher ?issuedate ?issuer ?issuername
+    WHERE
+    {
+        ?consent    a                   ?type .
+        FILTER (STRSTARTS(STR(?type),   "http://genecoop.waag.org/credentials/v1#"))
+        ?consent    rdf:label           ?name;
+                    cred:credentialSubject  ?dna_donor ;
+                    gc_cred:given_to    ?researcher ;
+                    cred:issuanceDate   ?issuedate ;
+                    cred:issuer         ?issuer .
+        ?issuer     rdf:label           ?issuername
+    }
 
 """
+
+do_query(query_body, 'Consent')
+
 
 query_body = """
 SELECT ?experiment ?experiment_name
@@ -164,13 +191,38 @@ WHERE
     ?consent    a          gc_cred:VerifiableConsent .
     ?consent    cred:credentialSubject  ?dna_donor .
     ?dna_donor  gc_cred:consents_to  ?experiment .
-    ?experiment rdf:label ?experiment_name .
+    ?experiment rdf:label ?experiment_name
   }
 """
 
-query = query_prefix + query_body
+do_query(query_body, 'Allowed Experiments')
 
-for row in g.query(query):
-    for l in row.__dict__['labels']:
-        print(f'{l}: {row[l]}')
+query_body = """
+SELECT ?experiment ?experiment_name
 
+WHERE
+  {
+    ?consent    a          gc_cred:VerifiableConsent .
+    ?consent    cred:credentialSubject  ?dna_donor .
+    ?dna_donor  gc_cred:prohibits  ?experiment .
+    ?experiment rdf:label ?experiment_name
+  }
+"""
+
+do_query(query_body, 'Not Allowed experiments')
+
+query_body = """
+SELECT ?action ?parties
+
+WHERE
+  {
+    ?consent    a          gc_cred:VerifiableConsent .
+    ?consent    cred:termsOfUse  ?terms_of_use .
+    ?terms_of_use a         gc_cred:IssuerPolicy .
+    ?terms_of_use  gc_cred:obligation  ?obligation .
+    ?obligation gc_cred:action ?action .
+    ?obligation gc_cred:assignee ?parties
+  }
+"""
+
+do_query(query_body, 'Obligations')

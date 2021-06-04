@@ -202,6 +202,11 @@ LOGGING = {
             'handlers': ['console', 'file', 'mail_admins'],
             'level': 'DEBUG',
             'filters': ['require_debug_true']
+        },
+        'data_app': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'DEBUG',
+            'filters': ['require_debug_true']
         }
     }
 }

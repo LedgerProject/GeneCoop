@@ -10,7 +10,7 @@ from zenroom import zenroom
 logger = logging.getLogger(__name__)
 # print(f'Logger {__name__}')
 
-from .constants import GENECOOP_URL, BASE_DIR
+from .constants import GENECOOP_URL, BASE_DIR, GC_SCHEMA, GC_CRED
 
 KEY_SEP = '_'
 TOKEN_SEP = '_'
@@ -222,12 +222,15 @@ def verify_signed_vc(public_key, signed_vc):
     Then print 'verification passed' as 'string'
     """
 
-    data = f'{{"my-vc": {json.dumps(signed_vc)}}}'
+    if isinstance(signed_vc, dict):
+        data = f'{{"my-vc": {json.dumps(signed_vc)}}}'
+    elif isinstance(signed_vc, str):
+        data = f'{{"my-vc": {signed_vc}}}'
 
     keys = f'{{"Issuer": {{"public_key": "{public_key}" }} }}'
 
     logger.debug(f'verification data: {data}, keys: {keys}')
-    breakpoint()
+    
     try:
         # result = zenroom.zencode_exec(contract, keys=json.dumps(keys), data=json.dumps(data))
         # breakpoint()
@@ -476,12 +479,12 @@ class SerializeExperiments:
 VC = {
     "@context": [
         "https://www.w3.org/2018/credentials/v1",
-        "http://genecoop.waag.org/credentials/v1",
+        f"{GC_CRED}",
         {
             "gc_ids": f"{GENECOOP_URL}/ids/",
             "gc_docs": f"{GENECOOP_URL}/docs/",
-            "gc_schema": "http://genecoop.waag.org/schema/v1/",
-            "gc_cred": "http://genecoop.waag.org/credentials/v1/"
+            "gc_schema": f"{GC_SCHEMA}",
+            "gc_cred": f"{GC_CRED}"
         }
     ],
     # this URL allows to retrieve the document
@@ -549,6 +552,7 @@ def prepare_vc(token, researcher_id, experiments):
     vc_str = json.dumps(VC)
     vc_str = vc_str.replace('__TOKEN__', token)
     # vc_str = vc_str.replace('__DNA_DONOR_ID__', donor_id)
+    researcher_id = add_genecoop_ns(researcher_id)
     vc_str = vc_str.replace('__RESEARCHER_ID__', researcher_id)
     vc_json = json.loads(vc_str)
 
@@ -583,3 +587,17 @@ def get_publickey(id_url):
     response = requests.request("GET", id_url, headers=headers, data=payload)
 
     return json.loads(response.text)['public_key']
+
+def remove_genecoop_ns(username):
+    # Remove the genecoop namespace from the username since
+    #  usernames are saved without it
+    if username.startswith(f"{GENECOOP_URL}/ids/"):
+        username = username[len(f"{GENECOOP_URL}/ids/"):]
+    return username
+
+def add_genecoop_ns(username):
+    # Add the genecoop namespace to the username since
+    #  usernames need a namespace when inserted in the VC
+    if not username.startswith("http"):
+        username = f"{GENECOOP_URL}/ids/{username}"
+    return username
