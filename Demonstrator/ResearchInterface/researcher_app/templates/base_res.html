@@ -5,16 +5,16 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Researcher Space{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'researcher_app/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'researcher_app/styles.css' %}">
 </head>
 
 <body>
     {% if user.is_authenticated %}
         {% include "header_res.html" %}
     {% endif %}
-        <!-- User not logged in.  -->
-        {% block content %}
-        {% endblock %}    
+
+    {% block content %}
+    {% endblock %}    
 </body>
 
 </html>
