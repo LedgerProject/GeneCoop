@@ -39,7 +39,7 @@ pip install -r ./pip_requirements.txt
 if [ "${env_type} " == "PROD " ]
 then
     export SECRET_KEY=$(cat .secret_key)
-    python manage.py collectstatic --settings=${settings}
+    python manage.py collectstatic --noinput --settings=${settings}
 fi
 
 python manage.py makemigrations --settings=${settings}
