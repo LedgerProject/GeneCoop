@@ -115,6 +115,6 @@ function reportExecuteScriptError(error) {
 */
 console.log("popup start");
 
-browser.tabs.executeScript({ file: "/zenpage/zenpage.bundle.js" })
+browser.tabs.executeScript({ file: "/zenpage/zenpage.js" })
 .then(listenForClicks)
 .catch(reportExecuteScriptError);

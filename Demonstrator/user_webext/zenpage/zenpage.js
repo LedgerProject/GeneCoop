@@ -1,8 +1,3 @@
-// import {zencode_exec} from './zenroom/dist/module/zenroom';
-const { zencode_exec } = require("zenroom");
-
-const hello_script = 'print("Hello World!")';
-
 function zen_generate(seed, questions, answers) {
     const generate_script = `
     rule check version 1.0.0
@@ -35,7 +30,7 @@ function zen_generate(seed, questions, answers) {
     console.log("Hash data to generate key: ", JSON.stringify(data_togen));
 
     return new Promise(function (resolve, reject) {
-        zencode_exec(generate_script, { data: JSON.stringify(data_togen), keys: {}, conf: `color=0, debug=0` })
+        zencode.zencode_exec(generate_script, { data: JSON.stringify(data_togen), keys: {}, conf: `color=0, debug=0` })
             .then((result) => {
                 console.log("Result from zenroom generate: ", result.result);
                 const msg_generate = JSON.parse(result.result)["keypair"];
@@ -95,7 +90,7 @@ function zen_hash(questions, answers) {
     console.log("Hash data to zenroom: ", JSON.stringify(data_tohash));
 
     return new Promise(function (resolve, reject) {
-        zencode_exec(hash_script, { data: JSON.stringify(data_tohash), keys: {}, conf: `color=0, debug=0` })
+        zencode.zencode_exec(hash_script, { data: JSON.stringify(data_tohash), keys: {}, conf: `color=0, debug=0` })
             .then((result) => {
                 console.log("Result from zenroom hash: ", result.result);
                 const msg_hash = JSON.parse(result.result);
@@ -132,7 +127,7 @@ function zen_sign(public_key, private_key, tosign) {
     console.log("Data: ", data);
     return new Promise(function (resolve, reject) {
 
-        zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
+        zencode.zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
             .then((result) => {
                 console.log(result);
                 const msg_sign = JSON.parse(result.result)["message.signature"];
@@ -176,7 +171,7 @@ function zen_vc_sign(public_key, private_key, vc_text, user_id) {
     console.log("Keys: ", JSON.stringify(keys));
     return new Promise(function (resolve, reject) {
 
-        zencode_exec(sign_vc_script, { data: JSON.stringify(data), keys: JSON.stringify(keys), conf: `color=0, debug=0` })
+        zencode.zencode_exec(sign_vc_script, { data: JSON.stringify(data), keys: JSON.stringify(keys), conf: `color=0, debug=0` })
             .then((result) => {
                 console.log("Result", JSON.stringify(result));
                 const signed_vc_str = JSON.stringify(JSON.parse(result.result)['my-vc']);
@@ -361,7 +356,7 @@ function zen_vc_sign(public_key, private_key, vc_text, user_id) {
 
             const vc_json = prepare_vc(vc.textContent, storedSettings.keypair_recovery.username);
 
-            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_json, storedSettings.authCredentials.public_key)
+            zen_vc_sign(storedSettings.authCredentials.public_key, storedSettings.authCredentials.private_key, vc_json, storedSettings.keypair_recovery.username)
                 .then((signed_vc_str) => {
 
                     var html = document.querySelector("[id='signed_vc']");

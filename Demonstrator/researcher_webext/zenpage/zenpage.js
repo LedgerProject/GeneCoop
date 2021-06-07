@@ -1,6 +1,3 @@
-// import {zencode_exec} from './zenroom/dist/module/zenroom';
-const { zencode_exec } = require("zenroom");
-
 (function () {
 
     /**
@@ -145,7 +142,7 @@ const { zencode_exec } = require("zenroom");
         console.log("Data: ", data);
         return new Promise(function (resolve, reject) {
 
-            zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
+            zencode.zencode_exec(sign_script, { data: JSON.stringify(data), keys: {}, conf: `color=0, debug=0` })
                 .then((result) => {
                     console.log("Zenroom result", result);
                     const msg_sign = JSON.parse(result.result)["message.signature"];
@@ -163,7 +160,7 @@ const { zencode_exec } = require("zenroom");
     //  */
     function verify(key) {
         console.log("Verify called")
-        zencode_exec(script).then(({ result }) => console.log(result))
+        zencode.zencode_exec(script).then(({ result }) => console.log(result))
     }
 
     // /**

@@ -3,7 +3,7 @@
   "name": "genecoop_research",
   "description": "Support consent requests as defined by Genecoop",
   "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "browser_specific_settings": {
     "gecko": {
       "id": "researcher@genecoop.waag.org"
@@ -27,7 +27,10 @@
         "https://genecoop.waag.org/request/*",
         "http://localhost/request/*"
       ],
-      "js": ["content_script.js"]
+      "js": [
+        "content_script.js",
+        "zenpage/zenpage.bundle.js"
+    ]
     }
   ],
   "browser_action": {

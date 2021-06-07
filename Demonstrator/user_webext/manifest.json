@@ -3,7 +3,7 @@
   "name": "genecoop_donor",
   "description": "Handle consent requests as defined by Genecoop",
   "homepage_url": "https://github.com/LedgerProject/GeneCoop/tree/master/Demonstrator/",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "browser_specific_settings": {
     "gecko": {
       "id": "dna_donor@genecoop.waag.org"
@@ -27,7 +27,10 @@
         "https://genecoop.waag.org/consent/*",
         "http://localhost/consent/*"
       ],
-      "js": ["content_script.js"]
+      "js": [
+        "content_script.js",
+        "zenpage/zenpage.bundle.js"
+      ]
     }
   ],
   "browser_action": {
@@ -44,6 +47,5 @@
   "options_ui": {
     "page": "options/options.html"
   },
-  "web_accessible_resources": [
-  ]
+  "web_accessible_resources": []
 }
