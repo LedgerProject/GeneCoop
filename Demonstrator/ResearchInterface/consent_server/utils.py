@@ -198,7 +198,13 @@ def verify_signature(public_key, message, signature):
     if not result.output == '':
         res_json = json.loads(result.output)
 
-        if res_json['output'] == 'verification_passed':
+        res_json = json.loads(result.output)
+        if type(res_json['output']) == list:
+            parsed_res = res_json['output'][0]
+        else:
+            parsed_res = res_json['output']
+
+        if parsed_res == 'verification_passed':
             logger.debug(f'Verification passed')
             return True
 
@@ -221,7 +227,7 @@ def verify_signed_vc(public_key, signed_vc):
     When I verify the verifiable credential named 'my-vc'
     Then print 'verification passed' as 'string'
     """
-
+    
     if isinstance(signed_vc, dict):
         data = f'{{"my-vc": {json.dumps(signed_vc)}}}'
     elif isinstance(signed_vc, str):
@@ -247,10 +253,13 @@ def verify_signed_vc(public_key, signed_vc):
 
     if not result.output == '':
         res_json = json.loads(result.output)
-
-        if res_json['output'] == 'verification_passed':
-            logger.debug(f'Verification passed')
-            return True
+        if type(res_json['output']) == list:
+            parsed_res = res_json['output'][0]
+        else:
+            parsed_res = res_json['output']
+        if parsed_res == 'verification_passed':
+            print(f'Verification passed')
+            return True    
 
     logger.debug(f'Verification NOT passed')
     return False
