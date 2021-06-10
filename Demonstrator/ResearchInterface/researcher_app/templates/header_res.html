@@ -4,7 +4,8 @@
         <img id="logo" src="{% static 'researcher_app/images/logo.svg' %}" alt="Logo GeneConsent" />
     </a>
     <ul>
-        <li class="main"><a href="{% url 'researcher_app:index' %}">Requests</a></li>
+        <li class="main"><a href="{% url 'researcher_app:index' %}">Pending</a></li>
+        <li class="main"><a href="{% url 'researcher_app:complete' %}">Answered</a></li>
         <li class="main"><a href="{% url 'researcher_app:prepare_request' %}">Create Request</a></li>
         <!-- <li class="main"><a href="https://waag.org/en/project/gene-coop" target="_blank">About</a></li> -->
         <li class="user"><a href="{% url 'researcher_app:profile' %}">{{ request.user }}</a></li>

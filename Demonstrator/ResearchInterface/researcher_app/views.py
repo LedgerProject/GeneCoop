@@ -209,6 +209,13 @@ def index_view(request):
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
+@login_required(login_url='researcher_app:login')
+def complete_view(request):
+    logger.debug(f'Complete view request')
+    template_name = 'researcher_app/complete.html'
+    context = {'my_set': _gen_pageset(None)}
+    logger.debug(f'Complete view rendering: {json.dumps(context)}')
+    return render(request, template_name, context)
 
 @login_required(login_url='researcher_app:login')
 def prepare_request_view(request):
