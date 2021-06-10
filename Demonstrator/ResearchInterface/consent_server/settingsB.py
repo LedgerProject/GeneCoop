@@ -133,6 +133,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 ADMINS = [('Stefano', 'Stefano.Bocconi@gmail.com'), ('Taco', 'taco@waag.org')]
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = '/static/'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
