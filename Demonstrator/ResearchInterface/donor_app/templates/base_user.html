@@ -1,3 +1,4 @@
+{% load sass_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -7,6 +8,7 @@
     <title>{% block title %}Donor Space{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'donor_app/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/test2.scss' %}" />
 </head>
 
 <body>
