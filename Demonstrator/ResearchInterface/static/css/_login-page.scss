@@ -1,17 +1,26 @@
-.page__login .wrapper {
-  min-height: 100vh;
-  display: flex;
-}
+.page__login {
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
 
-.page__login .wrapper .pane {
-  margin: auto;
-  min-height: 5rem;
-  width: 470px;
-}
+    .pane {
+      margin: auto;
+      min-height: 5rem;
+      width: 470px;
+    }
+  }
 
-/* .page__login input#username {
-visibility: hidden;
+  #logo {
+    width: 70%;
+    display: block;
+    margin: 0 auto 3rem;
+  }
+
+  .instruction {
+    text-align: center;
+  }
+
+  form {
+    margin-top: 3rem;
+  }
 }
-.page__login input#username[value] {
-visibility: visible;
-} */

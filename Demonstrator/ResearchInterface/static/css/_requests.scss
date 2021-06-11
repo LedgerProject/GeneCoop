@@ -1,0 +1,40 @@
+.request {
+  .top-right {
+    margin-bottom: 1rem;
+
+    @media (min-width: 400px) {
+      float: right;
+      text-align: right;
+    }
+  }
+
+  ul {
+    list-style-type: square;
+    padding: 0;
+    margin: 2rem 0 0 2rem;
+
+    li {
+      font-style: italic;
+    }
+
+    &.experiments-requested li::marker {
+      content: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='12' width='16'><rect x='1' y='3' width='8' height='8' fill='none' stroke='black' stroke-width='2' /></svg>");
+      margin-right: 0.5rem;
+      display: inline-block;
+    }
+  }
+
+
+
+  h2 {
+    margin-top: 5rem;
+  }
+}
+
+
+.requests .request {
+  h2 {
+    margin-top: 0;
+  }
+}
+

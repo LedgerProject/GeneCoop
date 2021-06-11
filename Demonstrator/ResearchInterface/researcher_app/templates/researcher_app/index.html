@@ -1,36 +1,35 @@
 {% extends 'base_res.html' %}
 
-{% block title %}Request{% endblock %}
+{% block title %}GeneConsent - Requests{% endblock %}
 
 
 {% block content %}
 
 <div class="wrapper">
-    <h2>Pending Requests</h2>
+    <h1>Pending Requests</h1>
 
-    <div class="flow">
-
+    <div class="requests flow">
         {% if my_set.requests %}
         {% for request in my_set.requests %}
-            <a class="pane" href="{% url 'researcher_app:request' request.id %}">
-                <h3>{{ request.name }}</h3>
-                <div>{{ request.description }}</div>
-                <div>
-                    {% for experiment in request.experiments %}
-                    <ul>
-                        {% if experiment.chosen_option != -1 %}
-                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
-                        {% else %}
-                        <li id="minim">{{ experiment.name }}</li>
-                        {% endif %}
-                    </ul>
-                    {% endfor %}
+            <a class="pane request" href="{% url 'researcher_app:request' request.id %}">
+                <div class="top-right">
+                  <div class="token">{{ request.token }}</div>
                 </div>
-                <div>{{ request.token }}</div>
-              </a>
+                <h2>{{ request.name }}</h2>
+                <div>{{ request.description }}</div>
+                <ul class="experiments-requested">
+                    {% for experiment in request.experiments %}
+                        {% if experiment.chosen_option != -1 %}
+                        <li>{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
+                        {% else %}
+                        <li>{{ experiment.name }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </a>
         {% endfor %}
         {% else %}
-        <div class="pane">No requests are available.</div>
+        <div class="pane">No pending requests.</div>
         {% endif %}
     </div>
 

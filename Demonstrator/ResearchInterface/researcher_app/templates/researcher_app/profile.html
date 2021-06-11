@@ -1,12 +1,12 @@
 {% extends 'base_res.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}GeneConsent - Profile{% endblock %}
 
 
 {% block content %}
 
 <div class="wrapper">
-    <h2>Profile</h2>
+    <h1>Profile</h1>
 
     <form class="pane flow" action="{% url 'researcher_app:fill_profile' %}" method="post">
         {% csrf_token %}

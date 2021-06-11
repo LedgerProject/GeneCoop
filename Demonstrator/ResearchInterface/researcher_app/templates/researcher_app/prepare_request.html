@@ -1,23 +1,23 @@
 {% extends 'base_res.html' %}
 
-{% block title %}Request{% endblock %}
+{% block title %}GeneConsent - New Request{% endblock %}
 
 
 {% block content %}
 
 <div class="wrapper">
-  <h2>New Request</h2>
+  <h1>New Request</h1>
 
   <form class="pane flow" action="{% url 'researcher_app:sign_request' %}" method="post">
     {% csrf_token %}
 
     <div class="form-row">
-      <label for="name">Name of Request</label>
+      <label for="name">Title</label>
       <input type="text" name="name" value="" required>
     </div>
 
     <div class="form-row">
-      <label for="description">Request Description</label>
+      <label for="description">Description</label>
       <textarea cols="40" rows="5" name="description" value="" required></textarea>
     </div>
 

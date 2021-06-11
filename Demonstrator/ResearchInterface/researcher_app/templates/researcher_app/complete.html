@@ -1,41 +1,37 @@
 {% extends 'base_res.html' %}
 
-{% block title %}Request{% endblock %}
+{% block title %}GeneConsent - Answered Requests{% endblock %}
 
 
 {% block content %}
 
 <div class="wrapper">
-    
-    <h2>Answered Requests</h2>
+    <h1>Answered Requests</h1>
 
-    <div class="flow">
-
-        {% if my_set.requests %}
-            {% for request in my_set.requests %}
-                <div class="pane">
-                    <h3>
-                        <a href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a>
-                    </h3>
-                    <div>{{ request.description }}</div>
-                    <div>
-                        {% for experiment in request.experiments %}
-                        <ul>
-                            {% if experiment.chosen_option != -1 %}
-                            <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
-                            {% else %}
-                            <li id="minim">{{ experiment.name }}</li>
-                            {% endif %}
-                        </ul>
-                        {% endfor %}
-                    </div>
-                    <div><a href="../docs/{{ request.token }}">{{ request.token }}</a></div>
-                </li>
-            {% endfor %}
-        {% else %}
-            <div class="pane">No requests are available.</div>
-        {% endif %}
-    </div>
+    {% if my_set.requests %}
+        {% for request in my_set.requests %}
+            <div class="pane">
+                <h3>
+                    <a href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a>
+                </h3>
+                <div>{{ request.description }}</div>
+                <div>
+                    {% for experiment in request.experiments %}
+                    <ul>
+                        {% if experiment.chosen_option != -1 %}
+                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
+                        {% else %}
+                        <li id="minim">{{ experiment.name }}</li>
+                        {% endif %}
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div><a href="../docs/{{ request.token }}">{{ request.token }}</a></div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="pane">No answered requests.</div>
+    {% endif %}
 </div>
 
 {% endblock %}

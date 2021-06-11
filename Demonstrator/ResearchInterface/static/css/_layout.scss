@@ -1,12 +1,21 @@
+html, body {
+  height: 100%;
+}
+
 body {
   background-color: var(--color-bg-page);
+}
+
+#layout {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 .wrapper {
   margin: 0 auto;
   width: 844px;
   max-width: calc(100% - 6vw);
-  min-height: 70vh;
 }
 
 .pane {
@@ -28,12 +37,12 @@ a.pane {
   }
 }
 
-.flow>* {
+.flow > * {
   margin: 0;
 }
 
-.flow>*+* {
-  margin-top: 1.5em;
+.flow > * + * {
+  margin-top: 2em;
 }
 
 footer {
