@@ -6,17 +6,17 @@
 {% block content %}
 
 <div class="wrapper">
-    <h1 data-label="name">{{ request.name }}</h1>
+    <h1 data-label="name">{{ req.name }}</h1>
 
     <div class="pane">
-        <p data-label="description">{{ request.description }}</p>
+        <p data-label="description">{{ req.description }}</p>
 
-        <div data-label="token">{{ request.token }}</div>
-        <div data-label="status">{{ request.status }}</div>
+        <div data-label="token">{{ req.token }}</div>
+        <div data-label="status">{{ req.status }}</div>
 
         <h2>Experiments</h2>
         <div class="flow">
-            {% for experiment in request.experiments %}
+            {% for experiment in req.experiments %}
             <div>
                 <h3 data-label="Name">{{experiment.name }}</h3>
                 <div data-label="Description">{{ experiment.description }}</div>
@@ -29,10 +29,10 @@
                 </div>
                 <div data-label="Reply">{{ experiment.reply }}</div>
                 <div data-label="Submit">
-                    {% if request.status == "REPLIED" %}
+                    {% if req.status == "REPLIED" %}
                     <form action="{% url 'researcher_app:perform_action' %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" id="Token" name="Token" value={{request.token}}>
+                        <input type="hidden" id="Token" name="Token" value={{req.token}}>
                         <input type="hidden" id="experimentId" name="experimentId" value={{experiment.id}}>
                         <input type="submit" value="Run Analysis">
                     </form>

@@ -238,11 +238,9 @@ def prepare_request_view(request):
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_app/request.html'
-    context = {'request': _gen_pageset(pk)}
+    context = {'req': _gen_pageset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
-
-
 
 @login_required(login_url='researcher_app:login')
 def experiment_view(request, id):
