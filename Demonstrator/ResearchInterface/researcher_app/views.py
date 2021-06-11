@@ -302,16 +302,19 @@ def fill_profile(request):
     researcher = Researcher.objects.get(user=request.user)
     to_save = False
     if request.method == 'POST':
-        if 'name' in request.POST and not researcher.name == request.POST['name']:
-            researcher.name = request.POST['name']
+        if 'name' in request.POST and not researcher.user.first_name == request.POST['name']:
+            researcher.user.first_name = request.POST['name']
+            researcher.user.last_name = "" 
+            #TODO fix this mess (the name is concatenated on the frontend form as one field)
             to_save = True
-        if 'email' in request.POST and not researcher.email == request.POST['email']:
-            researcher.email = request.POST['email']
+        if 'email' in request.POST and not researcher.user.email == request.POST['email']:
+            researcher.user.email = request.POST['email']
             to_save = True
         if 'institute' in request.POST and not researcher.institute == request.POST['institute']:
             researcher.institute = request.POST['institute']
             to_save = True
         if to_save:
+            researcher.user.save()
             researcher.save()
 
     return HttpResponseRedirect(reverse('researcher_app:index'))
