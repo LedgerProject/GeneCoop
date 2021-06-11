@@ -16,6 +16,18 @@ body {
   padding: 2rem;
 }
 
+a.pane {
+  position: relative;
+  left: 0;
+  display: block;
+  text-decoration: none;
+
+  &:hover {
+    left: 2px;
+    transition: all 100ms ease;
+  }
+}
+
 .flow>* {
   margin: 0;
 }

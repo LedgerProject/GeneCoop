@@ -13,12 +13,10 @@
         {% if my_set.requests %}
         {% for request in my_set.requests %}
             {% if request.status != 'REPLIED' %}
-            <div class="pane">
-                <h3 data-label="Name">
-                    <a href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a>
-                </h3>
-                <div data-label="Description">{{ request.description }}</div>
-                <div data-label="Experiments">
+            <a class="pane" href="{% url 'researcher_app:request' request.id %}">
+                <h3>{{ request.name }}</h3>
+                <div>{{ request.description }}</div>
+                <div>
                     {% for experiment in request.experiments %}
                     <ul>
                         {% if experiment.chosen_option != -1 %}
@@ -29,9 +27,8 @@
                     </ul>
                     {% endfor %}
                 </div>
-                <div data-label="Token">{{ request.token }}</div>
-                <!-- <div data-label="Status">{{ request.status }}</div> -->
-            </div>
+                <div>{{ request.token }}</div>
+              </a>
             {% endif %}
         {% endfor %}
         {% else %}
