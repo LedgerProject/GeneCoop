@@ -6,47 +6,48 @@
 {% block content %}
 
 <div class="wrapper">
-    <h2>New Request</h2>
+  <h2>New Request</h2>
 
-    <form class="pane flow" action="{% url 'researcher_app:sign_request' %}" method="post">
-        {% csrf_token %}
+  <form class="pane flow" action="{% url 'researcher_app:sign_request' %}" method="post">
+    {% csrf_token %}
 
-        <div class="form-row">
-            <label for="name">Name of Request</label>
-            <input type="text" name="name" value="" required>
+    <div class="form-row">
+      <label for="name">Name of Request</label>
+      <input type="text" name="name" value="" required>
+    </div>
+
+    <div class="form-row">
+      <label for="description">Request Description</label>
+      <textarea cols="40" rows="5" name="description" value="" required></textarea>
+    </div>
+
+    <div class="form-row">
+      <label for="experiments">Experiments</label>
+      <div class="form-column">
+        {% for experiment in my_set.experiments %}
+        <div class="checkbox">
+          <input type="checkbox" name="experiments" id="experiment{{ forloop.counter }}" value="{{ experiment.id }}">
+          <label for="experiment{{ forloop.counter }}">{{ experiment.name }}</label>
         </div>
+        {% endfor %}
+      </div>
+    </div>
 
-        <div class="form-row">
-            <label for="description">Request Description</label>
-            <textarea cols="40" rows="5" name="description" value="" required></textarea>
-        </div>
+    <div class="form-row">
+      <label for="nr_users">Users</label>
+      <select name="nr_users" id="nr_users">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
 
-        <div class="form-row">
-            <label for="experiments">Experiments</label>
-            <div class="form-column">
-                {% for experiment in my_set.experiments %}
-                <input type="checkbox" name="experiments" id="experiment{{ forloop.counter }}" value="{{ experiment.id }}">
-                <label for="experiment{{ forloop.counter }}">{{ experiment.name }}</label><br>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="form-row">
-            <label for="nr_users">Users</label>
-            <select name="nr_users" id="nr_users">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-        </div>
-
-        <div class="form-buttons">
-            <input type="submit" value="Create request">
-        </div>
-    </form>
+    <div class="form-buttons">
+      <input type="submit" value="Create request">
+    </div>
+  </form>
 </div>
-
 
 {% endblock %}

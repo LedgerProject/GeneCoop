@@ -1,3 +1,4 @@
+{% load sass_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -5,8 +6,7 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Researcher Space{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'researcher_app/styles.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/style.scss' %}" />
 </head>
 
 <body>
@@ -15,7 +15,9 @@
     {% endif %}
 
     {% block content %}
-    {% endblock %}    
+    {% endblock %}
+
+    <footer>footer</footer>
 </body>
 
 </html>

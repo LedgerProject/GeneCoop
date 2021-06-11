@@ -1,0 +1,29 @@
+body {
+  background-color: var(--color-bg-page);
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 844px;
+  max-width: calc(100% - 6vw);
+  min-height: 70vh;
+}
+
+.pane {
+  background-color: var(--color-bg-pane);
+  border-left: 3px solid var(--color-yellow);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.flow>* {
+  margin: 0;
+}
+
+.flow>*+* {
+  margin-top: 1.5em;
+}
+
+footer {
+  margin-top: 5rem;
+}

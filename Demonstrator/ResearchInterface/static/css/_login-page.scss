@@ -1,0 +1,17 @@
+.page__login .wrapper {
+  min-height: 100vh;
+  display: flex;
+}
+
+.page__login .wrapper .pane {
+  margin: auto;
+  min-height: 5rem;
+  width: 470px;
+}
+
+/* .page__login input#username {
+visibility: hidden;
+}
+.page__login input#username[value] {
+visibility: visible;
+} */

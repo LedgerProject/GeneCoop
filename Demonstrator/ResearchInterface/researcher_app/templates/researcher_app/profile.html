@@ -5,26 +5,30 @@
 
 {% block content %}
 
-<div class="container">
+<div class="wrapper">
     <h2>Profile</h2>
 
-    <form action="{% url 'researcher_app:fill_profile' %}" method="post">
+    <form class="pane flow" action="{% url 'researcher_app:fill_profile' %}" method="post">
         {% csrf_token %}
-        <ul class="responsive-table">
-            <li class="table-header">
-                <div class="col col-1">Name</div>
-                <div class="col col-2">Email</div>
-                <div class="col col-4">Institute</div>
-            </li>
-            <li class="table-row">
-                <div class="col col-1" data-label="Name"><input type="text" id="name" name="name" value="{{ researcher.name }}"></div>
-                <div class="col col-2" data-label="Email"><input type="text" id="email" name="email" value="{{ researcher.email }}"></div>
-                <div class="col col-4" data-label="Institute"><input type="text" id="institute" name="institute" value="{{ researcher.institute }}"></div>
-            </li>
-            <li class="table-row">
-                <div class="col col-1" data-label="Submit"><input type="submit" value="Submit"></div>
-            </li>
-        </ul>
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" value="{{ researcher.name }}">
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" value="{{ researcher.email }}">
+        </div>
+
+        <div class="form-row">
+          <label for="institute">Institute</label>
+          <input type="text" id="institute" name="institute" value="{{ researcher.institute }}">
+        </div>
+
+        <div class="form-buttons">
+          <button type="submit">Update profile</button>
+        </div>
+
     </form>
 </div>
 

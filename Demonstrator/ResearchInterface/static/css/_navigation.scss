@@ -1,0 +1,52 @@
+nav {
+  background-color: var(--color-bg-pane);
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+  padding: 1rem 1.5rem;
+
+  a:focus {
+    outline-offset: 3px;
+  }
+
+  #logo {
+    height: 70px;
+    width: auto;
+  }
+
+  ul {
+    list-style: none;
+    margin: 1rem 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    align-items: flex-end;
+
+    a {
+      font-family: var(--font-headers);
+      font-weight: 700;
+      font-style: italic;
+      text-decoration: none;
+      border-bottom: 0px solid var(--color-green);
+
+      &:hover {
+        border-bottom: 3px solid var(--color-green);
+        transition: all 100ms ease;
+      }
+    }
+
+    li.main,
+    li.user {
+      margin: 0 0 0 auto;
+    }
+
+    /* all except first with class selector */
+    li.main ~ li.main,
+    li.user ~ li.user {
+      margin: 0 0 0 2rem;
+    }
+  }
+}
+
+
