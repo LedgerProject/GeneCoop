@@ -104,21 +104,13 @@ def _gen_experiments(experiments):
         experiments_view.append(experiment_view)
     return experiments_view
 
-
-def _gen_pageset(pk):
+def _pageset_for(request_set, pk):
     """
-        Return the requests, checking whether 
-        they have been signed and what experiments
-        are allowed
+    Return the requests, checking wheter they have been signed
+    and what experiments are allowed for the given request set
     """
-    request_set = None
-    if pk == None:
-        request_set = Request.objects.all()
-    else:
-        request_set = [Request.objects.get(pk=pk)]
-
     requests_view = []
-
+    
     for request_obj in request_set:
         _update_request(request_obj)
         logger.debug(f'Request {request_obj.id} updated')
@@ -159,6 +151,19 @@ def _gen_pageset(pk):
     logger.debug(f'Return queryset: {json.dumps(my_set)}')
     return my_set
 
+
+def _gen_pageset(pk):
+    """
+        generate a pageset for the private key
+        if no private key is given all objects are returned
+    """
+    request_set = None
+    if pk == None:
+        request_set = Request.objects.all()
+    else:
+        request_set = [Request.objects.get(pk=pk)]
+
+    return _pageset_for(request_set,pk) 
 
 # class LoginView(LoginView):
 #     template_name = 'researcher_app/login.html'
@@ -205,7 +210,9 @@ def profile_view(request):
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_app/index.html'
-    context = {'my_set': _gen_pageset(None)}
+    request_set = Request.objects.filter(status="NOT REPLIED")
+    pageset = _pageset_for(request_set,None)
+    context = {'my_set': pageset}
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
@@ -213,7 +220,9 @@ def index_view(request):
 def complete_view(request):
     logger.debug(f'Complete view request')
     template_name = 'researcher_app/complete.html'
-    context = {'my_set': _gen_pageset(None)}
+    request_set = Request.objects.filter(status="REPLIED")
+    pageset = _pageset_for(request_set,None)
+    context = {'my_set': pageset}
     logger.debug(f'Complete view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 

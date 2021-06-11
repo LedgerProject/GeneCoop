@@ -12,7 +12,6 @@
 
         {% if my_set.requests %}
         {% for request in my_set.requests %}
-            {% if request.status != 'REPLIED' %}
             <a class="pane" href="{% url 'researcher_app:request' request.id %}">
                 <h3>{{ request.name }}</h3>
                 <div>{{ request.description }}</div>
@@ -29,7 +28,6 @@
                 </div>
                 <div>{{ request.token }}</div>
               </a>
-            {% endif %}
         {% endfor %}
         {% else %}
         <div class="pane">No requests are available.</div>
