@@ -9,8 +9,9 @@
     <h1>Request signature</h1>
 
     <form class="pane request" action="{% url 'researcher_app:store_request' %}" method="post">
-        <h2>{{ request.name }}</h2>
         {% csrf_token %}
+
+        <h2 class="first-child">{{ request.name }}</h2>
         <p>{{ request.description }}</p>
 
         <h3>Experiments</h3>
@@ -37,14 +38,14 @@
         {% for experiment in request.experiments %}
         <input type="hidden" name="experiments" value="{{ experiment.id }}">
         {% endfor %}
-        <div id="action-required-genecoop-plugin">
+        <p id="action-required-genecoop-plugin" class="space instruction">
             Please 'Sign' this request with your GeneCoop add-on.
-        </div>
-        <div id="action-done-genecoop-plugin" style="display: none;visibility: hidden;">
-            Click on 'Proceed' to continue.
-        </div>
+        </p>
+        <p id="action-done-genecoop-plugin" class="space instruction" style="display: none;visibility: hidden;">
+            Signing successful. Click on 'Proceed' to continue.
+        </p>
         <div class="form-buttons">
-          <input id="submit" type="submit" value="Proceed" disabled="true">
+          <input id="submit" type="submit" value="Proceed" disabled>
         </div>
     </form>
 

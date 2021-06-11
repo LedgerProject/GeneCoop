@@ -21,7 +21,7 @@
             {% for experiment in req.experiments %}
             <div class="experiment">
                 <h3>{{experiment.name }}</h3>
-                <div>{{ experiment.description }}</div>
+                <p>{{ experiment.description }}</p>
                 <div>
                     {% if experiment.chosen_option != -1 %}
                     {{experiment.chosen_option_name}}

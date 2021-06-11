@@ -17,6 +17,11 @@ h4,
 h5 {
   font-family: var(--font-headers);
   font-style: italic;
+  margin: 0 0 0.5em 0;
+
+  &.first-child {
+    margin-top: 0 !important;
+  }
 
   &:not(:first-child) {
     margin: 2em 0 0.5em;
@@ -47,6 +52,16 @@ a {
 }
 
 ::selection { background: var(--color-yellow); }
+
+
+
+p.space {
+  margin: 2em 0;
+}
+
+.instruction {
+  font-style: italic;
+}
 
 .token {
   margin-bottom: 0.5rem;

@@ -9,9 +9,16 @@
   }
 
   ul {
-    list-style-type: square;
     padding: 0;
-    margin: 2rem 0 0 2rem;
+    margin: 2rem 0 2rem 2rem;
+  }
+
+  h3 + ul {
+    margin-top: 0;
+  }
+
+  ul {
+    list-style-type: square;
 
     li {
       font-style: italic;
@@ -24,10 +31,8 @@
     }
   }
 
-
-
-  h2 {
-    margin-top: 5rem;
+  .experiment {
+    margin-top: 3rem;
   }
 }
 
