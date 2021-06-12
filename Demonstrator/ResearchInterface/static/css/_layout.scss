@@ -18,6 +18,10 @@ body {
   max-width: calc(100% - 6vw);
 }
 
+.wrapper + .wrapper {
+  margin-top: 5rem;
+}
+
 .pane {
   background-color: var(--color-bg-pane);
   border-left: 3px solid var(--color-yellow);

@@ -1,4 +1,5 @@
-.request {
+.request,
+.consent {
   .top-right {
     margin-bottom: 1rem;
 
@@ -17,9 +18,8 @@
     margin-top: 3rem;
   }
 
-  section {
-    border-top: 3px solid var(--color-yellow);
-    border-top: 3px dashed black;
+  section:not(:first-child) {
+    border-top: 2px dashed black;
     margin-top: 3rem;
     padding-top: 3rem;
   }

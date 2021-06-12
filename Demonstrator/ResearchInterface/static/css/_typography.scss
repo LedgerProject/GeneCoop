@@ -64,9 +64,18 @@ ul {
   padding: 0;
   margin: 2rem 0 3rem 2rem;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   li {
     font-style: italic;
     margin-bottom: 0.5em;
+
+    &::before {
+      content: "  ";
+      padding-inline-start: 1ch;
+    }
   }
 
   &.experiments-requested li::marker {
@@ -79,6 +88,20 @@ ul {
     content: "✓ ";
     font-family: var(--font-headers);
     font-weight: 700;
+  }
+
+  &.consent-options li {
+
+    &::marker {
+    content: "✓ ";
+    font-family: var(--font-headers);
+    font-weight: 700;
+    color: var(--color-grey-light);
+    }
+
+    &.chosen::marker {
+      color: var(--color-green);
+    }
   }
 }
 
