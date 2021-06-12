@@ -8,31 +8,20 @@
     }
   }
 
-  ul {
-    padding: 0;
-    margin: 2rem 0 2rem 2rem;
-  }
 
   h3 + ul {
     margin-top: 0;
   }
 
-  ul {
-    list-style-type: square;
-
-    li {
-      font-style: italic;
-    }
-
-    &.experiments-requested li::marker {
-      content: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='12' width='16'><rect x='1' y='3' width='8' height='8' fill='none' stroke='black' stroke-width='2' /></svg>");
-      margin-right: 0.5rem;
-      display: inline-block;
-    }
-  }
-
   .experiment {
     margin-top: 3rem;
+  }
+
+  section {
+    border-top: 3px solid var(--color-yellow);
+    border-top: 3px dashed black;
+    margin-top: 3rem;
+    padding-top: 3rem;
   }
 }
 

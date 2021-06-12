@@ -27,6 +27,6 @@ function togglePermissions(e) {
     var selector = 'li[class=' + CSS.escape(e.target.id) + ']';
     var procedures = document.getElementById('procedures').querySelectorAll(selector);
     procedures.forEach(function (permission) {
-        permission.style.display = selected ? 'block' : 'none';
+        permission.style.display = selected ? 'list-item' : 'none';
     });
 }
