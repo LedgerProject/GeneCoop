@@ -96,7 +96,8 @@ def log_experiment(request):
                     consent_logger = consent.consentlogger_set.create()
                     if exp_json['chosen_option'] != 1:
                         is_allowed = myConfig.is_exp_allowed(exp_json['id'], exp_json['chosen_option'])
-                        consent_logger.log_experiment(token, exp_id, is_allowed)
+                        exp_name = myConfig.experiments[exp_id].name
+                        consent_logger.log_experiment(token, exp_id, exp_name, is_allowed)
                         consent_logger.save()
                         if not is_allowed:
                             return Response({f'error': f'Experiment {exp_id} is not allowed, consent {token}'})
