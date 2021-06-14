@@ -14,7 +14,7 @@
     "storage"
   ],
   "icons": {
-    "64": "icons/logo_64.png"
+    "64": "icons/icon.png"
   },
   "background": {
     "scripts": [
@@ -35,14 +35,14 @@
   ],
   "browser_action": {
     "default_icon": {
-      "64": "icons/logo_64.png"
+      "64": "icons/icon.png"
     },
     "default_popup": "browserAction/popup.html",
-    "default_title": "genecoop_consent"
+    "default_title": "GeneConsent Donor"
   },
   "page_action": {
     "default_popup": "pageAction/index.html",
-    "default_title": "genecoop_consent"
+    "default_title": "GeneConsent Donor"
   },
   "options_ui": {
     "page": "options/options.html"
