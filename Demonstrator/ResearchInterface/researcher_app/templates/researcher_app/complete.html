@@ -6,32 +6,30 @@
 {% block content %}
 
 <div class="wrapper">
-    <h1>Answered Requests</h1>
+  <h1>Answered Requests</h1>
 
-    {% if my_set.requests %}
-        {% for request in my_set.requests %}
-            <div class="pane">
-                <h3>
-                    <a href="{% url 'researcher_app:request' request.id %}">{{request.name }}</a>
-                </h3>
-                <div>{{ request.description }}</div>
-                <div>
-                    {% for experiment in request.experiments %}
-                    <ul>
-                        {% if experiment.chosen_option != -1 %}
-                        <li id="minim">{{ experiment.name }} : {{experiment.chosen_option_name}}</li>
-                        {% else %}
-                        <li id="minim">{{ experiment.name }}</li>
-                        {% endif %}
-                    </ul>
-                    {% endfor %}
-                </div>
-                <div><a href="../docs/{{ request.token }}">{{ request.token }}</a></div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="pane">No answered requests.</div>
-    {% endif %}
+  {% if my_set.requests %}
+  {% for request in my_set.requests %}
+  <a class="pane request" href="{% url 'researcher_app:request' request.id %}">
+    <div class="top-right">
+      <div class="token">{{ request.token }}</div>
+    </div>
+    <h2 class="first-child">{{request.name }}</h2>
+    <div>{{ request.description }}</div>
+    <ul class="consent-options">
+      {% for experiment in request.experiments %}
+      {% if experiment.chosen_option != -1 %}
+      <li class="{% if experiment.chosen_option_name == 'Yes' %}chosen{% endif %}">{{ experiment.name }}</li>
+      {% else %}
+      <li>{{ experiment.name }}</li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </a>
+  {% endfor %}
+  {% else %}
+  <div class="pane">No answered requests.</div>
+  {% endif %}
 </div>
 
 {% endblock %}

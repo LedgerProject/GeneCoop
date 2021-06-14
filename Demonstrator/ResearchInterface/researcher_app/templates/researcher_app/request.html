@@ -6,46 +6,46 @@
 {% block content %}
 
 <div class="wrapper">
-    <h1>{{ req.name }}</h1>
+  <h1>{{ req.name }}</h1>
 
-    <div class="pane request">
-        <div class="top-right">
-          <div class="token">{{ req.token }}</div>
-          <div class="status">{{ req.status }}</div>
-        </div>  
-
-        <p>{{ req.description }}</p>
-
-        <h2>Experiments</h2>
-        <div class="flow">
-            {% for experiment in req.experiments %}
-            <div class="experiment">
-                <h3>{{experiment.name }}</h3>
-                <p>{{ experiment.description }}</p>
-                <div>
-                    {% if experiment.chosen_option != -1 %}
-                    {{experiment.chosen_option_name}}
-                    {% else %}
-                    No reply
-                    {% endif %}
-                </div>
-                <div>{{ experiment.reply }}</div>
-                <div>
-                    {% if req.status == "REPLIED" %}
-                    <form action="{% url 'researcher_app:perform_action' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" id="Token" name="Token" value={{req.token}}>
-                        <input type="hidden" id="experimentId" name="experimentId" value={{experiment.id}}>
-                        <input type="submit" value="Run Analysis">
-                    </form>
-                    {% else %}
-                    No experiment possible
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="pane request">
+    <div class="top-right">
+      <div class="token">{{ req.token }}</div>
+      <div class="status">{{ req.status }}</div>
     </div>
+
+    <p>{{ req.description }}</p>
+
+    <h2>Experiments</h2>
+    <div class="flow">
+      {% for experiment in req.experiments %}
+      <section class="experiment">
+        <h3>{{experiment.name }}</h3>
+        <p>{{ experiment.description }}</p>
+        {% if experiment.chosen_option != -1 %}
+        <ul class="consent-options">
+          <li class="{% if experiment.chosen_option_name == 'Yes' %}chosen{% endif %}">{{experiment.chosen_option_name}}</li>
+        </ul>
+        {% else %}
+        <p>No reply</p>
+        {% endif %}
+        <p>{{ experiment.reply }}</p>
+        <div>
+          {% if req.status == "REPLIED" %}
+          <form action="{% url 'researcher_app:perform_action' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="Token" name="Token" value={{req.token}}>
+            <input type="hidden" id="experimentId" name="experimentId" value={{experiment.id}}>
+            <input type="submit" value="Run Analysis">
+          </form>
+          {% else %}
+          No experiment possible
+          {% endif %}
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 
 {% endblock %}

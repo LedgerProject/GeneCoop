@@ -72,10 +72,10 @@ ul {
     font-style: italic;
     margin-bottom: 0.5em;
 
-    &::before {
-      content: "  ";
-      padding-inline-start: 1ch;
-    }
+    // &::before {
+    //   content: "  ";
+    //   padding-inline-start: 1ch;
+    // }
   }
 
   &.experiments-requested li::marker {

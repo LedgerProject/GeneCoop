@@ -21,18 +21,15 @@
     {% for experiment in consent.experiments %}
     <section>
       <h3>{{ experiment.name}}</h3>
-      <!-- <div class="col col-24" data-label="Description">{{ experiment.description}}</div> -->
-      <div class="col col-44" data-label="Options">
-        <ul class="consent-options">
-          {% for option in experiment.options %}
-          {% if option.id == experiment.chosen_option %}
-          <li class="chosen"><b>{{ option.name }}</b></li>
-          {% else %}
-          <li>{{ option.name }}</li>
-          {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
+      <ul class="consent-options">
+        {% for option in experiment.options %}
+        {% if option.id == experiment.chosen_option %}
+        <li class="chosen"><b>{{ option.name }}</b></li>
+        {% else %}
+        <li>{{ option.name }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>
     </section>
     {% endfor %}
 
@@ -42,6 +39,7 @@
   <h1>Experiment Overview</h1>
 
   <div class="pane consent">
+    {% if consent.logs %}
     {% for log in consent.logs %}
     <section>
       <div class="top-right">
@@ -52,6 +50,9 @@
       <p>{{ log.message }}</p>
     </section>
     {% endfor %}
+    {% else %}
+      <p>No logs.</p>
+    {% endif %}
     </ul>
   </div>
 

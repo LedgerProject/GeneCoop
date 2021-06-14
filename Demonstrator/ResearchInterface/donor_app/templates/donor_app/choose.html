@@ -8,7 +8,6 @@
 <head>
   <meta charset="utf-8">
   <title>GeneConsent - Request for Consent</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'donor_app/user.css' %}">
   <link rel="stylesheet" href="{% static 'donor_app/font-awesome.min.css' %}">
   <link rel="stylesheet" href="{% sass_src 'css/style.scss' %}" />
   <link rel="apple-touch-icon" sizes="180x180" href="{% static '/apple-touch-icon.png' %}">
@@ -21,7 +20,7 @@
 </head>
 
 <body>
-  <div class="layout">
+  <div id="layout">
     <nav>
       <a href="{% url 'donor_app:index' %}">
         <img id="logo" src="{% static 'images/logo.svg' %}" alt="Logo GeneConsent" />
@@ -55,7 +54,7 @@
               {% endfor %}
             </ul>
             <strong>
-              <div data-label="Options" {%if experiment.required %} class="mandatory" {% endif %}>
+              <div {%if experiment.required %} class="mandatory" {% endif %}>
                 I agree to this:&nbsp;
                 {% for option in experiment.options %}
                   <span class="inline-radio-option">
@@ -84,7 +83,7 @@
 
           <footer class="form-buttons">
             <input type="hidden" id="token" name="token" value={{my_request.token}}>
-            <input id="submitButton" type="submit" data-label="Submit" value="Generate agreement" disabled />
+            <input id="submitButton" type="submit" value="Generate agreement" disabled />
           </footer>
         </form>
       </div>
