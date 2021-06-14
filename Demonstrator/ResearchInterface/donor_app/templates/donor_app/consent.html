@@ -39,6 +39,7 @@
   <h1>Experiment Overview</h1>
 
   <div class="pane consent">
+    {% if consent.logs %}
     {% for log in consent.logs %}
     <section>
       <div class="top-right">
@@ -49,6 +50,9 @@
       <p>{{ log.message }}</p>
     </section>
     {% endfor %}
+    {% else %}
+      <p>No logs.</p>
+    {% endif %}
     </ul>
   </div>
 
