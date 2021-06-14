@@ -1,4 +1,4 @@
-{% extends 'base_res.html' %}
+{% extends 'base_data.html' %}
 
 {% block title %}Verifiable Credential{% endblock %}
 
@@ -40,10 +40,10 @@ Consent <a href="{{vc.id }}">{{vc.id }}</a> with name "{{ vc.name }}" has been g
     </ul>
 </div>
 
-<h3>VC</h3>
-<h4>Original</h4>
-{{ vc.orig_vc}}
-<h4>Normalized</h4>
-{{ vc.norm_vc}}
+<!-- <h4>Original</h4>
+<pre lang="json" >{{ vc.orig_vc}}</pre> -->
+<h3>Normalized VC</h3>
+<pre lang="xml" >{{ vc.norm_vc}}</pre>
+
 
 {% endblock %}
