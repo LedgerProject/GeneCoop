@@ -24,7 +24,7 @@ body {
 
 .pane {
   background-color: var(--color-bg-pane);
-  border-left: 3px solid var(--color-yellow);
+  border-left: 3px solid var(--color-accent);
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
   padding: 2rem;
 }
@@ -49,6 +49,6 @@ a.pane {
   margin-top: 2em;
 }
 
-footer {
+#layout > footer {
   margin-top: 5rem;
 }

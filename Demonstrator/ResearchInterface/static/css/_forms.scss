@@ -22,6 +22,10 @@
 .form-one-line {
   display: flex;
   justify-content: space-between;
+
+  input[type="submit"], button {
+    margin-left: auto;
+  }
 }
 
 input,
