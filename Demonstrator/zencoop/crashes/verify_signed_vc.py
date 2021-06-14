@@ -34,8 +34,11 @@ def verify_signed_vc():
 
     if not result.output == '':
         res_json = json.loads(result.output)
-
-        if res_json['output'] == 'verification_passed':
+        if type(res_json['output']) == list:
+            parsed_res = res_json['output'][0]
+        else:
+            parsed_res = res_json['output']
+        if parsed_res == 'verification_passed':
             print(f'Verification passed')
             return True
 
