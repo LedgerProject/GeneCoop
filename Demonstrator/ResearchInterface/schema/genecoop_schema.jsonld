@@ -5,7 +5,7 @@
     "owl": "http://www.w3.org/2002/07/owl#",
     "schema": "https://schema.org/",
     "obo": "http://purl.obolibrary.org/obo/",
-    "gc_schema": "http://genecoop.waag.org/schema/v1#",
+    "gc_schema": "https://genecoop.waag.org/schema/v1#",
     "sio": "http://semanticscience.org/resource/",
     "defines": {
        "@reverse": "rdfs:isDefinedBy"

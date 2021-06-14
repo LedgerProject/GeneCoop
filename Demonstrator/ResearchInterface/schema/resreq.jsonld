@@ -4,7 +4,7 @@
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "schema": "https://schema.org/",
-        "gc_schema": "http://genecoop.waag.org/schema/v1#"
+        "gc_schema": "https://genecoop.waag.org/schema/v1#"
     },
     "@id": "gc_schema:eye_melanoma_consent",
     "rdf:label": "Consent for Eye Melanoma",

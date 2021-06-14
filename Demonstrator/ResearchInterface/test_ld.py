@@ -7,12 +7,12 @@ from rdflib.parser import StringInputSource
 doc = {
     "@context": [
         "https://www.w3.org/2018/credentials/v1",
-        "http://genecoop.waag.org/credentials/v1",
+        "https://genecoop.waag.org/credentials/v1",
         {
-            "gc_cred": "http://genecoop.waag.org/credentials/v1#",
+            "gc_cred": "https://genecoop.waag.org/credentials/v1#",
             "gc_docs": "http://localhost:8000/docs/",
             "gc_ids": "http://localhost:8000/ids/",
-            "gc_schema": "http://genecoop.waag.org/schema/v1#"
+            "gc_schema": "https://genecoop.waag.org/schema/v1#"
         }
     ],
     "credentialSubject": {
@@ -142,10 +142,10 @@ def do_normalize(doc):
 def do_query(query_body, msg):
     query_prefix = """
     PREFIX cred: <https://www.w3.org/2018/credentials#>
-    PREFIX gc_cred: <http://genecoop.waag.org/credentials/v1#>
+    PREFIX gc_cred: <https://genecoop.waag.org/credentials/v1#>
     PREFIX gc_docs: <http://localhost:8000/docs/>
     PREFIX gc_ids: <http://localhost:8000/ids/>
-    PREFIX gc_schema: <http://genecoop.waag.org/schema/v1#>
+    PREFIX gc_schema: <https://genecoop.waag.org/schema/v1#>
 
     """
     query = query_prefix + query_body
@@ -156,7 +156,7 @@ def do_query(query_body, msg):
             print(f'{l}: {row[l]}')
 
 
-# test = '<http://genecoop.waag.org/schema/v1#exp_000> <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Array SNP request + Analysis and interpretation" .'
+# test = '<https://genecoop.waag.org/schema/v1#exp_000> <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Array SNP request + Analysis and interpretation" .'
 test = do_normalize(doc)
 
 g = rdflib.Graph()
@@ -169,7 +169,7 @@ query_body = """
     WHERE
     {
         ?consent    a                   ?type .
-        FILTER (STRSTARTS(STR(?type),   "http://genecoop.waag.org/credentials/v1#"))
+        FILTER (STRSTARTS(STR(?type),   "https://genecoop.waag.org/credentials/v1#"))
         ?consent    rdf:label           ?name;
                     cred:credentialSubject  ?dna_donor ;
                     gc_cred:given_to    ?researcher ;
