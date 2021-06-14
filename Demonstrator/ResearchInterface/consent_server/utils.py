@@ -160,7 +160,7 @@ def verify_signature(public_key, message, signature):
     and I have a 'string' named 'message'
     and I have a 'signature' named 'message.signature'
     When I verify the 'message' has a signature in 'message.signature' by 'Signer'
-    Then print 'verification passed' as 'string'
+    Then print the string 'verification passed'
     """
 
     # data = {
@@ -225,7 +225,7 @@ def verify_signed_vc(public_key, signed_vc):
     Given I have a 'public key' from 'Issuer'
     Given I have a 'verifiable credential' named 'my-vc'
     When I verify the verifiable credential named 'my-vc'
-    Then print 'verification passed' as 'string'
+    Then print the string 'verification passed'
     """
     
     if isinstance(signed_vc, dict):
