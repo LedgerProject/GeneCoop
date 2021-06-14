@@ -64,7 +64,7 @@ select {
   }
 }
 
-input[type="submit"], button {
+input[type="submit"], button, a.button {
   background-color: var(--color-green);
   border: none;
   color: white;
@@ -75,6 +75,8 @@ input[type="submit"], button {
   line-height: 2.25;
   padding: 0 0.75rem;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 
   &:hover {
     //

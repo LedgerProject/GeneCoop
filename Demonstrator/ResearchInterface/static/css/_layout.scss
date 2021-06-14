@@ -14,12 +14,30 @@ body {
 
 .wrapper {
   margin: 0 auto;
-  width: 844px;
-  max-width: calc(100% - 6vw);
+  max-width: 844px;
+  width: calc(100% - 6vw);
 }
 
 .wrapper + .wrapper {
   margin-top: 5rem;
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+  
+
+  & > div {
+    width: calc(100% - 2rem);
+    margin: 1rem;
+  }
+
+  @media (min-width: 500px) {
+    & > div {
+      width: calc(50% - 2rem - 1px);
+    }
+  }
 }
 
 .pane {
