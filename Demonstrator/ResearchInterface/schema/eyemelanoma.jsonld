@@ -4,9 +4,10 @@
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "schema": "https://schema.org/",
-        "gc_schema": "https://genecoop.waag.org/schema/v1#"
+        "gc_schema": "https://genecoop.waag.org/schema/v1#",
+        "gc_eyemel": "https://genecoop.waag.org/eyemel/v1#"
     },
-    "@id": "gc_schema:eye_melanoma_consent",
+    "@id": "gc_eyemel:eye_melanoma_consent",
     "rdf:label": "Consent for Eye Melanoma",
     "@type": "gc_schema:Consent",
     "gc_schema:researcher_description": "Consent for Eye Melanoma",
@@ -27,32 +28,32 @@
     ],
     "gc_schema:has_experiments": [
         {
-            "@id": "gc_schema:exp_000",
+            "@id": "gc_eyemel:exp_000",
             "rdf:label": "Array SNP request + Analysis and interpretation",
             "gc_schema:is_required": true,
             "gc_schema:researcher_description": "Tier 1 essay Needed for tumor classification",
             "gc_schema:donor_description": "An array test is needed to sequence your DNA from your Saliva, and to produce a digital version of your DNA, which is needed for tumor classification in this research.",
             "gc_schema:has_procedures": [
                 {
-                    "@id": "gc_schema:proc_001",
+                    "@id": "gc_eyemel:proc_001",
                     "rdf:label" : "Saliva Sample",
                     "gc_schema:donor_description": "Donor will send a sample of Saliva for sequencing directly to the Research Center.",
                     "gc_schema:researcher_description": "Donor will send a sample of Saliva for sequencing directly to the Research Center."
                 },
                 {
-                    "@id": "gc_schema:proc_002",
+                    "@id": "gc_eyemel:proc_002",
                     "rdf:label" : "Array Test",
                     "gc_schema:donor_description": "The array test will be performed by the Research Center. The sample will be stored at the Research Center during the array test.",
                     "gc_schema:researcher_description": "The array test will be performed by the Research Center. The sample will be stored at the Research Center during the array test."
                 },
                 {
-                    "@id": "gc_schema:proc_003",
+                    "@id": "gc_eyemel:proc_003",
                     "rdf:label" : "Saliva Sample LifeCycle",
                     "gc_schema:donor_description": "After the array test the sample will be destroyed.",
                     "gc_schema:researcher_description": "After the array test the sample will be destroyed."
                 },
                 {
-                    "@id": "gc_schema:proc_004",
+                    "@id": "gc_eyemel:proc_004",
                     "rdf:label" : "Raw DNA Data file",
                     "gc_schema:donor_description": "The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation.",
                     "gc_schema:researcher_description": "The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation."
@@ -60,32 +61,32 @@
             ]
         },
         {
-            "@id": "gc_schema:exp_001",
+            "@id": "gc_eyemel:exp_001",
             "rdf:label": "Copy Number Variation",
             "gc_schema:is_required": true,
             "gc_schema:researcher_description": "Needed for tumor classification and personalized advise.",
             "gc_schema:donor_description": "Copy Number Variation is needed in this research for better insight in cancer treatment and prediction.",
             "gc_schema:has_procedures": [
                 {
-                    "@id": "gc_schema:proc_005",
+                    "@id": "gc_eyemel:proc_005",
                     "rdf:label" : "Omnigen-GCP",
                     "gc_schema:donor_description": "Genecoop Principal Investigator will perform the analysis using the Omnigen-GCP technology.",
                     "gc_schema:researcher_description": "Genecoop Principal Investigator will perform the analysis using the Omnigen-GCP technology."
                 },
                 {
-                    "@id": "gc_schema:proc_006",
+                    "@id": "gc_eyemel:proc_006",
                     "rdf:label" : "Raw DNA Data File Analysis",
                     "gc_schema:donor_description": "The analysis will be operated on the Raw DNA Data File stored on SURF LabSafe, which managed by Genecoop Cooperation.",
                     "gc_schema:researcher_description": "The analysis will be operated on the Raw DNA Data File stored on SURF LabSafe, which managed by Genecoop Cooperation."
                 },
                 {
-                    "@id": "gc_schema:proc_007",
+                    "@id": "gc_eyemel:proc_007",
                     "rdf:label" : "CNV Analysis Report",
                     "gc_schema:donor_description": "The analysis will result in a CNV Analysis Report, which will be stored on SURF LabSafe and will be managed and protected by Genecoop Cooperation.",
                     "gc_schema:researcher_description": "The analysis will result in a CNV Analysis Report, which will be stored on SURF LabSafe and will be managed and protected by Genecoop Cooperation."
                 },
                 {
-                    "@id": "gc_schema:proc_008",
+                    "@id": "gc_eyemel:proc_008",
                     "rdf:label" : "Raw DNA Data File",
                     "gc_schema:donor_description": "The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation.",
                     "gc_schema:researcher_description": "The result of the array test is a Raw DNA Data File. This file will be stored on SURF LabSafe, and managed and protected by the Genecoop Cooperation."
@@ -93,38 +94,38 @@
             ]
         },
         {
-            "@id": "gc_schema:exp_002",
+            "@id": "gc_eyemel:exp_002",
             "rdf:label": "SNP Variant detection (Biomarker or Pathogenic)",
             "gc_schema:is_required": false,
             "gc_schema:researcher_description": "Optimize personalized drug treatment.",
             "gc_schema:donor_description": "DBM discovery is needed to improve personalized drug treatment in the future, for you and for others. Biomarkers discovered in this analysis can be used for predictive, diagnostic or prognostic purposes.",
             "gc_schema:has_procedures": [
                 {
-                    "@id": "gc_schema:proc_009",
+                    "@id": "gc_eyemel:proc_009",
                     "rdf:label" : "Svastia technology",
                     "gc_schema:donor_description": "This analysis will be performed by Genecoop Principal Investigator using the Svastia technology on Amazon Web Services.",
                     "gc_schema:researcher_description": "This analysis will be performed by Genecoop Principal Investigator using the Svastia technology on Amazon Web Services."
                 },
                 {
-                    "@id": "gc_schema:proc_010",
+                    "@id": "gc_eyemel:proc_010",
                     "rdf:label" : "Raw DNA Data File",
                     "gc_schema:donor_description": "This analysis will access the Raw DNA Data File stored on SURF LabSafe and managed by Genecoop Cooperation.",
                     "gc_schema:researcher_description": "This analysis will access the Raw DNA Data File stored on SURF LabSafe and managed by Genecoop Cooperation."
                 },
                 {
-                    "@id": "gc_schema:proc_011",
+                    "@id": "gc_eyemel:proc_011",
                     "rdf:label" : "Amazon Web Services Storage",
                     "gc_schema:donor_description": "A copy of the Raw DNA Data File will be stored on Amazon Web Services during the analysis.",
                     "gc_schema:researcher_description": "A copy of the Raw DNA Data File will be stored on Amazon Web Services during the analysis."
                 },
                 {
-                    "@id": "gc_schema:proc_012",
+                    "@id": "gc_eyemel:proc_012",
                     "rdf:label" : "Biomarker Analysis Report",
                     "gc_schema:donor_description": "The result of the DBM will be described in a Biomarker Analysis Report. This report will be stored on SURF LabSafe.",
                     "gc_schema:researcher_description": "The result of the DBM will be described in a Biomarker Analysis Report. This report will be stored on SURF LabSafe."
                 },
                 {
-                    "@id": "gc_schema:proc_013",
+                    "@id": "gc_eyemel:proc_013",
                     "rdf:label" : "GeneCoop Data Catalogue",
                     "gc_schema:donor_description": "Anonymised data from the Biomarker Analysis Report will be collected and made available for request through the GeneCoop Data Catalogue.",
                     "gc_schema:researcher_description": "Anonymised data from the Biomarker Analysis Report will be collected and made available for request through the GeneCoop Data Catalogue."
@@ -132,32 +133,32 @@
             ]
         },
         {
-            "@id": "gc_schema:exp_003",
+            "@id": "gc_eyemel:exp_003",
             "rdf:label": "Population study. DNA data available for secondary use",
             "gc_schema:is_required": false,
             "gc_schema:researcher_description": "Description not directly linked to researcher to protect study.",
             "gc_schema:donor_description": "This allows other researchers to learn as much as possible from my dna data in the future. I will always be asked for informed consent before access is granted.",
             "gc_schema:has_procedures": [
                 {
-                    "@id": "gc_schema:proc_014",
+                    "@id": "gc_eyemel:proc_014",
                     "rdf:label" : "Phenotypical data",
                     "gc_schema:donor_description": "My phenotypical data will be indexed in a catalogue and be searchable by other researchers.",
                     "gc_schema:researcher_description": "My phenotypical data will be indexed in a catalogue and be searchable by other researchers."
                 },
                 {
-                    "@id": "gc_schema:proc_015",
+                    "@id": "gc_eyemel:proc_015",
                     "rdf:label" : "Personal data",
                     "gc_schema:donor_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe.",
                     "gc_schema:researcher_description": "The catalog has index on phenotypical data, such as gender, age and nationality, and the types of personal data that are stored in the SURF LabSafe."
                 },
                 {
-                    "@id": "gc_schema:proc_016",
+                    "@id": "gc_eyemel:proc_016",
                     "rdf:label" : "GenCoop Cooperation Database",
                     "gc_schema:donor_description": "The catalog will be stored in a database managed by GenCoop Cooperation.",
                     "gc_schema:researcher_description": "The catalog will be stored in a database managed by GenCoop Cooperation."
                 },
                 {
-                    "@id": "gc_schema:proc_017",
+                    "@id": "gc_eyemel:proc_017",
                     "rdf:label" : "Future Research",
                     "gc_schema:donor_description": "Researchers might ask for consent in the future to participate in new research through GeneCoop.",
                     "gc_schema:researcher_description": "Researchers might ask for consent in the future to participate in new research through GeneCoop."

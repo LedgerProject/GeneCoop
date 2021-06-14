@@ -41,4 +41,5 @@ DO_ENCODING = False
 
 GC_SCHEMA = 'https://genecoop.waag.org/schema/v1#'
 GC_CRED = 'https://genecoop.waag.org/credentials/v1#'
+GC_EYEMEL = 'https://genecoop.waag.org/eyemel/v1#'
 

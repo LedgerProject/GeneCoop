@@ -10,7 +10,7 @@ from zenroom import zenroom
 logger = logging.getLogger(__name__)
 # print(f'Logger {__name__}')
 
-from .constants import GENECOOP_URL, BASE_DIR, GC_SCHEMA, GC_CRED
+from .constants import GENECOOP_URL, BASE_DIR, GC_SCHEMA, GC_CRED, GC_EYEMEL
 
 KEY_SEP = '_'
 TOKEN_SEP = '_'
@@ -354,7 +354,7 @@ class Consent(baseEntity):
         return False
 
 def read_conf(role):
-    file_path = f'{BASE_DIR}/schema/resreq.jsonld'
+    file_path = f'{BASE_DIR}/schema/eyemelanoma.jsonld'
 
     logger.info(f'Reading conf file {file_path} for role {role}')
     descrpt_field = 'researcher_description' if role == 'researcher' else 'donor_description'
@@ -493,7 +493,8 @@ VC = {
             "gc_ids": f"{GENECOOP_URL}/ids/",
             "gc_docs": f"{GENECOOP_URL}/docs/",
             "gc_schema": f"{GC_SCHEMA}",
-            "gc_cred": f"{GC_CRED}"
+            "gc_cred": f"{GC_CRED}",
+            "gc_eyemel": f"{GC_EYEMEL}"
         }
     ],
     # this URL allows to retrieve the document

@@ -12,27 +12,28 @@ doc = {
             "gc_cred": "https://genecoop.waag.org/credentials/v1#",
             "gc_docs": "http://localhost:8000/docs/",
             "gc_ids": "http://localhost:8000/ids/",
-            "gc_schema": "https://genecoop.waag.org/schema/v1#"
+            "gc_schema": "https://genecoop.waag.org/schema/v1#",
+            "gc_eyemel": "https://genecoop.waag.org/eyemel/v1#"
         }
     ],
     "credentialSubject": {
         "gc_cred:consents_to": [
             {
-                "id": "gc_schema:exp_000",
+                "id": "gc_eyemel:exp_000",
                 "name": "Array SNP request + Analysis and interpretation"
             },
             {
-                "id": "gc_schema:exp_001",
+                "id": "gc_eyemel:exp_001",
                 "name": "Copy Number Variation"
             },
             {
-                "id": "gc_schema:exp_003",
+                "id": "gc_eyemel:exp_003",
                 "name": "Population study. DNA data available for secondary use"
             }
         ],
         "gc_cred:prohibits": [
             {
-                "id": "gc_schema:exp_002",
+                "id": "gc_eyemel:exp_002",
                 "name": "SNP Variant detection (Biomarker or Pathogenic)"
             }
         ],
@@ -146,6 +147,7 @@ def do_query(query_body, msg):
     PREFIX gc_docs: <http://localhost:8000/docs/>
     PREFIX gc_ids: <http://localhost:8000/ids/>
     PREFIX gc_schema: <https://genecoop.waag.org/schema/v1#>
+    PREFIX gc_eyemel: <https://genecoop.waag.org/eyemel/v1#>
 
     """
     query = query_prefix + query_body
