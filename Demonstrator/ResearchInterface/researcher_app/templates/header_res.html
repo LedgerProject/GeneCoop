@@ -1,9 +1,17 @@
-<div class="menu-top">
+{% load static %}
+<nav>
+    <a href="{% url 'researcher_app:index' %}">
+        <img id="logo" src="{% static 'images/logo.svg' %}" alt="Logo GeneConsent" />
+    </a>
     <ul>
-        <li><a href="{% url 'researcher_app:profile' %}">Hello, {{ request.user }} !</a></li>
-        <li><a href="{% url 'researcher_app:index' %}">Index</a></li>
-        <li><a href="{% url 'researcher_app:prepare_request' %}">Create Request</a></li>
-        <li><a href="{% url 'researcher_app:logout' %}">Logout</a></li>
-        <li><a href="https://waag.org/en/project/gene-coop" target="_blank">About</a></li>
+        {% if user.is_authenticated %}
+        <li class="main"><a href="{% url 'researcher_app:index' %}">Pending</a></li>
+        <li class="main"><a href="{% url 'researcher_app:complete' %}">Answered</a></li>
+        <li class="main"><a href="{% url 'researcher_app:prepare_request' %}">Create Request</a></li>
+        <li class="user"><a href="{% url 'researcher_app:profile' %}">{{ request.user }}</a></li>
+        <li class="user"><a href="{% url 'researcher_app:logout' %}">Logout</a></li>
+        {% else %}
+        <li class="user"><a href="{% url 'researcher_app:login' %}">Login</a></li>
+        {% endif %}
     </ul>
-</div>
+</nav>

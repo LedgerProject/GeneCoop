@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from .models import Consent
+from .models import ConsentLogger
 from id_app.models import User
 from researcher_app.models import Request
 
@@ -78,7 +79,7 @@ def _gen_queryset(pk, include_log=False):
         }
         if include_log:
             log_entries = []
-            for log_obj in consent.consentlogger_set.all().order_by('-request_received'):
+            for log_obj in consent.consentlogger_set.filter(type=ConsentLogger.LogTypes.LOG_EXPERIMENT).order_by('-request_received'):
                 log_entry = {}
                 log_entry['time'] = log_obj.request_received
                 log_entry['type'] = log_obj.type

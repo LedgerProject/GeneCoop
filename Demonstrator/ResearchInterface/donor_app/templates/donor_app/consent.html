@@ -1,70 +1,59 @@
 {% extends 'base_user.html' %}
 
-{% block title %}GeneCoop Consent{% endblock %}
+{% block title %}GeneConsent - Consent{% endblock %}
 
 {% block content %}
 
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<div class="container">
-    <h2>Consent Overview</h2>
+<div class="wrapper">
+  <h1>Consent Overview</h1>
 
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-14">Name of Consent</div>
-            <div class="col col-24">Description</div>
-            <div class="col col-34">Experiments</div>
-            <div class="col col-44">Token</div>
-        </li>
-        <li class="table-row">
-            <div class="col col-14" data-label="Name"><a href="{% url 'donor_app:consent' consent.token %}">{{consent.name}}</a></div>
-            <div class="col col-24" data-label="Description">{{consent.description}}</div>
+  <div class="pane consent">
+    <div class="top-right">
+      <div class="token">{{ consent.token }}</div>
+    </div>
 
-            <div class="col col-34" data-label="Experiments">
-                <ul class="responsive-table">
-                    {% for experiment in consent.experiments %}
-                    <li class="table-row">
-                        <div class="col col-34" data-label="Name">{{ experiment.name}}</div>
-                        <!-- <div class="col col-24" data-label="Description">{{ experiment.description}}</div> -->
-                        <div class="col col-44" data-label="Options">
-                            <ul>
-                                {% for option in experiment.options %}
-                                {% if option.id == experiment.chosen_option %}
-                                <li id="minim"><b>{{ option.name }}</b></li>
-                                {% else %}
-                                <li id="minim">{{ option.name }}</li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col col-44" data-label="Token">{{consent.token}}</div>
-        </li>
-    </ul>
-</div>
-<div class="container">
-    <h2>Experiment Overview</h2>
+    <h2 class="first-child">{{consent.name}}</h2>
+    <p>{{consent.description}}</p>
 
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-13">Time</div>
-            <div class="col col-23">Type</div>
-            <div class="col col-33">Message</div>
-            
-        </li>
-        {% for log in consent.logs %}
-        <li class="table-row">
-            <div class="col col-13" data-label="Time">{{ log.time }}</div>
-            <div class="col col-23" data-label="Message">{{ log.type }}</div>
-            <div class="col col-33" data-label="Type">{{ log.message }}</div>
-            
-        </li>
+    {% for experiment in consent.experiments %}
+    <section>
+      <h3>{{ experiment.name}}</h3>
+      <ul class="consent-options">
+        {% for option in experiment.options %}
+        {% if option.id == experiment.chosen_option %}
+        <li class="chosen"><b>{{ option.name }}</b></li>
+        {% else %}
+        <li>{{ option.name }}</li>
+        {% endif %}
         {% endfor %}
-    </ul>
-</div>
+      </ul>
+    </section>
+    {% endfor %}
 
-{% endblock %}
+  </div>
+</div>
+<div class="wrapper">
+  <h1>Experiment Overview</h1>
+
+  <div class="pane consent">
+    {% if consent.logs %}
+    {% for log in consent.logs %}
+    <section>
+      <div class="top-right">
+        <div class="time">{{ log.time }}</div>
+      </div>
+     
+      <p><strong>{{ log.type }}</strong></p>
+      <p>{{ log.message }}</p>
+    </section>
+    {% endfor %}
+    {% else %}
+      <p>No logs.</p>
+    {% endif %}
+    </ul>
+  </div>
+
+  {% endblock %}

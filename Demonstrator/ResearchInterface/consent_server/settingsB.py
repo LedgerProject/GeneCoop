@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -124,14 +125,20 @@ USE_L10N = True
 USE_TZ = True
 
 
+ADMINS = [('Stefano', 'Stefano.Bocconi@gmail.com'), ('Taco', 'taco@waag.org')]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-ADMINS = [('Stefano', 'Stefano.Bocconi@gmail.com'), ('Taco', 'taco@waag.org')]
+STATICFILES_FINDERS = [
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'sass_processor.finders.CssFinder',
+]
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 
 LOGGING = {
     'version': 1,

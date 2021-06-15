@@ -6,7 +6,7 @@ app_name = 'researcher_app'
 
 urlpatterns = [
     path('', views.index_view, name='index'),
-
+    path('complete/',views.complete_view, name='complete'),
     path('login/', views.login_view, name='login'),
     path('check_login/', views.check_login, name='check_login'),
 

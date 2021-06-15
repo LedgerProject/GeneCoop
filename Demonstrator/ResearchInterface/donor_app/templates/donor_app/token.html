@@ -1,31 +1,34 @@
+{% load sass_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>GeneCoop</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/login.css' %}">
+  <meta charset="utf-8">
+  <title>GeneCoop - Enter token</title>
+  <link rel="stylesheet" href="{% sass_src 'css/style.scss' %}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static '/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static '/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static '/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static '/site.webmanifest' %}">
+  <link rel="mask-icon" href="{% static '/safari-pinned-tab.svg' %}" color="#000000">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
 </head>
 
-<body>
+<body class="page__login">
+  <div class="wrapper">
+    <div class="pane">
+      <div id="formContent">
+        <img id="logo" src="{% static 'images/logo.svg' %}" alt="Logo GeneConsent" />
 
-
-<div class="wrapper fadeInDown">
-    <div id="formContent">
-        <!-- Tabs Titles -->
-        <h2 class="active"> Enter token </h2>
-
-        <!-- Icon -->
-        <div class="fadeIn first">
-            <img src="{% static 'donor_app/images/logo_64.png' %}" id="icon" alt="GeneCoop" />
-        </div>
-        
-        <!-- Login Form -->
-        <form action="{% url 'donor_app:check_token' %}" method="post">
-            {% csrf_token %}
-            <input type="text" id="token" class="fadeIn second" name="token" placeholder="Insert your token">
-            <input type="submit" class="fadeIn fourth" value="Submit">
+        <form class="form-one-line" action="{% url 'donor_app:check_token' %}" method="post">
+          {% csrf_token %}
+          <input type="text" id="token" name="token" placeholder="Insert your token">
+          <button type="submit">Enter token</button>
         </form>
+      </div>
     </div>
-</div>
+  </div>
+</body>
+</html>

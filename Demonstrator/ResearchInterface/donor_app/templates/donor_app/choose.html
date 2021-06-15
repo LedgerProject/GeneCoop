@@ -1,3 +1,4 @@
+{% load sass_tags %}
 {% load static %}
 {% load genecoop_consent %}
 
@@ -5,76 +6,91 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>GeneCoop Request for Consent</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/user.css' %}">
-    <link rel="stylesheet" href="{% static 'donor_app/font-awesome.min.css' %}">
+  <meta charset="utf-8">
+  <title>GeneConsent - Request for Consent</title>
+  <link rel="stylesheet" href="{% static 'donor_app/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/style.scss' %}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static '/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static '/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static '/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static '/site.webmanifest' %}">
+  <link rel="mask-icon" href="{% static '/safari-pinned-tab.svg' %}" color="#000000">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
-    <main class="consent_page">
-        <div><a href="{% url 'donor_app:index' %}">Home</a></div>
-        <h1 class="consent_request_label">GeneCoop Request for Consent</h1>
-        <form class="consent_request" action="{% url 'donor_app:gen_consent' %}" method="post">
-            <header class="consent_request_header">
-                <h2 class="consent_request_title">{{ my_request.name }}</h2>
-                <p class="consent_request_description">{{ my_request.description }}</p>
-                <p class="consent_request_description"><i class="organisation">{{ my_request.researcher.user.first_name }}
-                        {{ my_request.researcher.user.last_name }}&nbsp;<sup><i
-                                class="fa fa-briefcase"></i></sup></i> (in the following <b>Genecoop Principal
-                        Investigator</b>) from <i>{{ my_request.researcher.institute }}</i> (in the following <b>Research Center</b>)
-                    asks for your consent to the following procedures:
-                </p>
-            </header>
-            {% csrf_token %}
-            {% for experiment in my_exps.experiments %}
-            <section class="consent_request_item">
-                <h3 class="consent_request_item_title">{{ experiment.name}}</h3>
-                <h4 class="consent_request_section_title">Purpose</h4>
-                <p class="consent_request_section_text">{{ experiment.description }}</p>
-                <h4 class="consent_request_section_title">What procedures will take place with my personal data?</h4>
-                <ul>
-                    {% for procedure in experiment.procedures %}
-                    <li>{{ procedure}}</li>
-                    {% endfor %}
-                </ul>
-                <br />
-                <strong>
-                    <div data-label="Options" {%if experiment.required %} class="mandatory" {% endif %}>
-                        I agree to this:&nbsp;
-                        {% for option in experiment.options %}
-                        <label for="{{ experiment.id }}">{{ option.name }}</label>
-                        <input type="radio" name="option-{{ experiment.id }}" id="{{ experiment.id }}"
-                            value="{{ option.id }}" onchange="return onAgreementChange(event);">
-                        {% endfor %}
-                    </div>
-                </strong>
-                <br />
-                ({% if experiment.required == True %}Required{% else %}Optional{% endif %})
+  <div id="layout">
+    <nav>
+      <a href="{% url 'donor_app:index' %}">
+        <img id="logo" src="{% static 'images/logo.svg' %}" alt="Logo GeneConsent" />
+      </a>
+    </nav>
 
-            </section>
-            {% endfor %}
-            <section>
-                <h2>Summary of procedures</h2>
-                <p>As part of {{ my_request.name }} conducted by Genecoop Principal Investigator I agree to the
-                    following:
-                <ul id="procedures">
-                    {% for experiment in my_exps.experiments %}
-                    {% for procedure in experiment.procedures %}
-                    <li style="display:none" class="{{experiment.id}}">{{ procedure }}</li>
-                    {% endfor %}
-                    {% endfor %}
-                </ul>
-            </section>
 
-            <footer class="consent_sign_footer">
-                <input type="hidden" id="token" name="token" value={{my_request.token}}>
-                <input id="submitButton" type="submit" data-label="Submit" class="button" value="Generate agreement"
-                    disabled />
-            </footer>
+    <main>
+      <div class="wrapper">
+        <h1>GeneCoop Request for Consent</h1>
+        <form class="pane request consent_request" action="{% url 'donor_app:gen_consent' %}" method="post">
+          <header class="consent_request_header">
+            <h2 class="consent_request_title">{{ my_request.name }}</h2>
+            <p class="consent_request_description">{{ my_request.description }}</p>
+
+            <p class="consent_request_description">
+              <i class="organisation">{{ my_request.researcher.user.first_name }} {{ my_request.researcher.user.last_name }}&nbsp;<sup><i class="fa fa-briefcase"></i></sup></i> (in the following <b>Genecoop Principal Investigator</b>) from <i>{{ my_request.researcher.institute }}</i> (in the following <b>Research Center</b>) asks for your consent to the following procedures:
+            </p>
+          </header>
+
+          {% csrf_token %}
+          {% for experiment in my_exps.experiments %}
+          <section class="experiment consent_request_item">
+            <h3>{{ experiment.name}}</h3>
+            <h4>Purpose</h4>
+            <p>{{ experiment.description }}</p>
+            <h4>What procedures will take place with my personal data?</h4>
+            <ul>
+              {% for procedure in experiment.procedures %}
+              <li>{{ procedure}}</li>
+              {% endfor %}
+            </ul>
+            <strong>
+              <div {%if experiment.required %} class="mandatory" {% endif %}>
+                I agree to this:&nbsp;
+                {% for option in experiment.options %}
+                  <span class="inline-radio-option">
+                    <input type="radio" name="option-{{ experiment.id }}" id="{{ experiment.id }}" value="{{ option.id }}" onchange="return onAgreementChange(event);">
+                    <label for="{{ experiment.id }}">{{ option.name }}</label>
+                  </span>
+                {% endfor %}
+              </div>
+            </strong>
+            ({% if experiment.required == True %}Required{% else %}Optional{% endif %})
+
+          </section>
+          {% endfor %}
+          <section>
+            <h2>Summary of procedures</h2>
+            <p>As part of {{ my_request.name }} conducted by Genecoop Principal Investigator I agree to the
+              following:
+              <ul id="procedures" class="agrees">
+                {% for experiment in my_exps.experiments %}
+                {% for procedure in experiment.procedures %}
+                <li style="display:none" class="{{experiment.id}}">{{ procedure }}</li>
+                {% endfor %}
+                {% endfor %}
+              </ul>
+          </section>
+
+          <footer class="form-buttons">
+            <input type="hidden" id="token" name="token" value={{my_request.token}}>
+            <input id="submitButton" type="submit" value="Generate agreement" disabled />
+          </footer>
         </form>
+      </div>
     </main>
-    <script type="text/javascript" src="{% static 'donor_app/user.js' %}"></script>
+    <footer>...</footer>
+  </div>
+  <script type="text/javascript" src="{% static 'donor_app/user.js' %}"></script>
 </body>
 
 </html>

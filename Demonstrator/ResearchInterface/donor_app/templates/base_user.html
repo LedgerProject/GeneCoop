@@ -1,3 +1,4 @@
+{% load sass_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -5,16 +6,27 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Donor Space{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'donor_app/style.css' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/style.scss' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static '/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static '/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static '/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static '/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static '/safari-pinned-tab.svg' %}" color="#000000">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
-<body>
-    {% if user.is_authenticated %}
-        {% include "header_user.html" %}
-    {% endif %}
-        <!-- User not logged in.  -->
-        {% block content %}
-        {% endblock %}    
+<body class="donor">
+  <div id="layout">
+    {% include "header_user.html" %}
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer>GeneConsent license info? | <a href="https://waag.org/en/project/gene-coop" target="_blank">About</a> link?</footer>
+  </div>
 </body>
 
 </html>

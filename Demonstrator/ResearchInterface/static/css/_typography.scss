@@ -1,0 +1,138 @@
+html {
+  font-size: 62.25%;
+}
+
+body,
+input,
+textarea {
+  font-family: var(--font-default);
+  line-height: 1.5;
+  font-size: 1.6rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-headers);
+  font-style: italic;
+  margin: 0 0 0.5em 0;
+
+  &.first-child {
+    margin-top: 0 !important;
+  }
+
+  &:not(:first-child) {
+    margin: 2em 0 0.5em;
+  }
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+}
+
+h4,
+h5 {
+  line-height: 1.35;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.8rem; }
+
+p {
+  margin: 0 0 1em 0;
+}
+
+a {
+  color: #000;
+}
+
+::selection { background: var(--color-yellow); }
+
+.right {
+  text-align: right;
+}
+
+p.introduction {
+  font-family: var(--font-headers);
+  font-size: 2.2rem;
+  font-style: italic;
+  margin: 4rem 0;
+
+  @media(min-width: 600px) {
+    margin-right: 4rem;
+  }
+}
+
+p.space {
+  margin: 2em 0;
+}
+
+ul {
+  list-style-type: square;
+  padding: 0;
+  margin: 2rem 0 3rem 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  li {
+    font-style: italic;
+    margin-bottom: 0.5em;
+
+    // &::before {
+    //   content: "  ";
+    //   padding-inline-start: 1ch;
+    // }
+  }
+
+  &.experiments-requested li::marker {
+    content: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='12' width='16'><rect x='1' y='3' width='8' height='8' fill='none' stroke='black' stroke-width='2' /></svg>");
+    margin-right: 0.5rem;
+    display: inline-block;
+  }
+
+  &.agrees li::marker {
+    content: "✓ ";
+    font-family: var(--font-headers);
+    font-weight: 700;
+  }
+
+  &.consent-options li {
+
+    &::marker {
+    content: "✓ ";
+    font-family: var(--font-headers);
+    font-weight: 700;
+    color: var(--color-grey-light);
+    }
+
+    &.chosen::marker {
+      color: var(--color-green);
+    }
+  }
+}
+
+
+.instruction {
+  font-style: italic;
+}
+
+.token {
+  margin-bottom: 0.5rem;
+  padding: 0.1em 0.3em;
+  background-color: var(--color-grey-light);
+  border-radius: 1px;
+  font-style: italic;
+  font-family: var(--font-headers);
+  font-size: 1.4rem;
+}
+
+.status {
+  text-transform: lowercase;
+}

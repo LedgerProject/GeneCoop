@@ -1,3 +1,42 @@
+body {
+  font-family: sans-serif;
+  padding: 1rem;
+}
+
 h1 {
   font-style: italic;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-row > * {
+  min-width: 12rem;
+}
+
+.form-row > label {
+  width: 12rem;
+  font-weight: 400;
+}
+
+.form-buttons {
+  text-align: right;
+}
+
+button {
+  background-color: #05AA63;
+  border: none;
+  color: white;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 2.25;
+  padding: 0 0.75rem;
+  cursor: pointer;
+  text-align: center;
+  font-family: monospace;
 }

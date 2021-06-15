@@ -1,22 +1,17 @@
 {% extends 'base_user.html' %}
 
-{% block title %}Logout{% endblock %}
+{% block title %}GeneConsent - Logout{% endblock %}
 
 {% block content %}
 
-{% if request.user.is_authenticated %}
-Strange, you are still logged in {{ request.user }}!
-{% else %}
-<div class="menu-top">
-      <ul>
-
-            <li><a href="{% url 'donor_app:login' %}">Login</a></li>
-            <li><a href="https://waag.org/en/project/gene-coop" target="_blank">About</a></li>
-      </ul>
+<div class="wrapper">
+  <div class="pane">
+    {% if request.user.is_authenticated %}
+    <p>Strange, you are still logged in {{ request.user }}!</p>
+    {% else %}
+    <p>You are now logged out</p>
+    {% endif %}
+  </div>
 </div>
-<h2>You are now logged out</h2>
-
-{% endif %}
-
 
 {% endblock %}

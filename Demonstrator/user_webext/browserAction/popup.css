@@ -1,32 +1,37 @@
 html, body {
-    width: 100px;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .button {
-    margin: 3% auto;
-    padding: 4px;
-    text-align: center;
-    font-size: 1.5em;
-    cursor: pointer;
-  }
-  
-  .action:hover {
-    background-color: #CFF2F2;
-  }
-  
-  .action {
-    background-color: #E5F2F2;
-  }
-  
-  .reset {
-    background-color: #FBFBC9;
-  }
-  
-  .reset:hover {
-    background-color: #EAEA9D;
-  }
-  
+  width: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  background-color: #05AA63;
+  border: none;
+  color: white;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 2.25;
+  padding: 0 0.75rem;
+  cursor: pointer;
+  text-align: center;
+  font-family: monospace;
+}
+
+.button:hover {
+  background-color: #049154;
+}
+
+.button + .button {
+  margin-top: 0.5rem;
+}
+
+.reset {
+  background-color: #FBFBC9;
+}
+
+.reset:hover {
+  background-color: #EAEA9D;
+}

@@ -104,21 +104,13 @@ def _gen_experiments(experiments):
         experiments_view.append(experiment_view)
     return experiments_view
 
-
-def _gen_pageset(pk):
+def _pageset_for(request_set, pk):
     """
-        Return the requests, checking whether 
-        they have been signed and what experiments
-        are allowed
+    Return the requests, checking wheter they have been signed
+    and what experiments are allowed for the given request set
     """
-    request_set = None
-    if pk == None:
-        request_set = Request.objects.all()
-    else:
-        request_set = [Request.objects.get(pk=pk)]
-
     requests_view = []
-
+    
     for request_obj in request_set:
         _update_request(request_obj)
         logger.debug(f'Request {request_obj.id} updated')
@@ -159,6 +151,19 @@ def _gen_pageset(pk):
     logger.debug(f'Return queryset: {json.dumps(my_set)}')
     return my_set
 
+
+def _gen_pageset(pk):
+    """
+        generate a pageset for the private key
+        if no private key is given all objects are returned
+    """
+    request_set = None
+    if pk == None:
+        request_set = Request.objects.all()
+    else:
+        request_set = [Request.objects.get(pk=pk)]
+
+    return _pageset_for(request_set,pk) 
 
 # class LoginView(LoginView):
 #     template_name = 'researcher_app/login.html'
@@ -205,10 +210,21 @@ def profile_view(request):
 def index_view(request):
     logger.debug(f'Index view request')
     template_name = 'researcher_app/index.html'
-    context = {'my_set': _gen_pageset(None)}
+    request_set = Request.objects.filter(status="NOT REPLIED")
+    pageset = _pageset_for(request_set,None)
+    context = {'my_set': pageset}
     logger.debug(f'Index view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
 
+@login_required(login_url='researcher_app:login')
+def complete_view(request):
+    logger.debug(f'Complete view request')
+    template_name = 'researcher_app/complete.html'
+    request_set = Request.objects.filter(status="REPLIED")
+    pageset = _pageset_for(request_set,None)
+    context = {'my_set': pageset}
+    logger.debug(f'Complete view rendering: {json.dumps(context)}')
+    return render(request, template_name, context)
 
 @login_required(login_url='researcher_app:login')
 def prepare_request_view(request):
@@ -222,11 +238,9 @@ def prepare_request_view(request):
 def request_view(request, pk):
     logger.debug(f'Request view request')
     template_name = 'researcher_app/request.html'
-    context = {'request': _gen_pageset(pk)}
+    context = {'req': _gen_pageset(pk)}
     logger.debug(f'Request view rendering: {json.dumps(context)}')
     return render(request, template_name, context)
-
-
 
 @login_required(login_url='researcher_app:login')
 def experiment_view(request, id):
@@ -286,16 +300,19 @@ def fill_profile(request):
     researcher = Researcher.objects.get(user=request.user)
     to_save = False
     if request.method == 'POST':
-        if 'name' in request.POST and not researcher.name == request.POST['name']:
-            researcher.name = request.POST['name']
+        if 'name' in request.POST and not researcher.user.first_name == request.POST['name']:
+            researcher.user.first_name = request.POST['name']
+            researcher.user.last_name = "" 
+            #TODO fix this mess (the name is concatenated on the frontend form as one field)
             to_save = True
-        if 'email' in request.POST and not researcher.email == request.POST['email']:
-            researcher.email = request.POST['email']
+        if 'email' in request.POST and not researcher.user.email == request.POST['email']:
+            researcher.user.email = request.POST['email']
             to_save = True
         if 'institute' in request.POST and not researcher.institute == request.POST['institute']:
             researcher.institute = request.POST['institute']
             to_save = True
         if to_save:
+            researcher.user.save()
             researcher.save()
 
     return HttpResponseRedirect(reverse('researcher_app:index'))

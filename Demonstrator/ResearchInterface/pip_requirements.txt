@@ -28,3 +28,6 @@ toml==0.10.2
 traitlets==5.0.5
 urllib3==1.26.4
 zenroom==2.0.0.dev1616540261
+libsass==0.21.0
+django-compressor==2.4.1 
+django-sass-processor==1.0.1 

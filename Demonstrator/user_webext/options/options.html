@@ -4,26 +4,36 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
   <form>
     <div>
-      <label>Username: <input type="text" id="username"></label>
+    <div class="form-row">
+      <label>Username:<input type="text" id="username" placeholder="http://genecoop.waag.org/ids/xxx" size="30"></label>
     </div>
-    <div>
-      <label for="question1">1st Question: </label><select name="question1" id="question1"></select>
-      <label>Answer: <input type="text" id="answer1"></label>
+    <div class="form-row">
+      <label for="question1">1st Question:</label><select name="question1" id="question1"></select>
     </div>
-    <div>
+    <div class="form-row">
+      <label>Answer:</label><input type="text" id="answer1">
+    </div>
+    <div class="form-row">
       <label for="question2">2nd Question: </label><select name="question2" id="question2"></select>
-      <label>Answer: <input type="text" id="answer2"></label>
     </div>
-    <div>
+    <div class="form-row">
+      <label>Answer:</label><input type="text" id="answer2">
+    </div>
+    <div class="form-row">
       <label for="question3">3rd Question: </label><select name="question3" id="question3"></select>
-      <label>Answer: <input type="text" id="answer3"></label>
     </div>
-    <button id="submitButton" type="submit">Save</button>
+    <div class="form-row">
+      <label>Answer:</label><input type="text" id="answer3">
+    </div>
+    <div class="form-buttons">
+      <button id="submitButton" class="button" type="submit">Save</button>
+    </div>
   </form>
 
   <script src="options.js"></script>

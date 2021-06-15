@@ -1,0 +1,34 @@
+.request,
+.consent {
+  .top-right {
+    margin-bottom: 1rem;
+
+    @media (min-width: 400px) {
+      float: right;
+      text-align: right;
+    }
+  }
+
+
+  h3 + ul {
+    margin-top: 0;
+  }
+
+  .experiment {
+    margin-top: 3rem;
+  }
+
+  section:not(:first-child) {
+    border-top: 2px dashed black;
+    margin-top: 3rem;
+    padding-top: 3rem;
+  }
+}
+
+
+.requests .request {
+  h2 {
+    margin-top: 0;
+  }
+}
+
