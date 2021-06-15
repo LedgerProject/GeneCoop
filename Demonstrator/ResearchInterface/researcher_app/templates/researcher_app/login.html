@@ -46,7 +46,7 @@
                 <form class="form-one-line" action="{% url 'researcher_app:check_login' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" id="challenge" name="challenge" value={{ challenge }}>
-                    <input type="text" id="username" name="username" placeholder="" readonly>
+                    <input type="text" id="username" name="username" placeholder="" size="35" readonly>
                     <input type="hidden" id="response" name="response" placeholder="response">
                     <button id="proceedButton" type="submit" style="visibility:hidden;">Proceed</button>
                 </form>
