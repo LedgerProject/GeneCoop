@@ -24,7 +24,7 @@
         <h3>{% if request.token_data|length > 1 %} Tokens {% else %} Token {% endif %}</h3>
         <ul>
             {% for token_datum in request.token_data %}
-            <li>{{ token_datum.token }}</li>
+            <li data-label='token'>{{ token_datum.token }}</li>
             {% endfor %}
         </ul>
 
