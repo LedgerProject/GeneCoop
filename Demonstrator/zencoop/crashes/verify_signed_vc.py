@@ -13,7 +13,7 @@ def verify_signed_vc():
         Given I have a 'public key' from 'Issuer'
         Given I have a 'verifiable credential' named 'my-vc'
         When I verify the verifiable credential named 'my-vc'
-        Then print 'verification passed' as 'string'
+        Then print the string 'verification passed'
         """
 
 
