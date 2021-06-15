@@ -1,4 +1,23 @@
 body {
-  font-family: 'lato', sans-serif;
+  display: block;
+  font-family: monospace;
 }
 
+.myHeading {
+  width: 245px;
+  background-color: red;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.myHeading img {
+  float:left;
+  margin-right:10px;
+  position: relative;
+  top:2px;
+  width: 30px;
+  height: 30px 
+}

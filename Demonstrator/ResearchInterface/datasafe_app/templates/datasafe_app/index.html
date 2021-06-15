@@ -4,10 +4,14 @@
 
 
 {% block content %}
-<h2>Data Safe</h2>
+<div class="myHeading">
+    <img src="{% static 'datasafe_app/images/closedlock.svg' %}" id="icon" alt="DataSafe" />
+    <h2>Data Safe</h2>
+</div>
+
 <div class="container">
     <!-- iCon by oNlineWebFonts.Com -->
-    
+    <br/>
     <form action="{% url 'datasafe_app:retrieve_vc' %}" method="post">
         {% csrf_token %}
         <input type="text" id="vc_url" name="vc_url">
@@ -15,7 +19,8 @@
     </form>
     
     <div>
-        <img src="{% static 'datasafe_app/images/closedlock.svg' %}" width="50" height="50" id="icon" alt="DataSafe" />
+        <!-- <img src="{% static 'datasafe_app/images/closedlock.svg' %}" width="30" height="30" id="icon" alt="DataSafe" /> -->
+        <br/>
         <small>Icon made from <a href="http://www.onlinewebfonts.com/icon">Icon Fonts</a> is licensed by CC BY 3.0</small>
     </div>
 </div>

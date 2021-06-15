@@ -1,16 +1,23 @@
 {% extends 'base_data.html' %}
-
+{% load static %}
 {% block title %}Verifiable Credential{% endblock %}
 
 
 {% block content %}
 
+<div class="myHeading">
+    <img src="{% static 'datasafe_app/images/openlock.svg' %}" id="icon" alt="DataSafe" />
+    <h2>Data Safe</h2>
+</div>
+
 <div class="container">
     <h2>Consent</h2>
 
-<div>
-Consent <a href="{{vc.id }}">{{vc.id }}</a> with name "{{ vc.name }}" has been given by <a href="{{ vc.given_by }}">{{ vc.given_by }}</a> to <a href="{{ vc.given_to }}">{{ vc.given_to }}</a> on the {{ vc.issuedate }} via issuer <a href="{{ vc.issuer}}">{{ vc.issuer}}</a>
-</div>
+    <div>
+        Consent <a href="{{vc.id }}">{{vc.id }}</a> with name "{{ vc.name }}" has been given by <a
+            href="{{ vc.given_by }}">{{ vc.given_by }}</a> to <a href="{{ vc.given_to }}">{{ vc.given_to }}</a> on the
+        {{ vc.issuedate }} via issuer <a href="{{ vc.issuer}}">{{ vc.issuer}}</a>
+    </div>
 
     <h3>Allowed Experiments</h3>
     <ul>
@@ -34,16 +41,24 @@ Consent <a href="{{vc.id }}">{{vc.id }}</a> with name "{{ vc.name }}" has been g
     <ul>
         {% for obligation in vc.obligations %}
         <li>
-            Obligation <a href="{{obligation.action }}">{{obligation.action }}</a> for parties <a href="{{obligation.parties }}">{{obligation.parties }}</a>
+            Obligation <a href="{{obligation.action }}">{{obligation.action }}</a> for parties <a
+                href="{{obligation.parties }}">{{obligation.parties }}</a>
         </li>
         {% endfor %}
     </ul>
+    <!-- <h4>Original</h4>
+    <pre lang="json" >{{ vc.orig_vc}}</pre> -->
+    <h3>Normalized VC</h3>
+    <pre lang="xml">{{ vc.norm_vc}}</pre>
+    <div>
+        <br />
+        <small>Icon made from <a href="http://www.onlinewebfonts.com/icon">Icon Fonts</a> is licensed by CC BY
+            3.0</small>
+    </div>
+
 </div>
 
-<!-- <h4>Original</h4>
-<pre lang="json" >{{ vc.orig_vc}}</pre> -->
-<h3>Normalized VC</h3>
-<pre lang="xml" >{{ vc.norm_vc}}</pre>
+
 
 
 {% endblock %}
