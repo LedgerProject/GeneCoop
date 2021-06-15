@@ -24,14 +24,13 @@ class Request(models.Model):
     token = models.CharField(max_length=TOKEN_LENGTH, unique=True)
     token_time = models.FloatField(default=0)
     token_signature = models.CharField(max_length=SIGNATURE_LENGTH, default="")
-    request_sent = models.DateTimeField(
-        'date sent', default=timezone.make_aware(datetime(1900, 1, 1)))
+    request_created = models.DateTimeField(
+        'create date', default=timezone.make_aware(datetime(1900, 1, 1)))
     request_checked = models.DateTimeField(
-        'date signed', default=timezone.make_aware(datetime(1900, 1, 1)))
+        'checked date', default=timezone.make_aware(datetime(1900, 1, 1)))
 
     class RequestStatus(models.TextChoices):
         NOTSENT = 'NOT SENT', _('Request has not been sent')
-        SENT = 'SENT', _('Request has been sent')
         NOTREPLIED = 'NOT REPLIED', _('Request has not been replied')
         REPLIED = 'REPLIED', _('Request has been replied')
 
@@ -40,6 +39,10 @@ class Request(models.Model):
         choices=RequestStatus.choices,
         default=RequestStatus.NOTSENT,
     )
+
+    def created(self):
+        self.request_created = timezone.now()
+        self.status = self.RequestStatus.NOTREPLIED
 
     def replied(self):
         self.request_checked = timezone.now()

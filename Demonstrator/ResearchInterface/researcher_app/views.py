@@ -376,6 +376,7 @@ def store_request(request):
                 new_request = Request(name=web_data.get('name'), description=web_data.get(
                     'description'), researcher=researcher)
 
+                new_request.created()
                 # Add experiments to request
                 experiments_ids = web_data.getlist('experiments')
 
