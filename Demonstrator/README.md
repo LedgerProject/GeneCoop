@@ -26,7 +26,7 @@ Quit the server with CONTROL-C.
 ```
 
 ### Build Web extensions
-This part is not needed to run the application, only if you want to modify the web extensions.
+This part is not needed to run the application, only if you want to modify the web extensions. If you do not wish to do so, skip to **Install Web extensions**.
 
 There are two web extensions, one for the researcher and one for the DNA donor (user). The instructions are the same for both (unless specified), here we show the instructions for the researcher one.
 
@@ -54,7 +54,8 @@ For the DNA donor extension, step 7 and 8 should be replaced with:
   
 7. Select 3 questions and provide an answer to each of them
 8. To test if the configuration is correct, navigate to http://localhost:8000/consent, and click on the extension; you should see two buttons: 'login' and 'sign'.
-  
+
+### Sign your own Web extensions
 You can also build a signed, downloadable self hosted version of the webextension. This step will require that you modify the manifest.json file of both web-extension with your own id for the plugin and it is not encouraged.
 
 First you need to get credentials from [Mozilla](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/).
@@ -65,8 +66,9 @@ web-ext sign --api-key=<KEY> --api-secret=<SECRET> --channel=unlisted
 ```
 
 Copy the xpi file to the django static directory (`./ResearchInterface/researcher_app/static/researcher_app/` for the researcher and `./ResearchInterface/donor_app/static/donor_app/` for the user).
-  
-In this way if you navigate with Firefox to http://localhost:8000/consent or http://localhost:8000/request, the login window will offer you to download and install the plugin you just built.
+
+### Install Web extensions
+If you have signed your own web-ext or if you want to use the repository provided one, navigate with Firefox to http://localhost:8000/consent or http://localhost:8000/request. If no plugin is detected the login window will offer you to download and install it.
 
 ## Operations
 
