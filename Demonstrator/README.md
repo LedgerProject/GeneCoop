@@ -46,7 +46,7 @@ To install and configure the researcher web extension in Firefox:
 3. Select the researcher_webext.zip file in your Downloads directory
 4. Browse to about:addons
 5. Click on "..." -> preferences for the "genecoop_research" addon (genecoop_donor for the user one)
-6. Fill in the username, which has to be of the form http://localhost:8000/ids/<username>
+6. Fill in the username, which has to be of the form http://localhost:8000/ids/<username\>
 7. Fill in the public key and private key with the values you wrote in `ResearchInterface/.researcher.json`, click save.
 8. To test if the configuration is correct, navigate to http://localhost:8000/request, and click on the extension; you should see two buttons: 'login' and 'sign'.
 
@@ -84,3 +84,7 @@ The user can then reply to each single question in the consent and sign it. Once
 Once a consent is signed, the researcher will see it in the Answered section. Clicking on each answered request lead to a page where the researcher can perform the different experiments which they have received consent for.
   
 Each action is logged and visible for the DNA donor on the DNA donor website showing the consent used by the researcher to perform their experiment.
+
+User id are available at http://localhost:8000/ids/<username\> and signed consents (in [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) format) are available at http://localhost:8000/docs/<token\>.
+
+At http://localhost:8000/data/ there is a simple datasafe application where the URL of VC (in the form http://localhost:8000/docs/<token\>) can be entered. The app verifies the VC and shows its content.
