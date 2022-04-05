@@ -33,4 +33,4 @@ sqlparse==0.4.1
 toml==0.10.2
 traitlets==5.0.5
 urllib3==1.26.4
-zenroom==2.0.0
+zenroom==2.0.0.dev1616540261
