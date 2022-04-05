@@ -1,12 +1,5 @@
 #!/bin/bash
 env_name=Demonstrator
-settings=consent_server.settingsP
-
-if [ ! -f ./manage.py ]
-    then
-        echo "Wrong directory, needs to be where manage.py is"
-        exit 1
-    fi
 
 if [ ! -f ./.secret_key ]
 then

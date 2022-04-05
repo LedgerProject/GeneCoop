@@ -5,6 +5,7 @@ import hashlib
 import json
 import copy
 import time
+from sys import platform
 from zenroom import zenroom
 
 logger = logging.getLogger(__name__)
@@ -153,16 +154,20 @@ def verify_signature(public_key, message, signature):
         the signature of a message
     """
 
-    contract = """
+    contract_base = """
     rule check version 1.0.0
     Scenario 'ecdh': verify the signature of a request
     Given I have a 'public key' from 'Signer'
     and I have a 'string' named 'message'
     and I have a 'signature' named 'message.signature'
     When I verify the 'message' has a signature in 'message.signature' by 'Signer'
-    Then print the string 'verification passed'
     """
-
+    if platform == "linux" or platform == "linux2":
+        contract = contract_base + "Then print the string 'verification passed'"
+    elif platform == "darwin":
+        contract = contract_base + "Then print 'verification passed' as 'string'"
+    
+    
     # data = {
     #     "message": message,
     #     "signature": signature
@@ -218,15 +223,20 @@ def verify_signed_vc(public_key, signed_vc):
         a signed verifiable credential
     """
 
-    contract = """
+    contract_base = """
     Rule check version 1.0.0
     Scenario 'w3c' : verify w3c vc signature
     Scenario 'ecdh' : verify
     Given I have a 'public key' from 'Issuer'
     Given I have a 'verifiable credential' named 'my-vc'
     When I verify the verifiable credential named 'my-vc'
-    Then print the string 'verification passed'
     """
+
+    if platform == "linux" or platform == "linux2":
+        contract = contract_base + "Then print the string 'verification passed'"
+    elif platform == "darwin":
+        contract = contract_base + "Then print 'verification passed' as 'string'"
+    
     
     if isinstance(signed_vc, dict):
         data = f'{{"my-vc": {json.dumps(signed_vc)}}}'

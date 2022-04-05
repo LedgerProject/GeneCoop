@@ -9,7 +9,7 @@ elif [ "${env_type} " == "DEV " ]
 then
     settings=consent_server.settingsD
 else
-    echo -e "Environment unknown: {1}"
+    echo -e "Environment unknown: ${env_type}"
     exit 1
 fi
 
