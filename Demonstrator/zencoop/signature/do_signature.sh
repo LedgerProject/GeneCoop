@@ -1,7 +1,6 @@
 #!/bin/bash
 
-zenroom='/Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
-# /Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
+zenroom="~/bin/zenroom-osx.command"
 
 one=sign.data
 two=verify_signature.data

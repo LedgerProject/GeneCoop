@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zenroom='/Users/SB/Software/Ledger/crypto/Zenroom_test/zenroom-osx.command'
+zenroom="~/bin/zenroom-osx.command"
 
 one=verify_hash.data
 

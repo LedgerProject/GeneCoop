@@ -1,6 +1,7 @@
 #!/bin/bash
 
-zenroom='../../../../crypto/Zenroom_test/zenroom-osx.command'
+zenroom="~/bin/zenroom-osx.command"
+
 vc='./signed_vc.data'
 
 ${zenroom} -k vc_sign.keys -a vc_sign.data -z vc_sign.zen | jq '.' > ${vc}

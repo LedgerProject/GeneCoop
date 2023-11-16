@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zenroom='../../../../crypto/Zenroom_test/zenroom-osx.command'
+zenroom="~/bin/zenroom-osx.command"
 
 ${zenroom} -k centr_issuer.key -z centr_issuer.zen | jq '.' > create_proof.data
 
